@@ -33,7 +33,10 @@ const XUserList = defineAsyncComponent(() => import('./statusbar-user-list.vue')
 <style lang="scss" module>
 .root {
 	font-size: 15px;
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel);
+	border-bottom: 1px solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 }
 
 .item {

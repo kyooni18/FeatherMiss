@@ -114,12 +114,15 @@ onMounted(() => {
 	width: 100%;
 	height: var(--height);
 	contain: strict;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
+	border-bottom: 1px solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 
 	&.acrylic {
-		background: color(from var(--MI_THEME-bg) srgb r g b / 0.75);
-		-webkit-backdrop-filter: var(--MI-blur, blur(15px));
-		backdrop-filter: var(--MI-blur, blur(15px));
+		background: var(--MI-surfacePage);
+		-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
+		backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	}
 }
 
@@ -216,7 +219,7 @@ onMounted(() => {
 	right: 0;
 	z-index: 1;
 	contain: content;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
 }
 .acrylic .right {
 	background: transparent;

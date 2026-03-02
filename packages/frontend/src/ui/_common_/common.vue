@@ -176,6 +176,7 @@ if ($i) {
 .transition_menuDrawerBg_enterActive,
 .transition_menuDrawerBg_leaveActive {
 	opacity: 1;
+	will-change: opacity;
 	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .transition_menuDrawerBg_enterFrom,
@@ -187,6 +188,8 @@ if ($i) {
 .transition_menuDrawer_leaveActive {
 	opacity: 1;
 	transform: translateX(0);
+	will-change: transform, opacity;
+	backface-visibility: hidden;
 	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .transition_menuDrawer_enterFrom,
@@ -198,6 +201,7 @@ if ($i) {
 .transition_widgetsDrawerBg_enterActive,
 .transition_widgetsDrawerBg_leaveActive {
 	opacity: 1;
+	will-change: opacity;
 	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .transition_widgetsDrawerBg_enterFrom,
@@ -209,6 +213,8 @@ if ($i) {
 .transition_widgetsDrawer_leaveActive {
 	opacity: 1;
 	transform: translateX(0);
+	will-change: transform, opacity;
+	backface-visibility: hidden;
 	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .transition_widgetsDrawer_enterFrom,
@@ -233,6 +239,7 @@ if ($i) {
 
 .menuDrawerBg {
 	z-index: 1001;
+	contain: paint;
 }
 
 .menuDrawer {
@@ -240,11 +247,25 @@ if ($i) {
 	top: 0;
 	left: 0;
 	z-index: 1001;
+	width: min(82vw, 320px);
 	height: 100dvh;
+	overflow: clip;
+	transform: translateZ(0);
+	will-change: transform, opacity;
+	contain: content;
+	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
+	box-shadow: 14px 0 36px color(from var(--MI_THEME-shadow) srgb r g b / 0.28);
+
+	@media (max-width: 500px) {
+		width: min(88vw, 320px);
+		border-radius: 0 calc(var(--MI-radius) + 8px) calc(var(--MI-radius) + 8px) 0;
+		box-shadow: 10px 0 26px color(from var(--MI_THEME-shadow) srgb r g b / 0.24);
+	}
 }
 
 .widgetsDrawerBg {
 	z-index: 1001;
+	contain: paint;
 }
 
 .widgetsDrawer {
@@ -252,13 +273,27 @@ if ($i) {
 	top: 0;
 	left: 0;
 	z-index: 1001;
-	width: 310px;
+	width: min(90vw, 310px);
 	height: 100dvh;
 	padding: var(--MI-margin) var(--MI-margin) calc(var(--MI-margin) + env(safe-area-inset-bottom, 0px)) !important;
 	box-sizing: border-box;
 	overflow: auto;
 	overscroll-behavior: contain;
-	background: var(--MI_THEME-bg);
+	transform: translateZ(0);
+	will-change: transform, opacity;
+	contain: content;
+	background: var(--MI-surfacePage);
+	border-right: 1px solid var(--MI-surfaceBorder);
+	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	box-shadow: var(--MI-surfaceShadowRaised);
+
+	@media (max-width: 500px) {
+		border-radius: 0 calc(var(--MI-radius) + 8px) calc(var(--MI-radius) + 8px) 0;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
 }
 
 .widgetsCloseButton {

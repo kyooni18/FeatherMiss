@@ -503,6 +503,23 @@ defineExpose({
 			left: 0;
 			right: 0;
 			margin: auto;
+
+			> :first-child {
+				border-radius: calc(var(--MI-radius) + 12px) calc(var(--MI-radius) + 12px) 0 0;
+				overflow: clip;
+
+				@supports (-webkit-mask-image: radial-gradient(circle at center, #000 98%, transparent 100%)) {
+					-webkit-mask-image:
+						radial-gradient(var(--MI-squircleSize, 28px) at var(--MI-squircleSize, 28px) var(--MI-squircleSize, 28px), #000 98%, transparent 100%),
+						radial-gradient(var(--MI-squircleSize, 28px) at calc(100% - var(--MI-squircleSize, 28px)) var(--MI-squircleSize, 28px), #000 98%, transparent 100%),
+						linear-gradient(#000, #000);
+					-webkit-mask-composite: source-over, source-over, source-in;
+				}
+
+				@media (max-width: 500px) {
+					border-radius: calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0 0;
+				}
+			}
 		}
 	}
 }

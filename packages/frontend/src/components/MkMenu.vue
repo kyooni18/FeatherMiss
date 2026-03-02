@@ -509,9 +509,8 @@ onBeforeUnmount(() => {
 		> .menu {
 			padding: 12px 0 max(env(safe-area-inset-bottom, 0px), 12px) 0;
 			width: 100%;
-			border-radius: 24px;
-			border-bottom-right-radius: 0;
-			border-bottom-left-radius: 0;
+			border-radius: calc(var(--MI-radius) + 12px) calc(var(--MI-radius) + 12px) 0 0;
+			overflow: clip;
 
 			> .item {
 				font-size: 1em;
@@ -530,6 +529,10 @@ onBeforeUnmount(() => {
 
 			> .divider {
 				margin: 12px 0;
+			}
+
+			@media (max-width: 500px) {
+				border-radius: calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0 0;
 			}
 		}
 	}
@@ -583,7 +586,7 @@ onBeforeUnmount(() => {
 
 		&:not(:hover):not(:active)::before {
 			outline: var(--MI_THEME-focus) solid 2px;
-			outline-offset: -2px;
+			outline-offset: 0;
 		}
 	}
 
@@ -667,8 +670,15 @@ onBeforeUnmount(() => {
 }
 
 .switchButton {
-	margin-left: -2px;
-	--height: 1.35em;
+	margin-left: 0;
+	margin-right: 2px;
+	align-self: center;
+	--height: 1.3em;
+
+	@media (max-width: 500px) {
+		margin-right: 4px;
+		--height: 1.45em;
+	}
 }
 
 .switchText {

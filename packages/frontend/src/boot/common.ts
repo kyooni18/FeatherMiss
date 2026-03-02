@@ -30,6 +30,122 @@ import { fetchCustomEmojis } from '@/custom-emojis.js';
 import { prefer } from '@/preferences.js';
 import { $i } from '@/i.js';
 import { launchPlugins } from '@/plugin.js';
+import type { UiGraphicsStore } from '@/preferences/def.js';
+
+const UI_GRAPHICS_OVERRIDE_KEYS = [
+	'--MI-radius',
+	'--MI-buttonRadius',
+	'--MI-buttonPillRadius',
+	'--MI-mobileDockRadius',
+	'--MI-surfaceFilter',
+	'--MI-surfacePanel',
+	'--MI-surfacePopup',
+	'--MI-surfaceNav',
+	'--MI-surfacePage',
+	'--MI-surfaceBorder',
+	'--MI-surfaceBorderWidth',
+	'--MI-surfaceShadow',
+	'--MI-surfaceShadowRaised',
+	'--MI-overlayOpacity',
+	'--MI-squircleSize',
+	'--MI-popupRadiusOffset',
+	'--MI-postFormRadiusOffset',
+	'--MI-uiModalBlur',
+	'--MI-focusOutlineWidth',
+	'--MI-focusOutlineOffset',
+] as const;
+
+function clamp(value: number, min: number, max: number): number {
+	return Math.min(max, Math.max(min, value));
+}
+
+function applyUiGraphics(graphics: UiGraphicsStore): void {
+	const root = window.document.documentElement;
+	const normalized: UiGraphicsStore = {
+		enabled: graphics.enabled ?? false,
+		radius: graphics.radius ?? 12,
+		buttonRadius: graphics.buttonRadius ?? 12,
+		buttonPillRadius: graphics.buttonPillRadius ?? 999,
+		mobileDockRadius: graphics.mobileDockRadius ?? 22,
+		blur: graphics.blur ?? 9,
+		saturate: graphics.saturate ?? 125,
+		panelAlpha: graphics.panelAlpha ?? 0.62,
+		popupAlpha: graphics.popupAlpha ?? 0.52,
+		navAlpha: graphics.navAlpha ?? 0.58,
+		pageAlpha: graphics.pageAlpha ?? 0.62,
+		borderAlpha: graphics.borderAlpha ?? 0.07,
+		borderWidth: graphics.borderWidth ?? 1,
+		overlayOpacity: graphics.overlayOpacity ?? 0.18,
+		modalBlur: graphics.modalBlur ?? 4,
+		squircleSize: graphics.squircleSize ?? 28,
+		popupRadiusOffset: graphics.popupRadiusOffset ?? 12,
+		postFormRadiusOffset: graphics.postFormRadiusOffset ?? 12,
+		focusWidth: graphics.focusWidth ?? 2,
+		focusOffset: graphics.focusOffset ?? -2,
+		shadowStrength: graphics.shadowStrength ?? 1,
+		shadowYOffset: graphics.shadowYOffset ?? 14,
+		shadowRaisedStrength: graphics.shadowRaisedStrength ?? 1,
+		shadowRaisedYOffset: graphics.shadowRaisedYOffset ?? 26,
+	};
+
+	if (!normalized.enabled) {
+		for (const key of UI_GRAPHICS_OVERRIDE_KEYS) {
+			root.style.removeProperty(key);
+		}
+
+		const defaultModalBlur = window.innerWidth <= 500 ? '2px' : '4px';
+		root.style.setProperty('--MI-modalBgFilter', prefer.s.useBlurEffectForModal ? `blur(${defaultModalBlur})` : 'none');
+		return;
+	}
+
+	const radius = clamp(normalized.radius, 0, 48);
+	const buttonRadius = clamp(normalized.buttonRadius, 0, 48);
+	const buttonPillRadius = clamp(normalized.buttonPillRadius, 0, 999);
+	const mobileDockRadius = clamp(normalized.mobileDockRadius, 0, 48);
+	const blur = clamp(normalized.blur, 0, 24);
+	const saturate = clamp(normalized.saturate, 50, 220);
+	const panelAlpha = clamp(normalized.panelAlpha, 0, 1);
+	const popupAlpha = clamp(normalized.popupAlpha, 0, 1);
+	const navAlpha = clamp(normalized.navAlpha, 0, 1);
+	const pageAlpha = clamp(normalized.pageAlpha, 0, 1);
+	const borderAlpha = clamp(normalized.borderAlpha, 0, 1);
+	const borderWidth = clamp(normalized.borderWidth, 0, 4);
+	const overlayOpacity = clamp(normalized.overlayOpacity, 0, 1);
+	const modalBlur = clamp(normalized.modalBlur, 0, 20);
+	const squircleSize = clamp(normalized.squircleSize, 8, 48);
+	const popupRadiusOffset = clamp(normalized.popupRadiusOffset, 0, 32);
+	const postFormRadiusOffset = clamp(normalized.postFormRadiusOffset, 0, 32);
+	const focusWidth = clamp(normalized.focusWidth, 1, 8);
+	const focusOffset = clamp(normalized.focusOffset, -8, 8);
+	const shadowStrength = clamp(normalized.shadowStrength, 0, 2);
+	const shadowYOffset = clamp(normalized.shadowYOffset, 0, 40);
+	const shadowRaisedStrength = clamp(normalized.shadowRaisedStrength, 0, 2);
+	const shadowRaisedYOffset = clamp(normalized.shadowRaisedYOffset, 0, 70);
+
+	root.style.setProperty('--MI-radius', `${radius}px`);
+	root.style.setProperty('--MI-buttonRadius', `${buttonRadius}px`);
+	root.style.setProperty('--MI-buttonPillRadius', `${buttonPillRadius}px`);
+	root.style.setProperty('--MI-mobileDockRadius', `${mobileDockRadius}px`);
+	root.style.setProperty('--MI-surfaceFilter', `blur(${blur}px) saturate(${saturate}%)`);
+	root.style.setProperty('--MI-surfacePanel', `color(from var(--MI_THEME-panel) srgb r g b / ${panelAlpha.toFixed(3)})`);
+	root.style.setProperty('--MI-surfacePopup', `color(from var(--MI_THEME-popup) srgb r g b / ${popupAlpha.toFixed(3)})`);
+	root.style.setProperty('--MI-surfaceNav', `color(from var(--MI_THEME-navBg) srgb r g b / ${navAlpha.toFixed(3)})`);
+	root.style.setProperty('--MI-surfacePage', `color(from var(--MI_THEME-bg) srgb r g b / ${pageAlpha.toFixed(3)})`);
+	root.style.setProperty('--MI-surfaceBorder', `color(from var(--MI_THEME-fg) srgb r g b / ${borderAlpha.toFixed(3)})`);
+	root.style.setProperty('--MI-surfaceBorderWidth', `${borderWidth.toFixed(2)}px`);
+	root.style.setProperty('--MI-overlayOpacity', overlayOpacity.toFixed(3));
+	root.style.setProperty('--MI-squircleSize', `${squircleSize}px`);
+	root.style.setProperty('--MI-popupRadiusOffset', `${popupRadiusOffset}px`);
+	root.style.setProperty('--MI-postFormRadiusOffset', `${postFormRadiusOffset}px`);
+	root.style.setProperty('--MI-uiModalBlur', `${modalBlur.toFixed(1)}px`);
+	if (prefer.s.useBlurEffectForModal) {
+		root.style.setProperty('--MI-modalBgFilter', `blur(${modalBlur.toFixed(1)}px)`);
+	}
+	root.style.setProperty('--MI-focusOutlineWidth', `${focusWidth}px`);
+	root.style.setProperty('--MI-focusOutlineOffset', `${focusOffset}px`);
+	root.style.setProperty('--MI-surfaceShadow', `0 ${shadowYOffset.toFixed(1)}px ${(shadowYOffset * 2.7).toFixed(1)}px color(from var(--MI_THEME-shadow) srgb r g b / ${(0.24 * shadowStrength).toFixed(3)}), 0 ${(shadowYOffset * 0.29).toFixed(1)}px ${(shadowYOffset * 0.86).toFixed(1)}px color(from var(--MI_THEME-shadow) srgb r g b / ${(0.12 * shadowStrength).toFixed(3)})`);
+	root.style.setProperty('--MI-surfaceShadowRaised', `0 ${shadowRaisedYOffset.toFixed(1)}px ${(shadowRaisedYOffset * 3.5).toFixed(1)}px color(from var(--MI_THEME-shadow) srgb r g b / ${(0.30 * shadowRaisedStrength).toFixed(3)}), 0 ${(shadowRaisedYOffset * 0.39).toFixed(1)}px ${(shadowRaisedYOffset * 1.08).toFixed(1)}px color(from var(--MI_THEME-shadow) srgb r g b / ${(0.16 * shadowRaisedStrength).toFixed(3)})`);
+}
 
 export async function common(createVue: () => Promise<App<Element>>) {
 	console.info(`Misskey v${version}`);
@@ -196,7 +312,11 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	}, { immediate: true });
 
 	watch(prefer.r.useBlurEffectForModal, v => {
-		window.document.documentElement.style.setProperty('--MI-modalBgFilter', v ? 'blur(4px)' : 'none');
+		const root = window.document.documentElement;
+		const uiModalBlur = window.getComputedStyle(root).getPropertyValue('--MI-uiModalBlur').trim();
+		const defaultModalBlur = window.innerWidth <= 500 ? '2px' : '4px';
+		const blur = uiModalBlur || defaultModalBlur;
+		root.style.setProperty('--MI-modalBgFilter', v ? `blur(${blur})` : 'none');
 	}, { immediate: true });
 
 	watch(prefer.r.useBlurEffect, v => {
@@ -206,6 +326,10 @@ export async function common(createVue: () => Promise<App<Element>>) {
 			window.document.documentElement.style.setProperty('--MI-blur', 'none');
 		}
 	}, { immediate: true });
+
+	watch(prefer.r.uiGraphics, (value) => {
+		applyUiGraphics(value);
+	}, { immediate: true, deep: true });
 
 	// Keep screen on
 	const onVisibilityChange = () => window.document.addEventListener('visibilitychange', () => {

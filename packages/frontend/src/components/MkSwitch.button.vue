@@ -43,50 +43,60 @@ const toggle = () => {
 <style lang="scss" module>
 .button {
 	--height: 21px;
+	--inset: 2px;
+	--radius: 12px;
 
 	position: relative;
 	display: inline-flex;
+	align-items: center;
 	flex-shrink: 0;
 	margin: 0;
 	box-sizing: border-box;
 	width: calc(var(--height) * 1.6);
-	height: calc(var(--height) + 2px); // 枠線
+	height: var(--height);
+	padding: var(--inset);
 	outline: none;
-	background: var(--MI_THEME-switchOffBg);
-	background-clip: content-box;
-	border: solid 1px var(--MI_THEME-switchOffBg);
-	border-radius: 999px;
+	background: color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.46);
+	border: solid 1px color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.58);
+	border-radius: var(--radius);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	box-shadow: 0 10px 28px color(from var(--MI_THEME-shadow) srgb r g b / 0.16);
 	cursor: pointer;
-	transition: inherit;
+	transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 	user-select: none;
 }
 
 .buttonChecked {
-	background-color: var(--MI_THEME-switchOnBg) !important;
-	border-color: var(--MI_THEME-switchOnBg) !important;
+	background-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.52) !important;
+	border-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.64) !important;
+	box-shadow: 0 0 0 2px color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.18), 0 14px 34px color(from var(--MI_THEME-shadow) srgb r g b / 0.18);
 }
 
 .buttonDisabled {
 	cursor: not-allowed;
+	opacity: 0.6;
 }
 
 .knob {
 	position: absolute;
 	box-sizing: border-box;
-	top: 3px;
-	width: calc(var(--height) - 6px);
-	height: calc(var(--height) - 6px);
-	border-radius: 999px;
-	transition: all 0.2s ease;
+	top: 50%;
+	left: var(--inset);
+	width: calc(var(--height) - (var(--inset) * 2));
+	height: calc(var(--height) - (var(--inset) * 2));
+	transform: translateY(-50%);
+	border-radius: var(--radius);
+	transition: left 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+	box-shadow: 0 10px 24px color(from var(--MI_THEME-shadow) srgb r g b / 0.28);
 
 	&:not(.knobChecked) {
-		left: 3px;
-		background: var(--MI_THEME-switchOffFg);
+		background: color(from var(--MI_THEME-switchOffFg) srgb r g b / 0.82);
 	}
 }
 
 .knobChecked {
-	left: calc(calc(100% - var(--height)) + 3px);
-	background: var(--MI_THEME-switchOnFg);
+	left: calc(100% - var(--height) + var(--inset));
+	background: color(from var(--MI_THEME-switchOnFg) srgb r g b / 0.9);
 }
 </style>

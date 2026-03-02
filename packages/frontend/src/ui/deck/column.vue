@@ -324,6 +324,11 @@ function onDrop(ev: DragEvent) {
 	overflow: clip;
 	contain: strict;
 	border-radius: 10px;
+	background: var(--MI-surfacePanel);
+	border: 1px solid var(--MI-surfaceBorder);
+	box-shadow: var(--MI-surfaceShadow);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 
 	&.draghover {
 		&::after {
@@ -416,7 +421,8 @@ function onDrop(ev: DragEvent) {
 	padding: 0 16px 0 30px;
 	font-size: 0.9em;
 	color: var(--MI_THEME-panelHeaderFg);
-	background: var(--MI_THEME-panelHeaderBg);
+	background: color(from var(--MI_THEME-panelHeaderBg) srgb r g b / 0.84);
+	border-bottom: 1px solid var(--MI-surfaceBorder);
 	cursor: pointer;
 	user-select: none;
 }
@@ -487,7 +493,7 @@ function onDrop(ev: DragEvent) {
 	overscroll-behavior-y: contain;
 	box-sizing: border-box;
 	container-type: size;
-	background-color: var(--MI_THEME-bg);
+	background-color: color(from var(--MI_THEME-bg) srgb r g b / 0.82);
 	scrollbar-color: var(--MI_THEME-scrollbarHandle) var(--MI_THEME-panel);
 }
 </style>

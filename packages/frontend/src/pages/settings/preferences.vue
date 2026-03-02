@@ -615,6 +615,20 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</MkRadios>
 						</SearchMarker>
 
+						<SearchMarker :keywords="['font', 'family', 'helvetica', 'apple sd gothic neo', 'sf pro']">
+							<MkSelect v-model="fontFamily" :items="fontFamilyItems" :disabled="useSystemFont">
+								<template #label><SearchLabel>Font Family</SearchLabel></template>
+								<template #caption><SearchText>Turn off "Use system font" to enable this selector.</SearchText></template>
+							</MkSelect>
+						</SearchMarker>
+
+						<SearchMarker :keywords="['font', 'weight', 'bold', 'light']">
+							<MkRange v-model="fontWeight" :min="100" :max="900" :step="100" easing>
+								<template #label><SearchLabel>Font Weight</SearchLabel></template>
+								<template #suffix>{{ fontWeight }}</template>
+							</MkRange>
+						</SearchMarker>
+
 						<SearchMarker :keywords="['font', 'system', 'native']">
 							<MkSwitch v-model="useSystemFont">
 								<template #label><SearchLabel>{{ i18n.ts.useSystemFont }}</SearchLabel></template>
@@ -622,10 +636,120 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</SearchMarker>
 					</div>
 				</MkFolder>
-			</SearchMarker>
+				</SearchMarker>
 
-			<SearchMarker v-slot="slotProps" :keywords="['performance']">
-				<MkFolder :defaultOpen="slotProps.isParentOfTarget">
+				<SearchMarker v-slot="slotProps" :keywords="['ui', 'graphics', 'style', 'glass', 'blur', 'radius', 'shadow', 'focus', '모바일', '그래픽']">
+					<MkFolder :defaultOpen="slotProps.isParentOfTarget">
+						<template #label><SearchLabel>UI 그래픽 랩</SearchLabel></template>
+						<template #icon><SearchIcon><i class="ti ti-palette"></i></SearchIcon></template>
+
+						<div class="_gaps_m">
+							<MkPreferenceContainer k="uiGraphics">
+								<MkSwitch v-model="uiGraphicsEnabled">
+									<template #label><SearchLabel>고급 UI 그래픽 조정 활성화</SearchLabel></template>
+									<template #caption><SearchText>새로고침 없이 즉시 적용됩니다. 언제든 기본값으로 되돌릴 수 있어요.</SearchText></template>
+								</MkSwitch>
+							</MkPreferenceContainer>
+
+							<MkDisableSection :disabled="!uiGraphicsEnabled">
+								<div class="_buttons">
+									<MkButton inline @click="resetUiGraphics">기본값으로 초기화</MkButton>
+								</div>
+
+								<div class="_gaps_s">
+									<MkRange v-model="uiGraphicsRadius" :min="6" :max="32" :step="1" easing>
+										<template #label>코너 반경</template>
+										<template #suffix>{{ uiGraphicsRadius }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsButtonRadius" :min="4" :max="36" :step="1" easing>
+										<template #label>기본 버튼 반경</template>
+										<template #suffix>{{ uiGraphicsButtonRadius }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsButtonPillRadius" :min="12" :max="999" :step="1" easing>
+										<template #label>필/원형 버튼 반경</template>
+										<template #suffix>{{ uiGraphicsButtonPillRadius }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsMobileDockRadius" :min="0" :max="36" :step="1" easing>
+										<template #label>모바일 하단 바 라운드</template>
+										<template #suffix>{{ uiGraphicsMobileDockRadius }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsBlur" :min="0" :max="20" :step="1" easing>
+										<template #label>표면 블러</template>
+										<template #suffix>{{ uiGraphicsBlur }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsSaturate" :min="80" :max="180" :step="1" easing>
+										<template #label>채도</template>
+										<template #suffix>{{ uiGraphicsSaturate }}%</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsModalBlur" :min="0" :max="20" :step="1" easing>
+										<template #label>모달 배경 블러</template>
+										<template #suffix>{{ uiGraphicsModalBlur }}px</template>
+									</MkRange>
+
+									<MkRange v-model="uiGraphicsPanelAlpha" :min="0.25" :max="1" :step="0.01" easing>
+										<template #label>패널 투명도</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsPopupAlpha" :min="0.25" :max="1" :step="0.01" easing>
+										<template #label>팝업 투명도</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsNavAlpha" :min="0.25" :max="1" :step="0.01" easing>
+										<template #label>내비게이션 투명도</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsPageAlpha" :min="0.25" :max="1" :step="0.01" easing>
+										<template #label>페이지 레이어 투명도</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsBorderAlpha" :min="0.01" :max="0.3" :step="0.01" easing>
+										<template #label>테두리 투명도</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsBorderWidth" :min="0" :max="4" :step="0.1" easing>
+										<template #label>테두리 두께</template>
+										<template #suffix>{{ uiGraphicsBorderWidth.toFixed(1) }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsOverlayOpacity" :min="0.05" :max="0.6" :step="0.01" easing>
+										<template #label>오버레이 어둡기</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsSquircleSize" :min="8" :max="44" :step="1" easing>
+										<template #label>스퀴클 크기</template>
+										<template #suffix>{{ uiGraphicsSquircleSize }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsPopupRadiusOffset" :min="0" :max="32" :step="1" easing>
+										<template #label>팝업 라운드 추가값</template>
+										<template #suffix>{{ uiGraphicsPopupRadiusOffset }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsPostFormRadiusOffset" :min="0" :max="32" :step="1" easing>
+										<template #label>포스트폼 라운드 추가값</template>
+										<template #suffix>{{ uiGraphicsPostFormRadiusOffset }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsFocusWidth" :min="1" :max="5" :step="1" easing>
+										<template #label>포커스 링 두께</template>
+										<template #suffix>{{ uiGraphicsFocusWidth }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsFocusOffset" :min="-6" :max="4" :step="1" easing>
+										<template #label>포커스 링 오프셋</template>
+										<template #suffix>{{ uiGraphicsFocusOffset }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsShadowStrength" :min="0" :max="2" :step="0.05" easing>
+										<template #label>기본 그림자 세기</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsShadowYOffset" :min="0" :max="40" :step="1" easing>
+										<template #label>기본 그림자 Y 오프셋</template>
+										<template #suffix>{{ uiGraphicsShadowYOffset }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsShadowRaisedStrength" :min="0" :max="2" :step="0.05" easing>
+										<template #label>상승 그림자 세기</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsShadowRaisedYOffset" :min="0" :max="70" :step="1" easing>
+										<template #label>상승 그림자 Y 오프셋</template>
+										<template #suffix>{{ uiGraphicsShadowRaisedYOffset }}px</template>
+									</MkRange>
+								</div>
+							</MkDisableSection>
+						</div>
+					</MkFolder>
+				</SearchMarker>
+
+				<SearchMarker v-slot="slotProps" :keywords="['performance']">
+					<MkFolder :defaultOpen="slotProps.isParentOfTarget">
 					<template #label><SearchLabel>{{ i18n.ts.performance }}</SearchLabel></template>
 					<template #icon><SearchIcon><i class="ti ti-battery-vertical-eco"></i></SearchIcon></template>
 
@@ -882,6 +1006,7 @@ import { i18n } from '@/i18n.js';
 import { definePage } from '@/page.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { prefer } from '@/preferences.js';
+import type { UiGraphicsStore } from '@/preferences/def.js';
 import MkPreferenceContainer from '@/components/MkPreferenceContainer.vue';
 import MkFeatureBanner from '@/components/MkFeatureBanner.vue';
 import { globalEvents } from '@/events.js';
@@ -956,9 +1081,116 @@ const useNativeUiForVideoAudioPlayer = prefer.model('useNativeUiForVideoAudioPla
 const contextMenu = prefer.model('contextMenu');
 const menuStyle = prefer.model('menuStyle');
 const makeEveryTextElementsSelectable = prefer.model('makeEveryTextElementsSelectable');
+const uiGraphics = prefer.model('uiGraphics');
+
+const defaultUiGraphics = (): UiGraphicsStore => ({
+	enabled: false,
+	radius: 12,
+	buttonRadius: 12,
+	buttonPillRadius: 999,
+	mobileDockRadius: 22,
+	blur: 9,
+	saturate: 125,
+	panelAlpha: 0.62,
+	popupAlpha: 0.52,
+	navAlpha: 0.58,
+	pageAlpha: 0.62,
+	borderAlpha: 0.07,
+	borderWidth: 1,
+	overlayOpacity: 0.18,
+	modalBlur: 4,
+	squircleSize: 28,
+	popupRadiusOffset: 12,
+	postFormRadiusOffset: 12,
+	focusWidth: 2,
+	focusOffset: -2,
+	shadowStrength: 1,
+	shadowYOffset: 14,
+	shadowRaisedStrength: 1,
+	shadowRaisedYOffset: 26,
+});
+
+function useUiGraphicsField<K extends keyof UiGraphicsStore>(key: K) {
+	const defaults = defaultUiGraphics();
+	return computed<UiGraphicsStore[K]>({
+		get: () => (uiGraphics.value[key] ?? defaults[key]) as UiGraphicsStore[K],
+		set: (value) => {
+			uiGraphics.value = {
+				...uiGraphics.value,
+				[key]: value,
+			};
+		},
+	});
+}
+
+const uiGraphicsEnabled = useUiGraphicsField('enabled');
+const uiGraphicsRadius = useUiGraphicsField('radius');
+const uiGraphicsButtonRadius = useUiGraphicsField('buttonRadius');
+const uiGraphicsButtonPillRadius = useUiGraphicsField('buttonPillRadius');
+const uiGraphicsMobileDockRadius = useUiGraphicsField('mobileDockRadius');
+const uiGraphicsBlur = useUiGraphicsField('blur');
+const uiGraphicsSaturate = useUiGraphicsField('saturate');
+const uiGraphicsPanelAlpha = useUiGraphicsField('panelAlpha');
+const uiGraphicsPopupAlpha = useUiGraphicsField('popupAlpha');
+const uiGraphicsNavAlpha = useUiGraphicsField('navAlpha');
+const uiGraphicsPageAlpha = useUiGraphicsField('pageAlpha');
+const uiGraphicsBorderAlpha = useUiGraphicsField('borderAlpha');
+const uiGraphicsBorderWidth = useUiGraphicsField('borderWidth');
+const uiGraphicsOverlayOpacity = useUiGraphicsField('overlayOpacity');
+const uiGraphicsModalBlur = useUiGraphicsField('modalBlur');
+const uiGraphicsSquircleSize = useUiGraphicsField('squircleSize');
+const uiGraphicsPopupRadiusOffset = useUiGraphicsField('popupRadiusOffset');
+const uiGraphicsPostFormRadiusOffset = useUiGraphicsField('postFormRadiusOffset');
+const uiGraphicsFocusWidth = useUiGraphicsField('focusWidth');
+const uiGraphicsFocusOffset = useUiGraphicsField('focusOffset');
+const uiGraphicsShadowStrength = useUiGraphicsField('shadowStrength');
+const uiGraphicsShadowYOffset = useUiGraphicsField('shadowYOffset');
+const uiGraphicsShadowRaisedStrength = useUiGraphicsField('shadowRaisedStrength');
+const uiGraphicsShadowRaisedYOffset = useUiGraphicsField('shadowRaisedYOffset');
+
+type AppFontFamily = 'default' | 'system' | 'helveticaNeue' | 'appleSdGothicNeo' | 'sfPro';
+
+const APP_FONT_FAMILY_MAP: Record<AppFontFamily, string> = {
+	default: `'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif`,
+	system: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+	helveticaNeue: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+	appleSdGothicNeo: '"Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif',
+	sfPro: '"SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
+};
+
+function isAppFontFamily(value: string | null): value is AppFontFamily {
+	return value != null && Object.prototype.hasOwnProperty.call(APP_FONT_FAMILY_MAP, value);
+}
+
+function normalizeFontWeight(value: string | number | null): number {
+	const parsed = Number(value);
+	if (!Number.isFinite(parsed)) return 400;
+	return Math.min(900, Math.max(100, Math.round(parsed / 100) * 100));
+}
+
+const fontFamilyItems = [
+	{ label: 'Default', value: 'default' },
+	{ label: 'System UI', value: 'system' },
+	{ label: 'Helvetica Neue', value: 'helveticaNeue' },
+	{ label: 'Apple SD Gothic Neo', value: 'appleSdGothicNeo' },
+	{ label: 'SF Pro', value: 'sfPro' },
+];
 
 const fontSize = ref(miLocalStorage.getItem('fontSize') as '1' | '2' | '3' | null);
+const storedFontFamily = miLocalStorage.getItem('fontFamily');
+const fontFamily = ref<AppFontFamily>(isAppFontFamily(storedFontFamily) ? storedFontFamily : 'default');
+const fontWeight = ref(normalizeFontWeight(miLocalStorage.getItem('fontWeight')));
 const useSystemFont = ref(miLocalStorage.getItem('useSystemFont') != null);
+
+function applyGlobalFontStyles(): void {
+	const familyKey = useSystemFont.value ? 'system' : fontFamily.value;
+	const family = APP_FONT_FAMILY_MAP[familyKey] ?? APP_FONT_FAMILY_MAP.default;
+	const html = window.document.documentElement;
+
+	html.style.setProperty('--MI-baseFontFamily', family);
+	html.style.setProperty('--MI-baseFontWeight', String(fontWeight.value));
+	html.classList.toggle('useSystemFont', useSystemFont.value);
+}
 
 watch(lang, () => {
 	miLocalStorage.setItem('lang', lang.value as string);
@@ -972,13 +1204,41 @@ watch(fontSize, () => {
 	}
 });
 
+watch(fontFamily, () => {
+	if (fontFamily.value === 'default') {
+		miLocalStorage.removeItem('fontFamily');
+	} else {
+		miLocalStorage.setItem('fontFamily', fontFamily.value);
+	}
+
+	applyGlobalFontStyles();
+});
+
+watch(fontWeight, () => {
+	const normalized = normalizeFontWeight(fontWeight.value);
+	if (fontWeight.value !== normalized) {
+		fontWeight.value = normalized;
+		return;
+	}
+
+	if (normalized === 400) {
+		miLocalStorage.removeItem('fontWeight');
+	} else {
+		miLocalStorage.setItem('fontWeight', String(normalized));
+	}
+
+	applyGlobalFontStyles();
+});
+
 watch(useSystemFont, () => {
 	if (useSystemFont.value) {
 		miLocalStorage.setItem('useSystemFont', 't');
 	} else {
 		miLocalStorage.removeItem('useSystemFont');
 	}
-});
+
+	applyGlobalFontStyles();
+}, { immediate: true });
 
 watch([
 	hemisphere,
@@ -1094,6 +1354,10 @@ function disableAllDataSaver() {
 	(Object.keys(g) as (keyof typeof g)[]).forEach((key) => { g[key] = false; });
 
 	dataSaver.value = g;
+}
+
+function resetUiGraphics() {
+	uiGraphics.value = defaultUiGraphics();
 }
 
 watch(dataSaver, (to) => {

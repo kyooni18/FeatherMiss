@@ -172,12 +172,23 @@ function onInputKeydown(evt: KeyboardEvent) {
 	position: relative;
 	margin: auto;
 	padding: 32px;
-	min-width: 320px;
+	width: min(480px, calc(100vw - 24px));
+	min-width: 0;
 	max-width: 480px;
 	box-sizing: border-box;
 	text-align: center;
-	background: var(--MI_THEME-panel);
-	border-radius: 16px;
+	background: var(--MI-surfacePanel);
+	border: 1px solid var(--MI-surfaceBorder);
+	border-radius: calc(var(--MI-radius) + 8px);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	box-shadow: var(--MI-surfaceShadowRaised);
+
+	@media (max-width: 500px) {
+		width: calc(100vw - 16px);
+		padding: 20px;
+		border-radius: calc(var(--MI-radius) + 10px);
+	}
 }
 
 .icon {

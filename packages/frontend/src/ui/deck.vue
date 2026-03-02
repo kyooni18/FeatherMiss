@@ -267,7 +267,7 @@ window.document.documentElement.style.scrollBehavior = 'auto';
 	height: 100dvh;
 	box-sizing: border-box;
 	flex: 1;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
 }
 
 .nonTitlebarArea {
@@ -283,11 +283,16 @@ window.document.documentElement.style.scrollBehavior = 'auto';
 	flex-direction: column;
 
 	&:not(.withWallpaper) {
-		background: var(--MI_THEME-deckBg);
+		background: color(from var(--MI_THEME-deckBg) srgb r g b / 0.8);
 	}
 
 	&.withSidebarAndTitlebar {
-		border-radius: 12px 0 0 0;
+		border-radius: calc(var(--MI-radius) + 4px) 0 0 0;
+		border: 1px solid var(--MI-surfaceBorder);
+		border-right: none;
+		box-shadow: var(--MI-surfaceShadow);
+		-webkit-backdrop-filter: var(--MI-surfaceFilter);
+		backdrop-filter: var(--MI-surfaceFilter);
 		overflow: clip;
 	}
 }

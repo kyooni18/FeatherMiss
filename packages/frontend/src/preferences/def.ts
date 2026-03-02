@@ -51,6 +51,33 @@ export type DataSaverStore = {
 	code: boolean;
 };
 
+export type UiGraphicsStore = {
+	enabled: boolean;
+	radius: number;
+	buttonRadius: number;
+	buttonPillRadius: number;
+	mobileDockRadius: number;
+	blur: number;
+	saturate: number;
+	panelAlpha: number;
+	popupAlpha: number;
+	navAlpha: number;
+	pageAlpha: number;
+	borderAlpha: number;
+	borderWidth: number;
+	overlayOpacity: number;
+	modalBlur: number;
+	squircleSize: number;
+	popupRadiusOffset: number;
+	postFormRadiusOffset: number;
+	focusWidth: number;
+	focusOffset: number;
+	shadowStrength: number;
+	shadowYOffset: number;
+	shadowRaisedStrength: number;
+	shadowRaisedYOffset: number;
+};
+
 type OmitStrict<T, K extends keyof T> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
 
 // NOTE: デフォルト値は他の設定の状態に依存してはならない(依存していた場合、ユーザーがその設定項目単体で「初期値にリセット」した場合不具合の原因になる)
@@ -247,6 +274,34 @@ export const PREF_DEF = definePreferences({
 	},
 	useBlurEffect: {
 		default: true,
+	},
+	uiGraphics: {
+		default: {
+			enabled: false,
+			radius: 12,
+			buttonRadius: 12,
+			buttonPillRadius: 999,
+			mobileDockRadius: 22,
+			blur: 9,
+			saturate: 125,
+			panelAlpha: 0.62,
+			popupAlpha: 0.52,
+			navAlpha: 0.58,
+			pageAlpha: 0.62,
+			borderAlpha: 0.07,
+			borderWidth: 1,
+			overlayOpacity: 0.18,
+			modalBlur: 4,
+			squircleSize: 28,
+			popupRadiusOffset: 12,
+			postFormRadiusOffset: 12,
+			focusWidth: 2,
+			focusOffset: -2,
+			shadowStrength: 1,
+			shadowYOffset: 14,
+			shadowRaisedStrength: 1,
+			shadowRaisedYOffset: 26,
+		} as UiGraphicsStore,
 	},
 	useStickyIcons: {
 		default: true,

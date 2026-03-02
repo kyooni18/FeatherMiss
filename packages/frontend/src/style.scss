@@ -8,8 +8,30 @@
 
 :root {
 	--MI-radius: 12px;
+	--MI-buttonRadius: 12px;
+	--MI-buttonPillRadius: 999px;
+	--MI-mobileDockRadius: 22px;
 	--MI-marginFull: 16px;
 	--MI-marginHalf: 10px;
+	--MI-surfaceFilter: blur(9px) saturate(125%);
+	--MI-surfacePanel: color(from var(--MI_THEME-panel) srgb r g b / 0.62);
+	--MI-surfacePopup: color(from var(--MI_THEME-popup) srgb r g b / 0.52);
+	--MI-surfaceNav: color(from var(--MI_THEME-navBg) srgb r g b / 0.58);
+	--MI-surfacePage: color(from var(--MI_THEME-bg) srgb r g b / 0.62);
+	--MI-surfaceBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.07);
+	--MI-surfaceBorderWidth: 1px;
+	--MI-surfaceShadow: 0 14px 38px color(from var(--MI_THEME-shadow) srgb r g b / 0.24), 0 4px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.12);
+	--MI-surfaceShadowRaised: 0 26px 90px color(from var(--MI_THEME-shadow) srgb r g b / 0.3), 0 10px 28px color(from var(--MI_THEME-shadow) srgb r g b / 0.16);
+	--MI-uiModalBlur: 4px;
+	--MI-modalBgFilter: blur(6px);
+	--MI-overlayOpacity: 0.18;
+	--MI-squircleSize: 28px;
+	--MI-popupRadiusOffset: 12px;
+	--MI-postFormRadiusOffset: 12px;
+	--MI-focusOutlineWidth: 2px;
+	--MI-focusOutlineOffset: -2px;
+	--MI-baseFontFamily: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+	--MI-baseFontWeight: 400;
 
 	--MI-margin: var(--MI-marginFull);
 
@@ -19,13 +41,50 @@
 
 	@media (max-width: 500px) {
 		--MI-margin: var(--MI-marginHalf);
+		--MI-radius: 14px;
+		--MI-buttonRadius: 14px;
+		--MI-mobileDockRadius: 20px;
+		--MI-squircleSize: 24px;
+		--MI-surfaceFilter: blur(6px) saturate(110%);
+		--MI-uiModalBlur: 2px;
+		--MI-modalBgFilter: blur(2px);
+		--MI-popupRadiusOffset: 10px;
+		--MI-postFormRadiusOffset: 10px;
+		--MI-surfaceShadow: 0 10px 24px color(from var(--MI_THEME-shadow) srgb r g b / 0.22), 0 2px 8px color(from var(--MI_THEME-shadow) srgb r g b / 0.1);
+		--MI-surfaceShadowRaised: 0 16px 44px color(from var(--MI_THEME-shadow) srgb r g b / 0.26), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.13);
+		--MI-focusOutlineOffset: 1px;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--MI-surfacePanel: color(from var(--MI_THEME-panel) srgb r g b / 0.58);
+		--MI-surfacePopup: color(from var(--MI_THEME-popup) srgb r g b / 0.5);
+		--MI-surfaceNav: color(from var(--MI_THEME-navBg) srgb r g b / 0.54);
+		--MI-surfacePage: color(from var(--MI_THEME-bg) srgb r g b / 0.56);
+		--MI-surfaceBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.12);
+		--MI-surfaceShadow: 0 18px 46px color(from var(--MI_THEME-shadow) srgb r g b / 0.46), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.34);
+		--MI-surfaceShadowRaised: 0 32px 110px color(from var(--MI_THEME-shadow) srgb r g b / 0.58), 0 12px 34px color(from var(--MI_THEME-shadow) srgb r g b / 0.4);
+		--MI-uiModalBlur: 4px;
+		--MI-modalBgFilter: blur(4px);
+		--MI-overlayOpacity: 0.3;
+	}
+}
+
+@media (prefers-color-scheme: dark) and (max-width: 500px) {
+	:root {
+		--MI-uiModalBlur: 2px;
+		--MI-modalBgFilter: blur(2px);
+		--MI-surfaceShadow: 0 12px 30px color(from var(--MI_THEME-shadow) srgb r g b / 0.34), 0 3px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.2);
+		--MI-surfaceShadowRaised: 0 20px 56px color(from var(--MI_THEME-shadow) srgb r g b / 0.4), 0 8px 22px color(from var(--MI_THEME-shadow) srgb r g b / 0.26);
 	}
 }
 
 html {
 	overflow: auto;
 	overflow-wrap: break-word;
-	font-family: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+	font-family: var(--MI-baseFontFamily);
+	font-weight: var(--MI-baseFontWeight);
 	font-size: 14px;
 	line-height: 1.35;
 	text-size-adjust: 100%;
@@ -50,7 +109,7 @@ html {
 	}
 
 	&.useSystemFont {
-		font-family: system-ui;
+		--MI-baseFontFamily: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	}
 
 	&:not(.forceSelectableAll) {
@@ -150,8 +209,8 @@ rt {
 }
 
 :focus-visible {
-	outline: var(--MI_THEME-focus) solid 2px;
-	outline-offset: -2px;
+	outline: var(--MI_THEME-focus) solid var(--MI-focusOutlineWidth);
+	outline-offset: var(--MI-focusOutlineOffset);
 
 	&:hover {
 		text-decoration: none;
@@ -283,13 +342,13 @@ rt {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: var(--MI_THEME-modalBg);
+	background: color(from var(--MI_THEME-modalBg) srgb r g b / var(--MI-overlayOpacity));
 	-webkit-backdrop-filter: var(--MI-modalBgFilter);
 	backdrop-filter: var(--MI-modalBgFilter);
 }
 
 ._shadow {
-	box-shadow: 0px 4px 32px var(--MI_THEME-shadow) !important;
+	box-shadow: var(--MI-surfaceShadowRaised) !important;
 }
 
 ._button {
@@ -319,6 +378,7 @@ rt {
 	@extend ._button;
 	color: var(--MI_THEME-fgOnAccent);
 	background: var(--MI_THEME-accent);
+	border-radius: var(--MI-buttonRadius);
 
 	&:not(:disabled):hover {
 		background: hsl(from var(--MI_THEME-accent) h s calc(l + 5));
@@ -362,8 +422,10 @@ rt {
 }
 
 ._panel {
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel);
 	border-radius: var(--MI-radius);
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	box-shadow: var(--MI-surfaceShadow);
 	overflow: clip;
 }
 
@@ -409,7 +471,7 @@ rt {
 	box-sizing: border-box;
 	text-align: center;
 	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: var(--MI-radius);
+	border-radius: var(--MI-buttonRadius);
 
 	&:active {
 		border-color: var(--MI_THEME-accent);
@@ -417,15 +479,32 @@ rt {
 }
 
 ._popup {
-	background: var(--MI_THEME-popup);
-	border-radius: var(--MI-radius);
+	background: var(--MI-surfacePopup);
+	border-radius: calc(var(--MI-radius) + var(--MI-popupRadiusOffset));
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	box-shadow: var(--MI-surfaceShadowRaised);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	contain: content;
 }
 
 ._acrylic {
 	background: color(from var(--MI_THEME-panel) srgb r g b / 0.5);
-	-webkit-backdrop-filter: var(--MI-blur, blur(15px));
-	backdrop-filter: var(--MI-blur, blur(15px));
+	-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
+	backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	box-shadow: var(--MI-surfaceShadowRaised);
+}
+
+._panel.mkw-post-form {
+	border-radius: calc(var(--MI-radius) + var(--MI-postFormRadiusOffset));
+	box-shadow: var(--MI-surfaceShadowRaised);
+}
+
+@media (max-width: 500px) {
+	._panel {
+		border-radius: calc(var(--MI-radius) + 2px);
+	}
 }
 
 ._formLinksGrid {

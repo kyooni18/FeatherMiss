@@ -107,10 +107,33 @@
 		document.documentElement.classList.add('f-' + fontSize);
 	}
 
-	const useSystemFont = localStorage.getItem('useSystemFont');
-	if (useSystemFont) {
-		document.documentElement.classList.add('useSystemFont');
+	const FONT_FAMILY_MAP = Object.freeze({
+		default: "'Hiragino Maru Gothic Pro', \"BIZ UDGothic\", Roboto, HelveticaNeue, Arial, sans-serif",
+		system: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+		helveticaNeue: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+		appleSdGothicNeo: '"Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif',
+		sfPro: '"SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
+	});
+
+	function normalizeFontWeight(rawValue) {
+		const parsed = Number(rawValue);
+		if (!Number.isFinite(parsed)) return 400;
+		return Math.min(900, Math.max(100, Math.round(parsed / 100) * 100));
 	}
+
+	function applyFontSettings(fontFamilyKey, fontWeight, useSystemFont) {
+		const familyKey = useSystemFont ? 'system' : fontFamilyKey;
+		const familyValue = FONT_FAMILY_MAP[familyKey] ?? FONT_FAMILY_MAP.default;
+
+		document.documentElement.style.setProperty('--MI-baseFontFamily', familyValue);
+		document.documentElement.style.setProperty('--MI-baseFontWeight', normalizeFontWeight(fontWeight).toString());
+		document.documentElement.classList.toggle('useSystemFont', useSystemFont);
+	}
+
+	const fontFamily = localStorage.getItem('fontFamily');
+	const fontWeight = localStorage.getItem('fontWeight');
+	const useSystemFont = localStorage.getItem('useSystemFont');
+	applyFontSettings(fontFamily, fontWeight, useSystemFont != null);
 
 	if (!isSafeMode) {
 		const customCss = localStorage.getItem('customCss');

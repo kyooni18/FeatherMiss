@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="[$style.root, { [$style.iconOnly]: iconOnly }]">
+<div :class="[$style.root, { [$style.iconOnly]: iconOnly, [$style.asDrawer]: props.asDrawer }]">
 	<div :class="$style.body">
 		<div :class="$style.top">
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
@@ -73,16 +73,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<!--
 	<svg viewBox="0 0 16 48" :class="$style.subButtonShape">
 		<g transform="matrix(0.333333,0,0,0.222222,0.000895785,13.3333)">
-			<path d="M23.935,-24C37.223,-24 47.995,-7.842 47.995,12.09C47.995,34.077 47.995,62.07 47.995,84.034C47.995,93.573 45.469,102.721 40.972,109.466C36.475,116.211 30.377,120 24.018,120L23.997,120C10.743,120 -0.003,136.118 -0.003,156C-0.003,156 -0.003,156 -0.003,156L-0.003,-60L-0.003,-59.901C-0.003,-50.379 2.519,-41.248 7.007,-34.515C11.496,-27.782 17.584,-24 23.931,-24C23.932,-24 23.934,-24 23.935,-24Z" style="fill:var(--MI_THEME-navBg);"/>
+			<path d="M23.935,-24C37.223,-24 47.995,-7.842 47.995,12.09C47.995,34.077 47.995,62.07 47.995,84.034C47.995,93.573 45.469,102.721 40.972,109.466C36.475,116.211 30.377,120 24.018,120L23.997,120C10.743,120 -0.003,136.118 -0.003,156C-0.003,156 -0.003,156 -0.003,156L-0.003,-60L-0.003,-59.901C-0.003,-50.379 2.519,-41.248 7.007,-34.515C11.496,-27.782 17.584,-24 23.931,-24C23.932,-24 23.934,-24 23.935,-24Z" style="fill:var(--MI-surfaceNav);"/>
 		</g>
 	</svg>
 	-->
 
-	<div v-if="!forceIconOnly && prefer.r.showNavbarSubButtons.value" :class="$style.subButtons">
+		<div v-if="!props.asDrawer && !forceIconOnly && prefer.r.showNavbarSubButtons.value" :class="$style.subButtons">
 		<div :class="$style.subButton">
 			<svg viewBox="0 0 16 64" :class="$style.subButtonShape">
 				<g transform="matrix(0.333333,0,0,0.222222,0.000895785,21.3333)">
-					<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI_THEME-navBg);"/>
+					<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI-surfaceNav);"/>
 				</g>
 			</svg>
 			<button class="_button" :class="$style.subButtonClickable" @click="menuEdit"><i :class="$style.subButtonIcon" class="ti ti-settings-2"></i></button>
@@ -93,7 +93,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div :class="$style.subButton">
 				<svg viewBox="0 0 16 64" :class="$style.subButtonShape">
 					<g transform="matrix(0.333333,0,0,0.222222,0.000895785,21.3333)">
-						<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI_THEME-navBg);"/>
+						<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI-surfaceNav);"/>
 					</g>
 				</svg>
 				<button class="_button" :class="$style.subButtonClickable" @click="toggleIconOnly"><i v-if="iconOnly" class="ti ti-chevron-right" :class="$style.subButtonIcon"></i><i v-else class="ti ti-chevron-left" :class="$style.subButtonIcon"></i></button>
@@ -202,13 +202,36 @@ function menuEdit() {
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
-	--nav-bg-transparent: color(from var(--MI_THEME-navBg) srgb r g b / 0.5);
+	--nav-bg-transparent: color(from var(--MI-surfaceNav) srgb r g b / 0.65);
 
 	--subButtonWidth: 20px;
 
 	flex: 0 0 var(--nav-width);
 	width: var(--nav-width);
 	box-sizing: border-box;
+}
+
+.root.asDrawer {
+	--nav-width: 100%;
+	--nav-icon-only-width: 100%;
+
+	flex: 1 1 auto;
+	width: 100%;
+
+	.body {
+		width: 100%;
+		border-right: none;
+		/*
+		 * Drawer mode should keep panel blur visible.
+		 * Avoid forcing backdrop-filter off, otherwise only the modal background gets blurred.
+		 */
+		-webkit-backdrop-filter: var(--MI-surfaceFilter);
+		backdrop-filter: var(--MI-surfaceFilter);
+	}
+
+	.subButtons {
+		display: none;
+	}
 }
 
 .body {
@@ -219,7 +242,10 @@ function menuEdit() {
 	overflow: auto;
 	overflow-x: clip;
 	overscroll-behavior: contain;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
+	border-right: 1px solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	contain: strict;
 
 	/* 画面が縦に長い、設置している項目数が少ないなどの環境においても確実にbottomを最下部に表示するため */
@@ -388,7 +414,7 @@ function menuEdit() {
 	margin-top: -32px;
 	margin-bottom: -32px;
 	pointer-events: none;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
 }
 
 .subButtonGapFillDivider {
@@ -471,7 +497,7 @@ function menuEdit() {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			border-radius: 999px;
+			border-radius: var(--MI-buttonPillRadius);
 			background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
 		}
 
@@ -516,7 +542,7 @@ function menuEdit() {
 			outline: none;
 
 			> .avatar {
-				box-shadow: 0 0 0 4px var(--MI_THEME-focus);
+				box-shadow: 0 0 0 2px var(--MI_THEME-focus);
 			}
 		}
 	}
@@ -586,7 +612,7 @@ function menuEdit() {
 				left: 0;
 				right: 0;
 				bottom: 0;
-				border-radius: 999px;
+				border-radius: var(--MI-buttonPillRadius);
 				background: var(--MI_THEME-accentedBg);
 			}
 		}
@@ -704,7 +730,7 @@ function menuEdit() {
 			margin: auto;
 			width: 52px;
 			aspect-ratio: 1/1;
-			border-radius: 100%;
+			border-radius: var(--MI-buttonPillRadius);
 			background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
 		}
 
@@ -744,7 +770,7 @@ function menuEdit() {
 			outline: none;
 
 			> .avatar {
-				box-shadow: 0 0 0 4px var(--MI_THEME-focus);
+				box-shadow: 0 0 0 2px var(--MI_THEME-focus);
 			}
 		}
 	}
@@ -796,7 +822,7 @@ function menuEdit() {
 				left: 0;
 				right: 0;
 				bottom: 0;
-				border-radius: 999px;
+				border-radius: var(--MI-buttonPillRadius);
 				background: var(--MI_THEME-accentedBg);
 			}
 
@@ -835,6 +861,40 @@ function menuEdit() {
 
 	.subButtons {
 		left: var(--nav-icon-only-width);
+	}
+}
+
+@media (max-width: 500px) {
+	.root {
+		max-width: 100%;
+	}
+
+	.root:not(.iconOnly) {
+		.post {
+			&:focus-visible::before {
+				outline-offset: -2px;
+			}
+		}
+
+		.item {
+			&:focus-visible::before {
+				outline-offset: 0;
+			}
+		}
+	}
+
+	.root.iconOnly {
+		.post {
+			&:focus-visible::before {
+				outline-offset: -2px;
+			}
+		}
+
+		.item {
+			&:focus-visible::before {
+				outline-offset: 0;
+			}
+		}
 	}
 }
 </style>

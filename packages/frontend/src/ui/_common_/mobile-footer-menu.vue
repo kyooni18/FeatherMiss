@@ -84,13 +84,27 @@ watch(rootEl, () => {
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	width: 100%;
 	box-sizing: border-box;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav);
 	color: var(--MI_THEME-navFg);
-	border-top: solid 0.5px var(--MI_THEME-divider);
+	border: 1px solid var(--MI-surfaceBorder);
+	border-bottom: none;
+	border-radius: var(--MI-mobileDockRadius) var(--MI-mobileDockRadius) 0 0;
+	box-shadow: var(--MI-surfaceShadow);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	overflow: clip;
 }
 
 .item {
 	padding: 12px 0;
+
+	&:focus-visible {
+		outline: none;
+
+		.itemInner {
+			box-shadow: 0 0 0 2px var(--MI_THEME-focus);
+		}
+	}
 
 	&:first-child {
 		padding-left: 12px;
@@ -124,7 +138,7 @@ watch(rootEl, () => {
 	max-width: 42px;
 	margin: auto;
 	align-content: center;
-	border-radius: 100%;
+	border-radius: var(--MI-buttonPillRadius);
 
 	&:hover {
 		background: var(--MI_THEME-panelHighlight);
