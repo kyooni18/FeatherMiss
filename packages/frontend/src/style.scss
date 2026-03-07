@@ -10,18 +10,33 @@
 	--MI-radius: 12px;
 	--MI-buttonRadius: 12px;
 	--MI-buttonPillRadius: 999px;
+	--MI-buttonPaddingY: 7px;
+	--MI-buttonPaddingX: 14px;
+	--MI-buttonPaddingYSmall: 6px;
+	--MI-buttonPaddingXSmall: 12px;
+	--MI-buttonPaddingYLarge: 8px;
+	--MI-buttonPaddingXLarge: 16px;
+	--MI-buttonMinHeight: 34px;
+	--MI-buttonMinHeightSmall: 30px;
+	--MI-buttonMinHeightLarge: 38px;
+	--MI-buttonIconSize: 40px;
 	--MI-mobileDockRadius: 22px;
 	--MI-marginFull: 16px;
 	--MI-marginHalf: 10px;
-	--MI-surfaceFilter: blur(9px) saturate(125%);
-	--MI-surfacePanel: color(from var(--MI_THEME-panel) srgb r g b / 0.62);
-	--MI-surfacePopup: color(from var(--MI_THEME-popup) srgb r g b / 0.52);
-	--MI-surfaceNav: color(from var(--MI_THEME-navBg) srgb r g b / 0.58);
-	--MI-surfacePage: color(from var(--MI_THEME-bg) srgb r g b / 0.62);
-	--MI-surfaceBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.07);
+	--MI-materialBg: rgba(255, 255, 255, 0.58);
+	--MI-materialFilter: blur(9px) saturate(125%);
+	--MI-materialBorder: rgba(0, 0, 0, 0.07);
+	--MI-materialShadow: 0 14px 38px rgba(0, 0, 0, 0.24), 0 4px 12px rgba(0, 0, 0, 0.12);
+	--MI-materialShadowRaised: 0 26px 90px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.16);
+	--MI-surfaceFilter: var(--MI-materialFilter);
+	--MI-surfacePanel: var(--MI-materialBg);
+	--MI-surfacePopup: var(--MI-materialBg);
+	--MI-surfaceNav: var(--MI-materialBg);
+	--MI-surfacePage: var(--MI-materialBg);
+	--MI-surfaceBorder: var(--MI-materialBorder);
 	--MI-surfaceBorderWidth: 1px;
-	--MI-surfaceShadow: 0 14px 38px color(from var(--MI_THEME-shadow) srgb r g b / 0.24), 0 4px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.12);
-	--MI-surfaceShadowRaised: 0 26px 90px color(from var(--MI_THEME-shadow) srgb r g b / 0.3), 0 10px 28px color(from var(--MI_THEME-shadow) srgb r g b / 0.16);
+	--MI-surfaceShadow: var(--MI-materialShadow);
+	--MI-surfaceShadowRaised: var(--MI-materialShadowRaised);
 	--MI-uiModalBlur: 4px;
 	--MI-modalBgFilter: blur(6px);
 	--MI-overlayOpacity: 0.18;
@@ -43,28 +58,35 @@
 		--MI-margin: var(--MI-marginHalf);
 		--MI-radius: 14px;
 		--MI-buttonRadius: 14px;
+		--MI-buttonPaddingY: 6px;
+		--MI-buttonPaddingX: 12px;
+		--MI-buttonPaddingYSmall: 5px;
+		--MI-buttonPaddingXSmall: 10px;
+		--MI-buttonPaddingYLarge: 7px;
+		--MI-buttonPaddingXLarge: 14px;
+		--MI-buttonMinHeight: 32px;
+		--MI-buttonMinHeightSmall: 28px;
+		--MI-buttonMinHeightLarge: 36px;
+		--MI-buttonIconSize: 38px;
 		--MI-mobileDockRadius: 20px;
 		--MI-squircleSize: 24px;
-		--MI-surfaceFilter: blur(6px) saturate(110%);
+		--MI-materialFilter: blur(6px) saturate(110%);
 		--MI-uiModalBlur: 2px;
 		--MI-modalBgFilter: blur(2px);
 		--MI-popupRadiusOffset: 10px;
 		--MI-postFormRadiusOffset: 10px;
-		--MI-surfaceShadow: 0 10px 24px color(from var(--MI_THEME-shadow) srgb r g b / 0.22), 0 2px 8px color(from var(--MI_THEME-shadow) srgb r g b / 0.1);
-		--MI-surfaceShadowRaised: 0 16px 44px color(from var(--MI_THEME-shadow) srgb r g b / 0.26), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.13);
+		--MI-materialShadow: 0 10px 24px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.1);
+		--MI-materialShadowRaised: 0 16px 44px rgba(0, 0, 0, 0.26), 0 6px 18px rgba(0, 0, 0, 0.13);
 		--MI-focusOutlineOffset: 1px;
 	}
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--MI-surfacePanel: color(from var(--MI_THEME-panel) srgb r g b / 0.58);
-		--MI-surfacePopup: color(from var(--MI_THEME-popup) srgb r g b / 0.5);
-		--MI-surfaceNav: color(from var(--MI_THEME-navBg) srgb r g b / 0.54);
-		--MI-surfacePage: color(from var(--MI_THEME-bg) srgb r g b / 0.56);
-		--MI-surfaceBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.12);
-		--MI-surfaceShadow: 0 18px 46px color(from var(--MI_THEME-shadow) srgb r g b / 0.46), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.34);
-		--MI-surfaceShadowRaised: 0 32px 110px color(from var(--MI_THEME-shadow) srgb r g b / 0.58), 0 12px 34px color(from var(--MI_THEME-shadow) srgb r g b / 0.4);
+		--MI-materialBg: rgba(20, 20, 22, 0.56);
+		--MI-materialBorder: rgba(255, 255, 255, 0.12);
+		--MI-materialShadow: 0 18px 46px rgba(0, 0, 0, 0.46), 0 6px 18px rgba(0, 0, 0, 0.34);
+		--MI-materialShadowRaised: 0 32px 110px rgba(0, 0, 0, 0.58), 0 12px 34px rgba(0, 0, 0, 0.4);
 		--MI-uiModalBlur: 4px;
 		--MI-modalBgFilter: blur(4px);
 		--MI-overlayOpacity: 0.3;
@@ -75,8 +97,40 @@
 	:root {
 		--MI-uiModalBlur: 2px;
 		--MI-modalBgFilter: blur(2px);
-		--MI-surfaceShadow: 0 12px 30px color(from var(--MI_THEME-shadow) srgb r g b / 0.34), 0 3px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.2);
-		--MI-surfaceShadowRaised: 0 20px 56px color(from var(--MI_THEME-shadow) srgb r g b / 0.4), 0 8px 22px color(from var(--MI_THEME-shadow) srgb r g b / 0.26);
+		--MI-materialShadow: 0 12px 30px rgba(0, 0, 0, 0.34), 0 3px 12px rgba(0, 0, 0, 0.2);
+		--MI-materialShadowRaised: 0 20px 56px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.26);
+	}
+}
+
+@supports (color: color(from white srgb r g b)) {
+	:root {
+		--MI-materialBg: color(from var(--MI_THEME-panel) srgb r g b / 0.58);
+		--MI-materialBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.07);
+		--MI-materialShadow: 0 14px 38px color(from var(--MI_THEME-shadow) srgb r g b / 0.24), 0 4px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.12);
+		--MI-materialShadowRaised: 0 26px 90px color(from var(--MI_THEME-shadow) srgb r g b / 0.3), 0 10px 28px color(from var(--MI_THEME-shadow) srgb r g b / 0.16);
+	}
+
+	@media (max-width: 500px) {
+		:root {
+			--MI-materialShadow: 0 10px 24px color(from var(--MI_THEME-shadow) srgb r g b / 0.22), 0 2px 8px color(from var(--MI_THEME-shadow) srgb r g b / 0.1);
+			--MI-materialShadowRaised: 0 16px 44px color(from var(--MI_THEME-shadow) srgb r g b / 0.26), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.13);
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--MI-materialBg: color(from var(--MI_THEME-panel) srgb r g b / 0.56);
+			--MI-materialBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.12);
+			--MI-materialShadow: 0 18px 46px color(from var(--MI_THEME-shadow) srgb r g b / 0.46), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.34);
+			--MI-materialShadowRaised: 0 32px 110px color(from var(--MI_THEME-shadow) srgb r g b / 0.58), 0 12px 34px color(from var(--MI_THEME-shadow) srgb r g b / 0.4);
+		}
+	}
+
+	@media (prefers-color-scheme: dark) and (max-width: 500px) {
+		:root {
+			--MI-materialShadow: 0 12px 30px color(from var(--MI_THEME-shadow) srgb r g b / 0.34), 0 3px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.2);
+			--MI-materialShadowRaised: 0 20px 56px color(from var(--MI_THEME-shadow) srgb r g b / 0.4), 0 8px 22px color(from var(--MI_THEME-shadow) srgb r g b / 0.26);
+		}
 	}
 }
 
@@ -263,7 +317,7 @@ rt {
 
 ._pageContainer {
 	container-type: size;
-	contain: strict;
+	contain: size layout style;
 	overflow: auto;
 	overscroll-behavior: contain;
 }
@@ -342,6 +396,7 @@ rt {
 	left: 0;
 	width: 100%;
 	height: 100%;
+	background: rgba(0, 0, 0, var(--MI-overlayOpacity));
 	background: color(from var(--MI_THEME-modalBg) srgb r g b / var(--MI-overlayOpacity));
 	-webkit-backdrop-filter: var(--MI-modalBgFilter);
 	backdrop-filter: var(--MI-modalBgFilter);
@@ -374,8 +429,21 @@ rt {
 	}
 }
 
+/* Keep button surfaces flat: disable drop shadows on button primitives. */
+._button,
+._buttonPrimary,
+._buttonGradate,
+._borderButton,
+._textButton,
+button._button,
+a._button {
+	box-shadow: none !important;
+}
+
 ._buttonPrimary {
 	@extend ._button;
+	padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
+	min-height: var(--MI-buttonMinHeight);
 	color: var(--MI_THEME-fgOnAccent);
 	background: var(--MI_THEME-accent);
 	border-radius: var(--MI-buttonRadius);
@@ -422,10 +490,12 @@ rt {
 }
 
 ._panel {
-	background: var(--MI-surfacePanel);
+	background: var(--MI-materialBg);
 	border-radius: var(--MI-radius);
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	box-shadow: var(--MI-surfaceShadow);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	overflow: clip;
 }
 
@@ -467,7 +537,7 @@ rt {
 	@extend ._button;
 	display: block;
 	width: 100%;
-	padding: 10px;
+	padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
 	box-sizing: border-box;
 	text-align: center;
 	border: solid 0.5px var(--MI_THEME-divider);
@@ -479,21 +549,35 @@ rt {
 }
 
 ._popup {
-	background: var(--MI-surfacePopup);
+	background: var(--MI-materialBg);
 	border-radius: calc(var(--MI-radius) + var(--MI-popupRadiusOffset));
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	box-shadow: var(--MI-surfaceShadowRaised);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
-	contain: content;
+	contain: layout style;
 }
 
 ._acrylic {
-	background: color(from var(--MI_THEME-panel) srgb r g b / 0.5);
+	background: var(--MI-materialBg);
 	-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	box-shadow: var(--MI-surfaceShadowRaised);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+	:root {
+		--MI-modalBgFilter: none;
+		--MI-materialBg: var(--MI_THEME-panel);
+	}
+
+	._panel,
+	._popup,
+	._acrylic {
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
 }
 
 ._panel.mkw-post-form {

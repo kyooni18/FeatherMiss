@@ -177,50 +177,60 @@ if ($i) {
 .transition_menuDrawerBg_leaveActive {
 	opacity: 1;
 	will-change: opacity;
-	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+	transition: opacity 220ms ease;
 }
 .transition_menuDrawerBg_enterFrom,
 .transition_menuDrawerBg_leaveTo {
 	opacity: 0;
 }
 
-.transition_menuDrawer_enterActive,
+.transition_menuDrawer_enterActive {
+	opacity: 1;
+	transform: translate3d(0, 0, 0) scale(1);
+	will-change: transform, opacity, filter;
+	transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+}
+
 .transition_menuDrawer_leaveActive {
 	opacity: 1;
-	transform: translateX(0);
-	will-change: transform, opacity;
-	backface-visibility: hidden;
-	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+	transform: translate3d(0, 0, 0) scale(1);
+	will-change: transform, opacity, filter;
+	transition: transform 240ms cubic-bezier(0.4, 0, 1, 1), opacity 180ms ease;
 }
 .transition_menuDrawer_enterFrom,
 .transition_menuDrawer_leaveTo {
 	opacity: 0;
-	transform: translateX(-240px);
+	transform: translate3d(calc(-100% - 10px), 0, 0) scale(0.985);
 }
 
 .transition_widgetsDrawerBg_enterActive,
 .transition_widgetsDrawerBg_leaveActive {
 	opacity: 1;
 	will-change: opacity;
-	transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+	transition: opacity 220ms ease;
 }
 .transition_widgetsDrawerBg_enterFrom,
 .transition_widgetsDrawerBg_leaveTo {
 	opacity: 0;
 }
 
-.transition_widgetsDrawer_enterActive,
+.transition_widgetsDrawer_enterActive {
+	opacity: 1;
+	transform: translate3d(0, 0, 0) scale(1);
+	will-change: transform, opacity, filter;
+	transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+}
+
 .transition_widgetsDrawer_leaveActive {
 	opacity: 1;
-	transform: translateX(0);
-	will-change: transform, opacity;
-	backface-visibility: hidden;
-	transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms cubic-bezier(0.23, 1, 0.32, 1);
+	transform: translate3d(0, 0, 0) scale(1);
+	will-change: transform, opacity, filter;
+	transition: transform 240ms cubic-bezier(0.4, 0, 1, 1), opacity 180ms ease;
 }
 .transition_widgetsDrawer_enterFrom,
 .transition_widgetsDrawer_leaveTo {
 	opacity: 0;
-	transform: translateX(-240px);
+	transform: translate3d(calc(-100% - 10px), 0, 0) scale(0.985);
 }
 
 .transition_notification_move,
@@ -250,9 +260,11 @@ if ($i) {
 	width: min(82vw, 320px);
 	height: 100dvh;
 	overflow: clip;
-	transform: translateZ(0);
-	will-change: transform, opacity;
-	contain: content;
+	will-change: transform, opacity, filter;
+	background: var(--MI-materialBg);
+	border-right: 1px solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
 	box-shadow: 14px 0 36px color(from var(--MI_THEME-shadow) srgb r g b / 0.28);
 
@@ -279,10 +291,8 @@ if ($i) {
 	box-sizing: border-box;
 	overflow: auto;
 	overscroll-behavior: contain;
-	transform: translateZ(0);
-	will-change: transform, opacity;
-	contain: content;
-	background: var(--MI-surfacePage);
+	will-change: transform, opacity, filter;
+	background: var(--MI-materialBg);
 	border-right: 1px solid var(--MI-surfaceBorder);
 	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
@@ -291,8 +301,6 @@ if ($i) {
 
 	@media (max-width: 500px) {
 		border-radius: 0 calc(var(--MI-radius) + 8px) calc(var(--MI-radius) + 8px) 0;
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
 	}
 }
 

@@ -483,6 +483,11 @@ defineExpose({
 		> .content {
 			position: absolute;
 
+			> :global(._panel) {
+				-webkit-backdrop-filter: var(--MI-surfaceFilter);
+				backdrop-filter: var(--MI-surfaceFilter);
+			}
+
 			&.fixed {
 				position: fixed;
 			}
@@ -505,7 +510,12 @@ defineExpose({
 			margin: auto;
 
 			> :first-child {
-				border-radius: calc(var(--MI-radius) + 12px) calc(var(--MI-radius) + 12px) 0 0;
+				background: var(--MI-materialBg);
+				border: var(--MI-surfaceBorderWidth, 1px) solid var(--MI-surfaceBorder);
+				border-bottom: none;
+				-webkit-backdrop-filter: var(--MI-surfaceFilter);
+				backdrop-filter: var(--MI-surfaceFilter);
+				border-radius: min(calc(var(--MI-radius) + 12px), 28px) min(calc(var(--MI-radius) + 12px), 28px) 0 0;
 				overflow: clip;
 
 				@supports (-webkit-mask-image: radial-gradient(circle at center, #000 98%, transparent 100%)) {
@@ -517,7 +527,7 @@ defineExpose({
 				}
 
 				@media (max-width: 500px) {
-					border-radius: calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0 0;
+					border-radius: min(calc(var(--MI-radius) + 10px), 24px) min(calc(var(--MI-radius) + 10px), 24px) 0 0;
 				}
 			}
 		}

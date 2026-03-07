@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.body">
 		<div :class="$style.top">
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img :src="instance.iconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
+				<img :src="instanceIconUrl" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;" @error="onInstanceIconError"/>
 			</button>
 			<button v-if="!iconOnly" v-tooltip.noDelay.right="i18n.ts.realtimeMode" class="_button" :class="[$style.realtimeMode, store.r.realtimeMode.value ? $style.on : null]" @click="toggleRealtimeMode">
 				<i v-if="store.r.realtimeMode.value" class="ti ti-bolt ti-fw"></i>
@@ -116,6 +116,7 @@ import { useRouter } from '@/router.js';
 import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
+import { getProxiedImageUrlNullable } from '@/utility/media-proxy.js';
 
 const router = useRouter();
 
@@ -140,6 +141,38 @@ const otherMenuItemIndicated = computed(() => {
 	}
 	return false;
 });
+
+const FALLBACK_INSTANCE_ICON = '/favicon.ico';
+const LAST_RESORT_INSTANCE_ICON = '/client-assets/unknown.png';
+const instanceIconCandidateIndex = ref(0);
+const instanceIconCandidates = computed(() => {
+	const candidates = [
+		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
+		instance.iconUrl ?? null,
+		getProxiedImageUrlNullable(instance.faviconUrl, 'preview'),
+		instance.faviconUrl ?? null,
+		FALLBACK_INSTANCE_ICON,
+		LAST_RESORT_INSTANCE_ICON,
+	].filter((url): url is string => !!url);
+
+	return [...new Set(candidates)];
+});
+const instanceIconUrl = computed(() => {
+	const candidates = instanceIconCandidates.value;
+	const index = Math.min(instanceIconCandidateIndex.value, Math.max(0, candidates.length - 1));
+	return candidates[index] ?? LAST_RESORT_INSTANCE_ICON;
+});
+
+watch(() => [instance.iconUrl, instance.faviconUrl, instance.mediaProxy], () => {
+	instanceIconCandidateIndex.value = 0;
+});
+
+function onInstanceIconError() {
+	const maxIndex = instanceIconCandidates.value.length - 1;
+	if (instanceIconCandidateIndex.value < maxIndex) {
+		instanceIconCandidateIndex.value += 1;
+	}
+}
 
 function calcViewState() {
 	forceIconOnly.value = window.innerWidth <= 1279;
@@ -202,7 +235,6 @@ function menuEdit() {
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
-	--nav-bg-transparent: color(from var(--MI-surfaceNav) srgb r g b / 0.65);
 
 	--subButtonWidth: 20px;
 
@@ -221,6 +253,7 @@ function menuEdit() {
 	.body {
 		width: 100%;
 		border-right: none;
+		background: transparent;
 		/*
 		 * Drawer mode should keep panel blur visible.
 		 * Avoid forcing backdrop-filter off, otherwise only the modal background gets blurred.
@@ -230,6 +263,14 @@ function menuEdit() {
 	}
 
 	.subButtons {
+		display: none;
+	}
+
+	/* Prevent pseudo progressive blur layers from distorting the server icon in drawer mode. */
+	.top::before,
+	.top::after,
+	.bottom::before,
+	.bottom::after {
 		display: none;
 	}
 }
@@ -242,11 +283,11 @@ function menuEdit() {
 	overflow: auto;
 	overflow-x: clip;
 	overscroll-behavior: contain;
-	background: var(--MI-surfaceNav);
+	background: var(--MI-materialBg);
 	border-right: 1px solid var(--MI-surfaceBorder);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
-	contain: strict;
+	contain: layout style;
 
 	/* 画面が縦に長い、設置している項目数が少ないなどの環境においても確実にbottomを最下部に表示するため */
 	display: flex;
@@ -451,8 +492,14 @@ function menuEdit() {
 	.instanceIcon {
 		display: inline-block;
 		width: 38px;
+		height: 38px;
 		aspect-ratio: 1;
 		border-radius: 8px;
+		object-fit: cover;
+		image-rendering: auto;
+		transform: translateZ(0);
+		position: relative;
+		z-index: 2;
 	}
 
 	.realtimeMode {
@@ -682,8 +729,14 @@ function menuEdit() {
 	.instanceIcon {
 		display: inline-block;
 		width: 30px;
+		height: 30px;
 		aspect-ratio: 1;
 		border-radius: 8px;
+		object-fit: cover;
+		image-rendering: auto;
+		transform: translateZ(0);
+		position: relative;
+		z-index: 2;
 	}
 
 	.bottom {

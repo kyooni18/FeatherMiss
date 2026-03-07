@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.body">
 		<div>
 			<button v-click-anime :class="[$style.item, $style.instance]" class="_button" @click="openInstanceMenu">
-				<img :class="$style.instanceIcon" :src="instance.iconUrl ?? '/favicon.ico'" draggable="false"/>
+				<img :class="$style.instanceIcon" :src="instanceIconUrl" draggable="false" @error="onInstanceIconError"/>
 			</button>
 			<MkA v-click-anime v-tooltip="i18n.ts.timeline" :class="$style.item" :activeClass="$style.active" to="/" exact>
 				<i :class="$style.itemIcon" class="ti ti-home ti-fw"></i>
@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue';
 import { openInstanceMenu } from './common.js';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
@@ -58,6 +58,7 @@ import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
+import { getProxiedImageUrlNullable } from '@/utility/media-proxy.js';
 
 const WINDOW_THRESHOLD = 1400;
 
@@ -74,6 +75,38 @@ const otherNavItemIndicated = computed<boolean>(() => {
 		if (navbarItemDef[def].indicated) return true;
 	}
 	return false;
+});
+
+const FALLBACK_INSTANCE_ICON = '/favicon.ico';
+const LAST_RESORT_INSTANCE_ICON = '/client-assets/unknown.png';
+const instanceIconCandidateIndex = ref(0);
+const instanceIconCandidates = computed(() => {
+	const candidates = [
+		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
+		instance.iconUrl ?? null,
+		getProxiedImageUrlNullable(instance.faviconUrl, 'preview'),
+		instance.faviconUrl ?? null,
+		FALLBACK_INSTANCE_ICON,
+		LAST_RESORT_INSTANCE_ICON,
+	].filter((url): url is string => !!url);
+
+	return [...new Set(candidates)];
+});
+const instanceIconUrl = computed(() => {
+	const candidates = instanceIconCandidates.value;
+	const index = Math.min(instanceIconCandidateIndex.value, Math.max(0, candidates.length - 1));
+	return candidates[index] ?? LAST_RESORT_INSTANCE_ICON;
+});
+
+function onInstanceIconError() {
+	const maxIndex = instanceIconCandidates.value.length - 1;
+	if (instanceIconCandidateIndex.value < maxIndex) {
+		instanceIconCandidateIndex.value += 1;
+	}
+}
+
+watch(() => [instance.iconUrl, instance.faviconUrl, instance.mediaProxy], () => {
+	instanceIconCandidateIndex.value = 0;
 });
 
 async function more(ev: PointerEvent) {
@@ -113,14 +146,14 @@ onMounted(() => {
 	z-index: 1000;
 	width: 100%;
 	height: var(--height);
-	contain: strict;
-	background: var(--MI-surfaceNav);
+	contain: layout style;
+	background: var(--MI-materialBg);
 	border-bottom: 1px solid var(--MI-surfaceBorder);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
 
 	&.acrylic {
-		background: var(--MI-surfacePage);
+		background: var(--MI-materialBg);
 		-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 		backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	}
@@ -202,12 +235,16 @@ onMounted(() => {
 .instanceIcon {
 	display: inline-block;
 	width: 24px;
+	height: 24px;
 	position: absolute;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	margin: auto;
+	object-fit: cover;
+	image-rendering: auto;
+	transform: translateZ(0);
 }
 
 .right {

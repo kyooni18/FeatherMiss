@@ -37,8 +37,12 @@ function skip() {
 	line-height: var(--height);
 	height: var(--height);
 	overflow: clip;
-	contain: strict;
+	contain: layout style;
 	background: var(--MI_THEME-accent);
+	background: color(from var(--MI_THEME-accent) srgb r g b / 0.62);
+	border-bottom: 1px solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	color: var(--MI_THEME-fgOnAccent);
 }
 

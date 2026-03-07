@@ -127,10 +127,10 @@ $widgets-hide-threshold: 1090px;
 .root {
 	height: 100dvh;
 	overflow: clip;
-	contain: strict;
+	contain: size layout style;
 	display: flex;
 	flex-direction: column;
-	background: var(--MI-surfaceNav);
+	background: var(--MI-materialBg);
 }
 
 .nonTitlebarArea {
@@ -151,7 +151,7 @@ $widgets-hide-threshold: 1090px;
 	min-width: 0;
 
 	&.withSidebarAndTitlebar {
-		background: var(--MI-surfaceNav);
+		background: var(--MI-materialBg);
 		border-radius: calc(var(--MI-radius) + 4px) 0 0 0;
 		border: 1px solid var(--MI-surfaceBorder);
 		border-right: none;
@@ -180,7 +180,7 @@ $widgets-hide-threshold: 1090px;
 	overflow: auto;
 	padding: var(--MI-margin) var(--MI-margin) calc(var(--MI-margin) + env(safe-area-inset-bottom, 0px));
 	border-left: solid 1px var(--MI-surfaceBorder);
-	background: var(--MI-surfacePage);
+	background: var(--MI-materialBg);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
 

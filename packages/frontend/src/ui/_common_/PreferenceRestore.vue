@@ -37,7 +37,7 @@ function skip() {
 	line-height: var(--height);
 	height: var(--height);
 	overflow: clip;
-	contain: strict;
+	contain: layout style;
 	background: var(--MI-surfacePanel);
 	border-bottom: 1px solid var(--MI-surfaceBorder);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);

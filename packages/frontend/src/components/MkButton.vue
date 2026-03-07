@@ -121,19 +121,24 @@ function onMousedown(evt: MouseEvent): void {
 
 <style lang="scss" module>
 .root {
+	--button-padding-y: var(--MI-buttonPaddingY, 7px);
+	--button-padding-x: var(--MI-buttonPaddingX, 14px);
+	--button-min-height: var(--MI-buttonMinHeight, 34px);
+
 	position: relative;
 	z-index: 1; // 他コンポーネントのbox-shadowに隠されないようにするため
 	display: block;
 	min-width: 100px;
 	width: max-content;
-	padding: 7px 14px;
+	padding: var(--button-padding-y) var(--button-padding-x);
+	min-height: var(--button-min-height);
 	text-align: center;
 	font-weight: normal;
 	font-size: 95%;
 	box-shadow: none;
 	text-decoration: none;
 	background: var(--MI_THEME-buttonBg);
-	border-radius: var(--MI-buttonRadius);
+	border-radius: min(var(--MI-buttonRadius), calc(var(--button-min-height) / 2));
 	overflow: clip;
 	box-sizing: border-box;
 	transition: background 0.1s ease;
@@ -151,18 +156,27 @@ function onMousedown(evt: MouseEvent): void {
 	}
 
 	&.iconOnly {
-		padding: 7px;
-		min-width: auto;
+		padding: 0;
+		min-width: var(--MI-buttonIconSize, 40px);
+		width: var(--MI-buttonIconSize, 40px);
+		min-height: var(--MI-buttonIconSize, 40px);
+		height: var(--MI-buttonIconSize, 40px);
+		display: inline-grid;
+		place-items: center;
 	}
 
 	&.small {
+		--button-padding-y: var(--MI-buttonPaddingYSmall, 6px);
+		--button-padding-x: var(--MI-buttonPaddingXSmall, 12px);
+		--button-min-height: var(--MI-buttonMinHeightSmall, 30px);
 		font-size: 90%;
-		padding: 6px 12px;
 	}
 
 	&.large {
+		--button-padding-y: var(--MI-buttonPaddingYLarge, 8px);
+		--button-padding-x: var(--MI-buttonPaddingXLarge, 16px);
+		--button-min-height: var(--MI-buttonMinHeightLarge, 38px);
 		font-size: 100%;
-		padding: 8px 16px;
 	}
 
 	&.full {

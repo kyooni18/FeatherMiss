@@ -1,3 +1,8 @@
+(Forked)
+
+- No impact for vanilla DB.
+- Adds more clear/roundy look to overall UI. (Customizable in Settings)
+
 <div align="center">
 <a href="https://misskey-hub.net">
 	<img src="./assets/title_float.svg" alt="Misskey logo" style="border-radius:50%" width="300"/>

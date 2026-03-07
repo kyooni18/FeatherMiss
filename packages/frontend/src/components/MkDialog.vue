@@ -177,7 +177,7 @@ function onInputKeydown(evt: KeyboardEvent) {
 	max-width: 480px;
 	box-sizing: border-box;
 	text-align: center;
-	background: var(--MI-surfacePanel);
+	background: var(--MI-materialBg);
 	border: 1px solid var(--MI-surfaceBorder);
 	border-radius: calc(var(--MI-radius) + 8px);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);

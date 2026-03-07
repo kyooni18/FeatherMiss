@@ -1526,7 +1526,7 @@ defineExpose({
 	flex-wrap: nowrap;
 	align-items: center;
 	gap: 6px;
-	padding-left: 12px;
+	padding-left: 16px;
 }
 
 .cancel {
@@ -1551,6 +1551,7 @@ defineExpose({
 	gap: 4px;
 	overflow: clip;
 	padding-left: 4px;
+	padding-right: 10px;
 }
 
 .submit {
@@ -1598,11 +1599,11 @@ defineExpose({
 }
 
 .submitInner {
-	padding: 0 12px;
+	padding: 0 16px;
 	line-height: 34px;
 	font-weight: bold;
-	border-radius: 6px;
-	min-width: 90px;
+	border-radius: var(--MI-buttonPillRadius);
+	min-width: 96px;
 	box-sizing: border-box;
 	color: var(--MI_THEME-fgOnAccent);
 	background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
@@ -1610,8 +1611,8 @@ defineExpose({
 
 .headerRightItem {
 	margin: 0;
-	padding: 8px;
-	border-radius: 6px;
+	padding: 9px;
+	border-radius: var(--MI-buttonRadius);
 
 	&:hover {
 		background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
@@ -1796,7 +1797,7 @@ html[data-color-scheme=light] .preview {
 
 .footer {
 	display: flex;
-	padding: 0 16px 16px 16px;
+	padding: 0 20px 18px 20px;
 	font-size: 1em;
 }
 
@@ -1825,7 +1826,7 @@ html[data-color-scheme=light] .preview {
 	font-size: 1em;
 	width: auto;
 	height: 100%;
-	border-radius: 6px;
+	border-radius: var(--MI-buttonRadius);
 
 	&:hover {
 		background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
@@ -1858,16 +1859,16 @@ html[data-color-scheme=light] .preview {
 	}
 
 	.toSpecified {
-		padding: 6px 16px;
+		padding: 8px 20px;
 	}
 
 	.preview {
-		padding: 16px 14px 0 14px;
+		padding: 16px 18px 0 18px;
 	}
 	.cw,
 	.hashtags,
 	.text {
-		padding: 0 16px;
+		padding: 0 20px;
 	}
 
 	.text {
@@ -1875,7 +1876,7 @@ html[data-color-scheme=light] .preview {
 	}
 
 	.footer {
-		padding: 0 8px 8px 8px;
+		padding: 0 14px 14px 14px;
 	}
 }
 

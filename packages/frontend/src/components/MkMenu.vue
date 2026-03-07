@@ -507,18 +507,19 @@ onBeforeUnmount(() => {
 		margin: auto;
 
 		> .menu {
-			padding: 12px 0 max(env(safe-area-inset-bottom, 0px), 12px) 0;
+			padding: 12px 12px max(env(safe-area-inset-bottom, 0px), 12px) 12px;
 			width: 100%;
 			border-radius: calc(var(--MI-radius) + 12px) calc(var(--MI-radius) + 12px) 0 0;
 			overflow: clip;
 
 			> .item {
 				font-size: 1em;
-				padding: 12px 24px;
+				padding: 12px 18px;
+				border-radius: 16px;
 
 				&::before {
-					width: calc(100% - 24px);
-					border-radius: 12px;
+					width: 100%;
+					border-radius: inherit;
 				}
 
 				> .icon {
@@ -528,7 +529,7 @@ onBeforeUnmount(() => {
 			}
 
 			> .divider {
-				margin: 12px 0;
+				margin: 12px 6px;
 			}
 
 			@media (max-width: 500px) {
@@ -539,7 +540,7 @@ onBeforeUnmount(() => {
 }
 
 .menu {
-	padding: 8px 0;
+	padding: 10px 8px;
 	box-sizing: border-box;
 	max-width: 100vw;
 	min-width: 200px;
@@ -555,7 +556,7 @@ onBeforeUnmount(() => {
 	display: flex;
 	align-items: center;
 	position: relative;
-	padding: 5px 16px;
+	padding: 7px 18px;
 	width: 100%;
 	box-sizing: border-box;
 	white-space: nowrap;
@@ -566,6 +567,8 @@ onBeforeUnmount(() => {
 	text-overflow: ellipsis;
 	text-decoration: none !important;
 	color: var(--menuFg, var(--MI_THEME-fg));
+	border-radius: 12px;
+	transition: color 120ms ease;
 
 	&::before {
 		content: "";
@@ -576,9 +579,10 @@ onBeforeUnmount(() => {
 		left: 0;
 		right: 0;
 		margin: auto;
-		width: calc(100% - 16px);
+		width: 100%;
 		height: 100%;
-		border-radius: 6px;
+		border-radius: inherit;
+		transition: background-color 120ms ease;
 	}
 
 	&:focus-visible {
@@ -711,7 +715,7 @@ onBeforeUnmount(() => {
 
 .label {
 	position: relative;
-	padding: 6px 16px;
+	padding: 8px 18px;
 	box-sizing: border-box;
 	white-space: nowrap;
 	font-size: 0.7em;
@@ -723,7 +727,7 @@ onBeforeUnmount(() => {
 }
 
 .divider {
-	margin: 8px 0;
+	margin: 8px 6px;
 	border-top: solid 0.5px var(--MI_THEME-divider);
 }
 

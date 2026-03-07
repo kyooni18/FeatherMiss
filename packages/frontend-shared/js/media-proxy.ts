@@ -21,7 +21,11 @@ export class MediaProxy {
 
 		if (imageUrl.startsWith(this.serverMetadata.mediaProxy + '/') || imageUrl.startsWith('/proxy/') || imageUrl.startsWith(localProxy + '/')) {
 			// もう既にproxyっぽそうだったらurlを取り出す
-			_imageUrl = (new URL(imageUrl)).searchParams.get('url') ?? imageUrl;
+			try {
+				_imageUrl = (new URL(imageUrl, this.url)).searchParams.get('url') ?? imageUrl;
+			} catch {
+				_imageUrl = imageUrl;
+			}
 		}
 
 		return `${mustOrigin ? localProxy : this.serverMetadata.mediaProxy}/${
