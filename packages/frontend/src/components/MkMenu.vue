@@ -507,14 +507,14 @@ onBeforeUnmount(() => {
 		margin: auto;
 
 		> .menu {
-			padding: 12px 12px max(env(safe-area-inset-bottom, 0px), 12px) 12px;
+			padding: 10px 10px max(env(safe-area-inset-bottom, 0px), 10px) 10px;
 			width: 100%;
 			border-radius: calc(var(--MI-radius) + 12px) calc(var(--MI-radius) + 12px) 0 0;
 			overflow: clip;
 
 			> .item {
 				font-size: 1em;
-				padding: 12px 18px;
+				padding: 11px 16px;
 				border-radius: 16px;
 
 				&::before {
@@ -540,7 +540,7 @@ onBeforeUnmount(() => {
 }
 
 .menu {
-	padding: 10px 8px;
+	padding: 8px 6px;
 	box-sizing: border-box;
 	max-width: 100vw;
 	min-width: 200px;
@@ -553,10 +553,15 @@ onBeforeUnmount(() => {
 }
 
 .item {
+	--menuHoverFg: var(--MI_THEME-accent);
+	--menuHoverBg: var(--MI_THEME-accentedBg);
+	--menuActiveFg: var(--MI_THEME-accent);
+	--menuActiveBg: var(--MI_THEME-accentedBg);
+
 	display: flex;
 	align-items: center;
 	position: relative;
-	padding: 7px 18px;
+	padding: 6px 16px;
 	width: 100%;
 	box-sizing: border-box;
 	white-space: nowrap;
@@ -598,19 +603,19 @@ onBeforeUnmount(() => {
 		&:hover,
 		&:focus-visible:active,
 		&:focus-visible.active {
-			color: var(--menuHoverFg, var(--MI_THEME-accent));
+			color: var(--menuHoverFg);
 
 			&::before {
-				background-color: var(--menuHoverBg, var(--MI_THEME-accentedBg));
+				background-color: var(--menuHoverBg);
 			}
 		}
 
 		&:not(:focus-visible):active,
 		&:not(:focus-visible).active {
-			color: var(--menuActiveFg, var(--MI_THEME-fgOnAccent));
+			color: var(--menuActiveFg);
 
 			&::before {
-				background-color: var(--menuActiveBg, var(--MI_THEME-accent));
+				background-color: var(--menuActiveBg);
 			}
 		}
 	}
@@ -645,6 +650,15 @@ onBeforeUnmount(() => {
 	&.none {
 		pointer-events: none;
 		opacity: 0.7;
+	}
+}
+
+@supports (color: color-mix(in srgb, white 50%, black)) {
+	.item {
+		--menuHoverFg: color-mix(in srgb, var(--MI_THEME-accent) 84%, var(--MI_THEME-fg) 16%);
+		--menuHoverBg: color-mix(in srgb, var(--MI_THEME-accent) 12%, transparent);
+		--menuActiveFg: color-mix(in srgb, var(--MI_THEME-accent) 90%, var(--MI_THEME-fg) 10%);
+		--menuActiveBg: color-mix(in srgb, var(--MI_THEME-accent) 16%, transparent);
 	}
 }
 
@@ -715,7 +729,7 @@ onBeforeUnmount(() => {
 
 .label {
 	position: relative;
-	padding: 8px 18px;
+	padding: 7px 16px;
 	box-sizing: border-box;
 	white-space: nowrap;
 	font-size: 0.7em;
@@ -727,7 +741,7 @@ onBeforeUnmount(() => {
 }
 
 .divider {
-	margin: 8px 6px;
+	margin: 8px 4px;
 	border-top: solid 0.5px var(--MI_THEME-divider);
 }
 

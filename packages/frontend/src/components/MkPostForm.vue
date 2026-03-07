@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<header :class="$style.header">
 		<div :class="$style.headerLeft">
 			<button v-if="!fixed" :class="$style.cancel" class="_button" @click="cancel"><i class="ti ti-x"></i></button>
-			<button ref="accountMenuEl" v-click-anime v-tooltip="i18n.ts.account" class="_button" @click="openAccountMenu">
+			<button ref="accountMenuEl" v-click-anime v-tooltip="i18n.ts.account" class="_button" :class="$style.accountButton" @click="openAccountMenu">
 				<MkAvatar :class="$style.avatar" :user="postAccount ?? $i"/>
 			</button>
 		</div>
@@ -71,16 +71,33 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</I18n> - <button class="_textButton" @click="cancelSchedule()">{{ i18n.ts.cancel }}</button>
 	</MkInfo>
 	<MkInfo v-if="hasNotSpecifiedMentions" warn :class="$style.hasNotSpecifiedMentions">{{ i18n.ts.notSpecifiedMentionWarning }} - <button class="_textButton" @click="addMissingMention()">{{ i18n.ts.add }}</button></MkInfo>
-	<div v-show="useCw" :class="$style.cwOuter">
-		<input ref="cwInputEl" v-model="cw" :class="$style.cw" :placeholder="i18n.ts.annotation" @keydown="onKeydown" @keyup="onKeyup" @compositionend="onCompositionEnd">
-		<div v-if="maxCwTextLength - cwTextLength < 20" :class="['_acrylic', $style.cwTextCount, { [$style.cwTextOver]: cwTextLength > maxCwTextLength }]">{{ maxCwTextLength - cwTextLength }}</div>
-	</div>
-	<div :class="[$style.textOuter, { [$style.withCw]: useCw }]">
-		<div v-if="targetChannel" :class="$style.colorBar" :style="{ background: targetChannel.color }"></div>
-		<textarea ref="textareaEl" v-model="text" :class="[$style.text]" :disabled="posting || posted" :readonly="textAreaReadOnly" :placeholder="placeholder" data-cy-post-form-text @keydown="onKeydown" @keyup="onKeyup" @paste="onPaste" @compositionupdate="onCompositionUpdate" @compositionend="onCompositionEnd"></textarea>
-		<div v-if="maxTextLength - textLength < 100" :class="['_acrylic', $style.textCount, { [$style.textOver]: textLength > maxTextLength }]">{{ maxTextLength - textLength }}</div>
-	</div>
-	<input v-show="withHashtags" ref="hashtagsInputEl" v-model="hashtags" :class="$style.hashtags" :placeholder="i18n.ts.hashtags" list="hashtags">
+	<section :class="[$style.editorShell, { [$style.draghover]: draghover }]">
+		<div v-show="useCw" :class="$style.cwOuter">
+			<input ref="cwInputEl" v-model="cw" :class="$style.cw" :placeholder="i18n.ts.annotation" @keydown="onKeydown" @keyup="onKeyup" @compositionend="onCompositionEnd">
+			<div v-if="maxCwTextLength - cwTextLength < 20" :class="['_acrylic', $style.cwTextCount, { [$style.cwTextOver]: cwTextLength > maxCwTextLength }]">{{ maxCwTextLength - cwTextLength }}</div>
+		</div>
+		<div :class="[$style.textOuter, { [$style.withCw]: useCw }]">
+			<div v-if="targetChannel" :class="$style.colorBar" :style="{ background: targetChannel.color }"></div>
+			<textarea ref="textareaEl" v-model="text" :class="[$style.text]" :disabled="posting || posted" :readonly="textAreaReadOnly" :placeholder="placeholder" data-cy-post-form-text @keydown="onKeydown" @keyup="onKeyup" @paste="onPaste" @compositionupdate="onCompositionUpdate" @compositionend="onCompositionEnd"></textarea>
+			<div v-if="maxTextLength - textLength < 100" :class="['_acrylic', $style.textCount, { [$style.textOver]: textLength > maxTextLength }]">{{ maxTextLength - textLength }}</div>
+		</div>
+		<input v-show="withHashtags" ref="hashtagsInputEl" v-model="hashtags" :class="$style.hashtags" :placeholder="i18n.ts.hashtags" list="hashtags">
+		<footer ref="footerEl" :class="$style.footer">
+			<div :class="$style.footerLeft">
+				<button v-tooltip="i18n.ts.attachFile + ' (' + i18n.ts.upload + ')'" class="_button" :class="$style.footerButton" @click="chooseFileFromPc"><i class="ti ti-photo-plus"></i></button>
+				<button v-tooltip="i18n.ts.attachFile + ' (' + i18n.ts.fromDrive + ')'" class="_button" :class="$style.footerButton" @click="chooseFileFromDrive"><i class="ti ti-cloud-download"></i></button>
+				<button v-tooltip="i18n.ts.poll" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: poll }]" @click="togglePoll"><i class="ti ti-chart-arrows"></i></button>
+				<button v-tooltip="i18n.ts.useCw" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: useCw }]" @click="useCw = !useCw"><i class="ti ti-eye-off"></i></button>
+				<button v-tooltip="i18n.ts.hashtags" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: withHashtags }]" @click="withHashtags = !withHashtags"><i class="ti ti-hash"></i></button>
+				<button v-tooltip="i18n.ts.mention" class="_button" :class="$style.footerButton" @click="insertMention"><i class="ti ti-at"></i></button>
+				<button v-if="showAddMfmFunction" v-tooltip="i18n.ts.addMfmFunction" :class="['_button', $style.footerButton]" @click="insertMfmFunction"><i class="ti ti-palette"></i></button>
+				<button v-if="postFormActions.length > 0" v-tooltip="i18n.ts.plugins" class="_button" :class="$style.footerButton" @click="showActions"><i class="ti ti-plug"></i></button>
+			</div>
+			<div :class="$style.footerRight">
+				<button v-tooltip="i18n.ts.emoji" :class="['_button', $style.footerButton]" @click="insertEmoji"><i class="ti ti-mood-happy"></i></button>
+			</div>
+		</footer>
+	</section>
 	<XPostFormAttaches v-model="files" @detach="detachFile" @changeSensitive="updateFileSensitive" @changeName="updateFileName"/>
 	<div v-if="uploader.items.value.length > 0" style="padding: 12px;">
 		<MkTip k="postFormUploader">
@@ -92,21 +109,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<MkNotePreview v-if="showPreview" :class="$style.preview" :text="text" :files="files" :poll="poll ?? undefined" :useCw="useCw" :cw="cw" :user="postAccount ?? $i"/>
 	<div v-if="showingOptions" style="padding: 8px 16px;">
 	</div>
-	<footer ref="footerEl" :class="$style.footer">
-		<div :class="$style.footerLeft">
-			<button v-tooltip="i18n.ts.attachFile + ' (' + i18n.ts.upload + ')'" class="_button" :class="$style.footerButton" @click="chooseFileFromPc"><i class="ti ti-photo-plus"></i></button>
-			<button v-tooltip="i18n.ts.attachFile + ' (' + i18n.ts.fromDrive + ')'" class="_button" :class="$style.footerButton" @click="chooseFileFromDrive"><i class="ti ti-cloud-download"></i></button>
-			<button v-tooltip="i18n.ts.poll" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: poll }]" @click="togglePoll"><i class="ti ti-chart-arrows"></i></button>
-			<button v-tooltip="i18n.ts.useCw" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: useCw }]" @click="useCw = !useCw"><i class="ti ti-eye-off"></i></button>
-			<button v-tooltip="i18n.ts.hashtags" class="_button" :class="[$style.footerButton, { [$style.footerButtonActive]: withHashtags }]" @click="withHashtags = !withHashtags"><i class="ti ti-hash"></i></button>
-			<button v-tooltip="i18n.ts.mention" class="_button" :class="$style.footerButton" @click="insertMention"><i class="ti ti-at"></i></button>
-			<button v-if="showAddMfmFunction" v-tooltip="i18n.ts.addMfmFunction" :class="['_button', $style.footerButton]" @click="insertMfmFunction"><i class="ti ti-palette"></i></button>
-			<button v-if="postFormActions.length > 0" v-tooltip="i18n.ts.plugins" class="_button" :class="$style.footerButton" @click="showActions"><i class="ti ti-plug"></i></button>
-		</div>
-		<div :class="$style.footerRight">
-			<button v-tooltip="i18n.ts.emoji" :class="['_button', $style.footerButton]" @click="insertEmoji"><i class="ti ti-mood-happy"></i></button>
-		</div>
-	</footer>
 	<datalist id="hashtags">
 		<option v-for="hashtag in recentHashtags" :key="hashtag" :value="hashtag"></option>
 	</datalist>
@@ -1509,15 +1511,21 @@ defineExpose({
 .root {
 	position: relative;
 	container-type: inline-size;
+	padding: 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 }
 
 //#region header
 .header {
 	z-index: 1000;
-	min-height: 50px;
+	min-height: 56px;
 	display: flex;
 	flex-wrap: nowrap;
-	gap: 4px;
+	align-items: center;
+	gap: 8px;
+	padding: 2px 4px 0;
 }
 
 .headerLeft {
@@ -1525,18 +1533,32 @@ defineExpose({
 	flex: 1;
 	flex-wrap: nowrap;
 	align-items: center;
-	gap: 6px;
-	padding-left: 16px;
+	gap: 10px;
+	padding-left: 0;
 }
 
 .cancel {
-	padding: 8px;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border-radius: 14px;
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.04);
+}
+
+.accountButton {
+	display: grid;
+	place-items: center;
+	width: 42px;
+	height: 42px;
+	padding: 0;
+	border-radius: 16px;
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.04);
 }
 
 .avatar {
 	display: block;
-	width: 28px;
-	height: 28px;
+	width: 30px;
+	height: 30px;
 	margin: auto;
 	object-fit: cover;
 }
@@ -1548,15 +1570,14 @@ defineExpose({
 	flex-wrap: nowrap;
 	align-items: center;
 	margin-left: auto;
-	gap: 4px;
+	gap: 8px;
 	overflow: clip;
-	padding-left: 4px;
-	padding-right: 10px;
+	padding: 0;
 }
 
 .submit {
-	margin: 12px 12px 12px 6px;
-	vertical-align: bottom;
+	margin: 0 0 0 2px;
+	vertical-align: middle;
 
 	&:focus-visible {
 		outline: none;
@@ -1590,32 +1611,42 @@ defineExpose({
 
 .colorBar {
 	position: absolute;
-	top: 0px;
-	left: 12px;
-	width: 5px;
-	height: 100% ;
+	top: 24px;
+	left: 18px;
+	width: 4px;
+	height: calc(100% - 48px);
 	border-radius: 999px;
 	pointer-events: none;
+	opacity: 0.85;
 }
 
 .submitInner {
-	padding: 0 16px;
-	line-height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 20px;
+	line-height: 40px;
 	font-weight: bold;
 	border-radius: var(--MI-buttonPillRadius);
-	min-width: 96px;
+	min-width: 128px;
 	box-sizing: border-box;
 	color: var(--MI_THEME-fgOnAccent);
 	background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
+	border: 1px solid color(from var(--MI_THEME-accent) srgb r g b / 0.18);
 }
 
 .headerRightItem {
 	margin: 0;
-	padding: 9px;
-	border-radius: var(--MI-buttonRadius);
+	min-height: 40px;
+	padding: 10px 12px;
+	border-radius: 16px;
+	display: inline-flex;
+	align-items: center;
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.04);
+	border: 1px solid color(from var(--MI_THEME-fg) srgb r g b / 0.05);
 
 	&:hover {
-		background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
+		background: color(from var(--MI_THEME-accent) srgb r g b / 0.08);
 	}
 
 	&:disabled {
@@ -1628,25 +1659,51 @@ defineExpose({
 }
 
 .headerRightButtonText {
-	padding-left: 6px;
+	padding-left: 8px;
+	font-weight: 600;
 }
 
 .visibility {
 	overflow: clip;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	max-width: 210px;
+	max-width: 220px;
 
 	&:enabled {
 		> .headerRightButtonText {
-			opacity: 0.8;
+			opacity: 0.9;
 		}
 	}
 }
 //#endregion
 
+.editorShell {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	margin: 0 4px;
+	border-radius: calc(var(--MI-radius) + 14px);
+	border: 1px solid color(from var(--MI_THEME-fg) srgb r g b / 0.08);
+	background:
+		linear-gradient(180deg, color(from var(--MI_THEME-panel) srgb r g b / 0.2), color(from var(--MI_THEME-panel) srgb r g b / 0.1)),
+		var(--MI-materialBg);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	box-shadow: inset 0 1px 0 color(from var(--MI_THEME-fg) srgb r g b / 0.03);
+	overflow: clip;
+	transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease;
+
+	&.draghover {
+		border-color: color(from var(--MI_THEME-accent) srgb r g b / 0.28);
+		background:
+			linear-gradient(180deg, color(from var(--MI_THEME-accent) srgb r g b / 0.09), color(from var(--MI_THEME-accent) srgb r g b / 0.04)),
+			var(--MI-materialBg);
+		transform: translateY(-1px);
+	}
+}
+
 .preview {
-	padding: 16px 20px 0 20px;
+	padding: 10px 14px 0 14px;
 	min-height: 75px;
 	max-height: 150px;
 	overflow: auto;
@@ -1662,19 +1719,21 @@ html[data-color-scheme=light] .preview {
 }
 
 .targetNote {
-	padding: 0 20px 16px 20px;
+	padding: 0 4px;
 }
 
 .withQuote {
-	margin: 0 0 8px 0;
+	margin: 0 4px;
 	color: var(--MI_THEME-accent);
 }
 
 .toSpecified {
-	padding: 6px 24px;
-	margin-bottom: 8px;
+	padding: 8px 12px;
+	margin: 0 4px;
 	overflow: auto;
 	white-space: nowrap;
+	border-radius: 16px;
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.04);
 }
 
 .visibleUsers {
@@ -1691,15 +1750,15 @@ html[data-color-scheme=light] .preview {
 }
 
 .hasNotSpecifiedMentions {
-	margin: 0 20px 16px 20px;
+	margin: 0 4px;
 }
 
 .scheduledAt {
-	margin: 0 20px 16px 20px;
+	margin: 0 4px;
 }
 
 .showHowToUse {
-	margin: 0 20px 16px 20px;
+	margin: 0 4px;
 }
 
 .cw,
@@ -1710,7 +1769,7 @@ html[data-color-scheme=light] .preview {
 	padding: 0 24px;
 	margin: 0;
 	width: 100%;
-	font-size: 110%;
+	font-size: 112%;
 	border: none;
 	border-radius: 0;
 	background: transparent;
@@ -1729,18 +1788,20 @@ html[data-color-scheme=light] .preview {
 .cwOuter {
 	width: 100%;
 	position: relative;
+	padding-top: 10px;
 }
 
 .cw {
 	z-index: 1;
-	padding-bottom: 8px;
-	border-bottom: solid 0.5px var(--MI_THEME-divider);
+	padding: 2px 24px 12px;
+	border-bottom: solid 1px color(from var(--MI_THEME-fg) srgb r g b / 0.08);
+	font-size: 0.98rem;
 }
 
 .cwTextCount {
 	position: absolute;
-	top: 0;
-	right: 2px;
+	top: 10px;
+	right: 14px;
 	padding: 2px 6px;
 	font-size: .9em;
 	color: var(--MI_THEME-warn);
@@ -1756,17 +1817,18 @@ html[data-color-scheme=light] .preview {
 
 .hashtags {
 	z-index: 1;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	border-top: solid 0.5px var(--MI_THEME-divider);
+	padding: 12px 24px 0;
+	border-top: solid 1px color(from var(--MI_THEME-fg) srgb r g b / 0.08);
+	font-size: 0.98rem;
 }
 
 .textOuter {
 	width: 100%;
 	position: relative;
+	padding-top: 10px;
 
 	&.withCw {
-		padding-top: 8px;
+		padding-top: 12px;
 	}
 }
 
@@ -1774,15 +1836,24 @@ html[data-color-scheme=light] .preview {
 	max-width: 100%;
 	min-width: 100%;
 	width: 100%;
-	min-height: 90px;
+	min-height: 200px;
 	max-height: 500px;
 	field-sizing: content;
+	padding: 0 24px 18px;
+	font-size: clamp(1.2rem, 1.4vw, 1.5rem);
+	line-height: 1.62;
+	letter-spacing: -0.02em;
+	font-weight: 500;
+
+	&::placeholder {
+		opacity: 0.42;
+	}
 }
 
 .textCount {
 	position: absolute;
-	top: 0;
-	right: 2px;
+	top: 10px;
+	right: 14px;
 	padding: 4px 6px;
 	font-size: .9em;
 	color: var(--MI_THEME-warn);
@@ -1797,16 +1868,19 @@ html[data-color-scheme=light] .preview {
 
 .footer {
 	display: flex;
-	padding: 0 20px 18px 20px;
+	padding: 12px 14px 14px;
+	margin-top: auto;
 	font-size: 1em;
+	border-top: 1px solid color(from var(--MI_THEME-fg) srgb r g b / 0.08);
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.02);
 }
 
 .footerLeft {
 	flex: 1;
 	display: grid;
 	grid-auto-flow: row;
-	grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-	grid-auto-rows: 40px;
+	grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+	grid-auto-rows: 42px;
 }
 
 .footerRight {
@@ -1814,26 +1888,31 @@ html[data-color-scheme=light] .preview {
 	margin-left: auto;
 	display: grid;
 	grid-auto-flow: row;
-	grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-	grid-auto-rows: 40px;
+	grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+	grid-auto-rows: 42px;
 	direction: rtl;
 }
 
 .footerButton {
-	display: inline-block;
+	display: inline-grid;
+	place-items: center;
 	padding: 0;
-	margin: 0;
+	margin: auto;
 	font-size: 1em;
-	width: auto;
-	height: 100%;
-	border-radius: var(--MI-buttonRadius);
+	width: 38px;
+	height: 38px;
+	border-radius: 14px;
+	background: color(from var(--MI_THEME-fg) srgb r g b / 0.04);
+	border: 1px solid transparent;
 
 	&:hover {
-		background: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
+		background: color(from var(--MI_THEME-accent) srgb r g b / 0.08);
 	}
 
 	&.footerButtonActive {
 		color: var(--MI_THEME-accent);
+		background: color(from var(--MI_THEME-accent) srgb r g b / 0.12);
+		border-color: color(from var(--MI_THEME-accent) srgb r g b / 0.14);
 	}
 }
 
@@ -1855,28 +1934,29 @@ html[data-color-scheme=light] .preview {
 	}
 
 	.submit {
-		margin: 8px 8px 8px 4px;
+		margin-left: 0;
 	}
 
 	.toSpecified {
-		padding: 8px 20px;
+		padding: 8px 12px;
 	}
 
 	.preview {
-		padding: 16px 18px 0 18px;
+		padding: 8px 10px 0 10px;
 	}
 	.cw,
 	.hashtags,
 	.text {
-		padding: 0 20px;
+		padding-left: 20px;
+		padding-right: 20px;
 	}
 
 	.text {
-		min-height: 80px;
+		min-height: 150px;
 	}
 
 	.footer {
-		padding: 0 14px 14px 14px;
+		padding: 12px 10px 12px;
 	}
 }
 

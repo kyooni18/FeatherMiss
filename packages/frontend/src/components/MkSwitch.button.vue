@@ -56,8 +56,8 @@ const toggle = () => {
 	height: var(--height);
 	padding: var(--inset);
 	outline: none;
-	background: color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.46);
-	border: solid 1px color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.58);
+	background: color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.38);
+	border: solid 1px color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.48);
 	border-radius: var(--radius);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
@@ -67,8 +67,8 @@ const toggle = () => {
 }
 
 .buttonChecked {
-	background-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.52) !important;
-	border-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.64) !important;
+	background-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.34) !important;
+	border-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.48) !important;
 }
 
 .buttonDisabled {
@@ -88,12 +88,12 @@ const toggle = () => {
 	transition: left 0.2s ease, background-color 0.2s ease;
 
 	&:not(.knobChecked) {
-		background: color(from var(--MI_THEME-switchOffFg) srgb r g b / 0.82);
+		background: color(from var(--MI_THEME-switchOffFg) srgb r g b / 0.72);
 	}
 }
 
 .knobChecked {
 	left: calc(100% - var(--height) + var(--inset));
-	background: color(from var(--MI_THEME-switchOnFg) srgb r g b / 0.9);
+	background: color(from var(--MI_THEME-switchOnFg) srgb r g b / 0.78);
 }
 </style>
