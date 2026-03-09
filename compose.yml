@@ -1,4 +1,4 @@
-name: misskey
+name: feathermiss
 services:
   web:
     build: .
