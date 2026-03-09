@@ -37,6 +37,9 @@ const UI_GRAPHICS_OVERRIDE_KEYS = [
 	'--MI-buttonRadius',
 	'--MI-buttonPillRadius',
 	'--MI-mobileDockRadius',
+	'--MI-mobileDockPaddingX',
+	'--MI-mobileDockPaddingTop',
+	'--MI-mobileDockPaddingBottom',
 	'--MI-surfaceFilter',
 	'--MI-surfacePanel',
 	'--MI-surfacePopup',
@@ -67,6 +70,9 @@ function applyUiGraphics(graphics: UiGraphicsStore): void {
 		buttonRadius: graphics.buttonRadius ?? 12,
 		buttonPillRadius: graphics.buttonPillRadius ?? 999,
 		mobileDockRadius: graphics.mobileDockRadius ?? 22,
+		mobileDockPaddingX: graphics.mobileDockPaddingX ?? 10,
+		mobileDockPaddingTop: graphics.mobileDockPaddingTop ?? 8,
+		mobileDockPaddingBottom: graphics.mobileDockPaddingBottom ?? 0,
 		blur: graphics.blur ?? 9,
 		saturate: graphics.saturate ?? 125,
 		panelAlpha: graphics.panelAlpha ?? 0.62,
@@ -102,6 +108,9 @@ function applyUiGraphics(graphics: UiGraphicsStore): void {
 	const buttonRadius = clamp(normalized.buttonRadius, 0, 48);
 	const buttonPillRadius = clamp(normalized.buttonPillRadius, 0, 999);
 	const mobileDockRadius = clamp(normalized.mobileDockRadius, 0, 48);
+	const mobileDockPaddingX = clamp(normalized.mobileDockPaddingX, 0, 32);
+	const mobileDockPaddingTop = clamp(normalized.mobileDockPaddingTop, 0, 32);
+	const mobileDockPaddingBottom = clamp(normalized.mobileDockPaddingBottom, 0, 40);
 	const blur = clamp(normalized.blur, 0, 24);
 	const saturate = clamp(normalized.saturate, 50, 220);
 	const panelAlpha = clamp(normalized.panelAlpha, 0, 1);
@@ -126,6 +135,9 @@ function applyUiGraphics(graphics: UiGraphicsStore): void {
 	root.style.setProperty('--MI-buttonRadius', `${buttonRadius}px`);
 	root.style.setProperty('--MI-buttonPillRadius', `${buttonPillRadius}px`);
 	root.style.setProperty('--MI-mobileDockRadius', `${mobileDockRadius}px`);
+	root.style.setProperty('--MI-mobileDockPaddingX', `${mobileDockPaddingX}px`);
+	root.style.setProperty('--MI-mobileDockPaddingTop', `${mobileDockPaddingTop}px`);
+	root.style.setProperty('--MI-mobileDockPaddingBottom', `${mobileDockPaddingBottom}px`);
 	root.style.setProperty('--MI-surfaceFilter', `blur(${blur}px) saturate(${saturate}%)`);
 	root.style.setProperty('--MI-surfacePanel', `color(from var(--MI_THEME-panel) srgb r g b / ${panelAlpha.toFixed(3)})`);
 	root.style.setProperty('--MI-surfacePopup', `color(from var(--MI_THEME-popup) srgb r g b / ${popupAlpha.toFixed(3)})`);

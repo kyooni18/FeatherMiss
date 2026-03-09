@@ -481,41 +481,23 @@ defineExpose({
 	top: 0;
 	left: 0;
 	right: 0;
-	bottom: 0;
+	pointer-events: none;
 }
 
 .newBg1 {
+	bottom: 0;
 	height: 100%;
-	-webkit-backdrop-filter: var(--MI-blur, blur(2px));
-	backdrop-filter: var(--MI-blur, blur(2px));
-	mask-image: linear-gradient( /* 疑似Easing Linear Gradients */
-		to top,
-		rgb(0 0 0 / 0%) 0%,
-		rgb(0 0 0 / 4.9%) 7.75%,
-		rgb(0 0 0 / 10.4%) 11.25%,
-		rgb(0 0 0 / 45%) 23.55%,
-		rgb(0 0 0 / 55%) 26.45%,
-		rgb(0 0 0 / 89.6%) 38.75%,
-		rgb(0 0 0 / 95.1%) 42.25%,
-		rgb(0 0 0 / 100%) 50%
-	);
+	background: linear-gradient(to top, transparent 0%, var(--MI-materialBg) 58%, var(--MI-materialBg) 100%);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 }
 
 .newBg2 {
-	height: 75%;
-	-webkit-backdrop-filter: var(--MI-blur, blur(4px));
-	backdrop-filter: var(--MI-blur, blur(4px));
-	mask-image: linear-gradient( /* 疑似Easing Linear Gradients */
-		to top,
-		rgb(0 0 0 / 0%) 0%,
-		rgb(0 0 0 / 4.9%) 15.5%,
-		rgb(0 0 0 / 10.4%) 22.5%,
-		rgb(0 0 0 / 45%) 47.1%,
-		rgb(0 0 0 / 55%) 52.9%,
-		rgb(0 0 0 / 89.6%) 77.5%,
-		rgb(0 0 0 / 95.1%) 91.9%,
-		rgb(0 0 0 / 100%) 100%
-	);
+	height: 68%;
+	background: linear-gradient(to top, transparent 0%, var(--MI-materialBg) 100%);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	opacity: 0.52;
 }
 
 .newButton {

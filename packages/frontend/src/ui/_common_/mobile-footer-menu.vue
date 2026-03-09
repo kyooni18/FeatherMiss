@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, useTemplateRef, watch } from 'vue';
+import { computed, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
 import { mainRouter } from '@/router.js';
@@ -51,6 +51,7 @@ const drawerMenuShowing = defineModel<boolean>('drawerMenuShowing');
 const widgetsShowing = defineModel<boolean>('widgetsShowing');
 
 const rootEl = useTemplateRef('rootEl');
+let rootResizeObserver: ResizeObserver | null = null;
 
 const menuIndicated = computed(() => {
 	for (const def in navbarItemDef) {
@@ -62,10 +63,32 @@ const menuIndicated = computed(() => {
 
 const rootElHeight = ref(0);
 
-watch(rootEl, () => {
-	if (rootEl.value) {
-		rootElHeight.value = rootEl.value.offsetHeight;
-		window.document.body.style.setProperty('--MI-minBottomSpacing', 'var(--MI-minBottomSpacingMobile)');
+function syncBottomSpacing() {
+	const el = rootEl.value;
+	if (!el) {
+		rootElHeight.value = 0;
+		window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
+		return;
+	}
+
+	const computedStyle = window.getComputedStyle(el);
+	const bottomInset = Number.parseFloat(computedStyle.bottom) || 0;
+	rootElHeight.value = (el.offsetHeight ?? 0) + bottomInset;
+	window.document.body.style.setProperty('--MI-minBottomSpacing', rootElHeight.value > 0 ? `${rootElHeight.value}px` : '0px');
+}
+
+watch(rootEl, (el) => {
+	rootResizeObserver?.disconnect();
+	rootResizeObserver = null;
+
+	if (el) {
+		syncBottomSpacing();
+		if (typeof ResizeObserver !== 'undefined') {
+			rootResizeObserver = new ResizeObserver(() => {
+				syncBottomSpacing();
+			});
+			rootResizeObserver.observe(el);
+		}
 	} else {
 		rootElHeight.value = 0;
 		window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
@@ -73,30 +96,50 @@ watch(rootEl, () => {
 }, {
 	immediate: true,
 });
+
+onUnmounted(() => {
+	rootResizeObserver?.disconnect();
+	rootResizeObserver = null;
+	window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
+});
 </script>
 
 <style lang="scss" module>
 .root {
-	position: relative;
-	z-index: 1;
-	padding-bottom: env(safe-area-inset-bottom, 0px);
+	--_dockOuterInsetX: calc(var(--MI-margin) + var(--MI-mobileDockPaddingX));
+	--_dockBottomInset: calc(max(env(safe-area-inset-bottom, 0px), 8px) + var(--MI-mobileDockPaddingBottom));
+	--_dockInnerPaddingY: calc(8px + var(--MI-mobileDockPaddingTop));
+	--_dockInnerPaddingX: calc(4px + (var(--MI-mobileDockPaddingX) * 0.2));
+	--_dockMaxWidth: min(calc(100vw - (var(--_dockOuterInsetX) * 2)), 332px);
+
+	position: fixed;
+	left: 50%;
+	right: auto;
+	bottom: var(--_dockBottomInset);
+	z-index: 1000;
+	width: var(--_dockMaxWidth);
+	transform: translateX(-50%);
+	padding: var(--_dockInnerPaddingY) var(--_dockInnerPaddingX);
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	width: 100%;
+	column-gap: calc(2px + (var(--MI-mobileDockPaddingX) * 0.15));
 	box-sizing: border-box;
-	background: var(--MI-materialBg);
 	color: var(--MI_THEME-navFg);
+	background: var(--MI-materialBg);
 	border: 1px solid var(--MI-surfaceBorder);
-	border-bottom: none;
-	border-radius: var(--MI-mobileDockRadius) var(--MI-mobileDockRadius) 0 0;
+	border-radius: var(--MI-mobileDockRadius);
 	box-shadow: var(--MI-surfaceShadow);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
-	overflow: clip;
+	overflow: visible;
+	isolation: isolate;
+	pointer-events: none;
 }
 
 .item {
-	padding: 12px 0;
+	min-width: 0;
+	padding: calc(2px + (var(--MI-mobileDockPaddingTop) * 0.08)) 0;
+	pointer-events: auto;
 
 	&:focus-visible {
 		outline: none;
@@ -104,14 +147,6 @@ watch(rootEl, () => {
 		.itemInner {
 			box-shadow: 0 0 0 2px var(--MI_THEME-focus);
 		}
-	}
-
-	&:first-child {
-		padding-left: 12px;
-	}
-
-	&:last-child {
-		padding-right: 12px;
 	}
 
 	&.post {
@@ -132,12 +167,12 @@ watch(rootEl, () => {
 
 .itemInner {
 	position: relative;
+	display: grid;
+	place-items: center;
 	padding: 0;
-	aspect-ratio: 1;
-	width: 100%;
-	max-width: 42px;
+	width: min(100%, 48px);
+	height: 46px;
 	margin: auto;
-	align-content: center;
 	border-radius: var(--MI-buttonPillRadius);
 
 	&:hover {

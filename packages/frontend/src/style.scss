@@ -21,6 +21,9 @@
 	--MI-buttonMinHeightLarge: 38px;
 	--MI-buttonIconSize: 40px;
 	--MI-mobileDockRadius: 22px;
+	--MI-mobileDockPaddingX: 10px;
+	--MI-mobileDockPaddingTop: 8px;
+	--MI-mobileDockPaddingBottom: 0px;
 	--MI-marginFull: 16px;
 	--MI-marginHalf: 10px;
 	--MI-materialBg: rgba(255, 255, 255, 0.58);
@@ -52,7 +55,7 @@
 
 	// switch dynamically
 	--MI-minBottomSpacingMobile: calc(72px + max(12px, env(safe-area-inset-bottom, 0px)));
-	--MI-minBottomSpacing: var(--MI-minBottomSpacingMobile);
+	--MI-minBottomSpacing: 0px;
 
 	@media (max-width: 500px) {
 		--MI-margin: var(--MI-marginHalf);
@@ -324,9 +327,12 @@ rt {
 
 ._pageScrollable {
 	height: 100%;
+	box-sizing: border-box;
 	overflow: clip;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
+	padding-bottom: var(--MI-minBottomSpacing);
+	scroll-padding-bottom: calc(var(--MI-minBottomSpacing) + var(--MI-margin));
 
 	/*
 	理屈は知らないけど、ここでbackgroundを設定しておかないと
@@ -339,11 +345,14 @@ rt {
 
 ._pageScrollableReversed {
 	height: 100%;
+	box-sizing: border-box;
 	overflow: clip;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
 	display: flex;
 	flex-direction: column-reverse;
+	padding-bottom: var(--MI-minBottomSpacing);
+	scroll-padding-bottom: calc(var(--MI-minBottomSpacing) + var(--MI-margin));
 }
 
 ._indicatorCircle {

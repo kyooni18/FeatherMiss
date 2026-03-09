@@ -57,6 +57,9 @@ export type UiGraphicsStore = {
 	buttonRadius: number;
 	buttonPillRadius: number;
 	mobileDockRadius: number;
+	mobileDockPaddingX: number;
+	mobileDockPaddingTop: number;
+	mobileDockPaddingBottom: number;
 	blur: number;
 	saturate: number;
 	panelAlpha: number;
@@ -282,6 +285,9 @@ export const PREF_DEF = definePreferences({
 			buttonRadius: 12,
 			buttonPillRadius: 999,
 			mobileDockRadius: 22,
+			mobileDockPaddingX: 10,
+			mobileDockPaddingTop: 8,
+			mobileDockPaddingBottom: 0,
 			blur: 9,
 			saturate: 125,
 			panelAlpha: 0.62,

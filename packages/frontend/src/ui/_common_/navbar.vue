@@ -235,6 +235,8 @@ function menuEdit() {
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
+	--nav-edge-blur-soft: 12px;
+	--nav-edge-blur-strong: 24px;
 
 	--subButtonWidth: 20px;
 
@@ -246,6 +248,8 @@ function menuEdit() {
 .root.asDrawer {
 	--nav-width: 100%;
 	--nav-icon-only-width: 100%;
+	--drawer-edge-padding: 10px;
+	--drawer-edge-bleed: 20px;
 
 	flex: 1 1 auto;
 	width: 100%;
@@ -253,24 +257,22 @@ function menuEdit() {
 	.body {
 		width: 100%;
 		border-right: none;
-		background: transparent;
-		/*
-		 * Drawer mode should keep panel blur visible.
-		 * Avoid forcing backdrop-filter off, otherwise only the modal background gets blurred.
-		 */
+		border-radius: inherit;
+		padding-block: var(--drawer-edge-padding);
+		background: var(--MI-materialBg);
 		-webkit-backdrop-filter: var(--MI-surfaceFilter);
 		backdrop-filter: var(--MI-surfaceFilter);
 	}
 
-	.subButtons {
-		display: none;
+	.top {
+		top: var(--drawer-edge-padding);
 	}
 
-	/* Prevent pseudo progressive blur layers from distorting the server icon in drawer mode. */
-	.top::before,
-	.top::after,
-	.bottom::before,
-	.bottom::after {
+	.bottom {
+		bottom: var(--drawer-edge-padding);
+	}
+
+	.subButtons {
 		display: none;
 	}
 }
@@ -294,19 +296,38 @@ function menuEdit() {
 	flex-direction: column;
 
 	direction: rtl; /* スクロールバーを左に表示したいため */
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
 }
 
 .top {
 	flex-shrink: 0;
 	direction: ltr;
 
-	/* 疑似progressive blur */
 	&::before {
 		position: absolute;
 		z-index: -1;
 		inset: 0;
 		content: "";
-		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(var(--nav-edge-blur-soft));
+		backdrop-filter: blur(var(--nav-edge-blur-soft));
+		-webkit-mask-image: linear-gradient(
+			to top,
+			rgb(0 0 0 / 0%) 0%,
+			rgb(0 0 0 / 4.9%) 7.75%,
+			rgb(0 0 0 / 10.4%) 11.25%,
+			rgb(0 0 0 / 45%) 23.55%,
+			rgb(0 0 0 / 55%) 26.45%,
+			rgb(0 0 0 / 89.6%) 38.75%,
+			rgb(0 0 0 / 95.1%) 42.25%,
+			rgb(0 0 0 / 100%) 50%
+		);
 		mask-image: linear-gradient(
 			to top,
 			rgb(0 0 0 / 0%) 0%,
@@ -326,7 +347,19 @@ function menuEdit() {
 		inset: 0;
 		bottom: 25%;
 		content: "";
-		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(var(--nav-edge-blur-strong));
+		backdrop-filter: blur(var(--nav-edge-blur-strong));
+		-webkit-mask-image: linear-gradient(
+			to top,
+			rgb(0 0 0 / 0%) 0%,
+			rgb(0 0 0 / 4.9%) 15.5%,
+			rgb(0 0 0 / 10.4%) 22.5%,
+			rgb(0 0 0 / 45%) 47.1%,
+			rgb(0 0 0 / 55%) 52.9%,
+			rgb(0 0 0 / 89.6%) 77.5%,
+			rgb(0 0 0 / 95.1%) 91.9%,
+			rgb(0 0 0 / 100%) 100%
+		);
 		mask-image: linear-gradient(
 			to top,
 			rgb(0 0 0 / 0%) 0%,
@@ -350,13 +383,24 @@ function menuEdit() {
 	flex-shrink: 0;
 	direction: ltr;
 
-	/* 疑似progressive blur */
 	&::before {
 		position: absolute;
 		z-index: -1;
 		inset: -30px 0 0 0;
 		content: "";
-		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(var(--nav-edge-blur-soft));
+		backdrop-filter: blur(var(--nav-edge-blur-soft));
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			rgb(0 0 0 / 0%) 0%,
+			rgb(0 0 0 / 4.9%) 7.75%,
+			rgb(0 0 0 / 10.4%) 11.25%,
+			rgb(0 0 0 / 45%) 23.55%,
+			rgb(0 0 0 / 55%) 26.45%,
+			rgb(0 0 0 / 89.6%) 38.75%,
+			rgb(0 0 0 / 95.1%) 42.25%,
+			rgb(0 0 0 / 100%) 50%
+		);
 		mask-image: linear-gradient(
 			to bottom,
 			rgb(0 0 0 / 0%) 0%,
@@ -377,7 +421,19 @@ function menuEdit() {
 		inset: 0;
 		top: 25%;
 		content: "";
-		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(var(--nav-edge-blur-strong));
+		backdrop-filter: blur(var(--nav-edge-blur-strong));
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			rgb(0 0 0 / 0%) 0%,
+			rgb(0 0 0 / 4.9%) 15.5%,
+			rgb(0 0 0 / 10.4%) 22.5%,
+			rgb(0 0 0 / 45%) 47.1%,
+			rgb(0 0 0 / 55%) 52.9%,
+			rgb(0 0 0 / 89.6%) 77.5%,
+			rgb(0 0 0 / 95.1%) 91.9%,
+			rgb(0 0 0 / 100%) 100%
+		);
 		mask-image: linear-gradient(
 			to bottom,
 			rgb(0 0 0 / 0%) 0%,
@@ -914,6 +970,75 @@ function menuEdit() {
 
 	.subButtons {
 		left: var(--nav-icon-only-width);
+	}
+}
+
+.root.asDrawer:not(.iconOnly) {
+	.top {
+		top: var(--drawer-edge-padding);
+
+		&::before,
+		&::after {
+			left: calc(var(--drawer-edge-bleed) * -1);
+			right: calc(var(--drawer-edge-bleed) * -1);
+		}
+
+		&::before {
+			top: calc(var(--drawer-edge-bleed) * -1);
+		}
+
+		&::after {
+			top: calc(var(--drawer-edge-bleed) * -1);
+			bottom: 25%;
+		}
+	}
+
+	.bottom {
+		bottom: var(--drawer-edge-padding);
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 18px 0 max(12px, env(safe-area-inset-bottom, 0px));
+
+		&::before,
+		&::after {
+			left: calc(var(--drawer-edge-bleed) * -1);
+			right: calc(var(--drawer-edge-bleed) * -1);
+		}
+
+		&::before {
+			bottom: calc(var(--drawer-edge-bleed) * -1);
+		}
+
+		&::after {
+			top: 25%;
+			bottom: calc(var(--drawer-edge-bleed) * -1);
+		}
+	}
+
+	.post {
+		height: 46px;
+
+		&::before {
+			width: calc(100% - 24px);
+		}
+	}
+
+	.postIcon {
+		margin-left: 24px;
+	}
+
+	.account {
+		padding: 6px 24px 0;
+		min-height: 52px;
+	}
+
+	.avatar {
+		width: 36px;
+	}
+
+	.acct {
+		padding-right: 0;
 	}
 }
 

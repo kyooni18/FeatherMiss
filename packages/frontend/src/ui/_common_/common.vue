@@ -259,12 +259,12 @@ if ($i) {
 	z-index: 1001;
 	width: min(82vw, 320px);
 	height: 100dvh;
-	overflow: clip;
+	overflow: hidden;
 	will-change: transform, opacity, filter;
-	background: var(--MI-materialBg);
+	background: transparent;
 	border-right: 1px solid var(--MI-surfaceBorder);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
 	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
 	box-shadow: 14px 0 36px color(from var(--MI_THEME-shadow) srgb r g b / 0.28);
 

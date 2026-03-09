@@ -673,6 +673,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 										<template #label>모바일 하단 바 라운드</template>
 										<template #suffix>{{ uiGraphicsMobileDockRadius }}px</template>
 									</MkRange>
+									<MkRange v-model="uiGraphicsMobileDockPaddingX" :min="0" :max="24" :step="1" easing>
+										<template #label>모바일 하단 바 좌우 패딩</template>
+										<template #suffix>{{ uiGraphicsMobileDockPaddingX }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsMobileDockPaddingTop" :min="0" :max="24" :step="1" easing>
+										<template #label>모바일 하단 바 상단 패딩</template>
+										<template #suffix>{{ uiGraphicsMobileDockPaddingTop }}px</template>
+									</MkRange>
+									<MkRange v-model="uiGraphicsMobileDockPaddingBottom" :min="0" :max="24" :step="1" easing>
+										<template #label>모바일 하단 바 하단 패딩</template>
+										<template #suffix>{{ uiGraphicsMobileDockPaddingBottom }}px</template>
+									</MkRange>
 									<MkRange v-model="uiGraphicsBlur" :min="0" :max="20" :step="1" easing>
 										<template #label>표면 블러</template>
 										<template #suffix>{{ uiGraphicsBlur }}px</template>
@@ -1089,6 +1101,9 @@ const defaultUiGraphics = (): UiGraphicsStore => ({
 	buttonRadius: 12,
 	buttonPillRadius: 999,
 	mobileDockRadius: 22,
+	mobileDockPaddingX: 10,
+	mobileDockPaddingTop: 8,
+	mobileDockPaddingBottom: 0,
 	blur: 9,
 	saturate: 125,
 	panelAlpha: 0.62,
@@ -1128,6 +1143,9 @@ const uiGraphicsRadius = useUiGraphicsField('radius');
 const uiGraphicsButtonRadius = useUiGraphicsField('buttonRadius');
 const uiGraphicsButtonPillRadius = useUiGraphicsField('buttonPillRadius');
 const uiGraphicsMobileDockRadius = useUiGraphicsField('mobileDockRadius');
+const uiGraphicsMobileDockPaddingX = useUiGraphicsField('mobileDockPaddingX');
+const uiGraphicsMobileDockPaddingTop = useUiGraphicsField('mobileDockPaddingTop');
+const uiGraphicsMobileDockPaddingBottom = useUiGraphicsField('mobileDockPaddingBottom');
 const uiGraphicsBlur = useUiGraphicsField('blur');
 const uiGraphicsSaturate = useUiGraphicsField('saturate');
 const uiGraphicsPanelAlpha = useUiGraphicsField('panelAlpha');
