@@ -510,13 +510,13 @@ defineExpose({
 <style lang="scss" module>
 .transition_window_enterActive,
 .transition_window_leaveActive {
-	transition: opacity 0.2s, transform 0.2s !important;
+	transition: opacity var(--MI-motionDurationNormal) ease, transform var(--MI-motionDurationNormal) cubic-bezier(.2, .8, .2, 1) !important;
 }
 .transition_window_enterFrom,
 .transition_window_leaveTo {
 	pointer-events: none;
 	opacity: 0;
-	transform: scale(0.9);
+	transform: translateY(var(--MI-motionDistance)) scale(0.975);
 }
 
 .root {
@@ -542,7 +542,12 @@ defineExpose({
 	contain: content;
 	width: 100%;
 	height: 100%;
-	border-radius: var(--MI-radius);
+	border-radius: calc(var(--MI-radius) + 4px);
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	background: var(--MI-surfacePopup, var(--MI_THEME-panel));
+	box-shadow: var(--MI-surfaceShadowRaised);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 }
 
 .header {
@@ -554,10 +559,10 @@ defineExpose({
 	flex-shrink: 0;
 	user-select: none;
 	height: var(--height);
-	background: var(--MI_THEME-windowHeader);
-	-webkit-backdrop-filter: var(--MI-blur, blur(15px));
-	backdrop-filter: var(--MI-blur, blur(15px));
-	//border-bottom: solid 1px var(--MI_THEME-divider);
+	background: var(--MI-surfacePopup, var(--MI_THEME-windowHeader));
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
+	border-bottom: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	font-size: 90%;
 	font-weight: bold;
 
@@ -601,8 +606,9 @@ defineExpose({
 .content {
 	flex: 1;
 	overflow: auto;
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel, var(--MI_THEME-panel));
 	container-type: size;
+	overscroll-behavior: contain;
 }
 
 $handleSize: 8px;

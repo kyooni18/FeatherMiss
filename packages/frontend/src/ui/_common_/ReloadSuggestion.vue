@@ -4,12 +4,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="$style.root">
-	<span :class="$style.icon">
-		<i class="ti ti-info-circle"></i>
+<div :class="$style.root" role="status" aria-live="polite">
+	<span :class="$style.icon" aria-hidden="true">
+		<i class="ti ti-refresh-alert"></i>
 	</span>
 	<span :class="$style.title">{{ i18n.ts.reloadRequiredToApplySettings }}</span>
-	<span :class="$style.body"><button class="_textButton" style="color: var(--MI_THEME-fgOnAccent);" @click="reload">{{ i18n.ts.reload }}</button> | <button class="_textButton" style="color: var(--MI_THEME-fgOnAccent);" @click="skip">{{ i18n.ts.skip }}</button></span>
+	<span :class="$style.actions">
+		<button class="_button" :class="$style.primary" @click="reload">{{ i18n.ts.reload }}</button>
+		<button class="_button" :class="$style.secondary" @click="skip">{{ i18n.ts.skip }}</button>
+	</span>
 </div>
 </template>
 
@@ -29,47 +32,75 @@ function skip() {
 
 <style lang="scss" module>
 .root {
-	--height: 24px;
-	font-size: 0.85em;
 	display: flex;
-	vertical-align: bottom;
+	align-items: center;
+	gap: var(--MI-space10);
+	min-height: 42px;
 	width: 100%;
-	line-height: var(--height);
-	height: var(--height);
-	overflow: clip;
-	contain: layout style;
-	background: var(--MI_THEME-accent);
-	background: color(from var(--MI_THEME-accent) srgb r g b / 0.62);
-	border-bottom: 1px solid var(--MI-surfaceBorder);
+	padding: 6px max(var(--MI-space12), env(safe-area-inset-right, 0px)) 6px max(var(--MI-space12), env(safe-area-inset-left, 0px));
+	box-sizing: border-box;
+	background: var(--MI-surfacePopup, var(--MI_THEME-accent));
+	border-bottom: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
-	color: var(--MI_THEME-fgOnAccent);
+	color: var(--MI_THEME-fg);
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.1);
 }
 
 .icon {
-	margin-left: 10px;
-	animation: blink 2s infinite;
+	flex: none;
+	color: var(--MI_THEME-accent);
+	font-size: 1.1em;
 }
 
 .title {
-	padding: 0 10px;
-	font-weight: bold;
-	animation: blink 2s infinite;
-}
-
-.body {
 	min-width: 0;
 	flex: 1;
-	overflow: clip;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+	font-size: 0.9em;
+	font-weight: 650;
+	line-height: 1.35;
 }
 
-@keyframes blink {
-	0% { opacity: 1; }
-	10% { opacity: 1; }
-	50% { opacity: 0; }
-	90% { opacity: 1; }
-	100% { opacity: 1; }
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: none;
+}
+
+.primary,
+.secondary {
+	min-height: 36px;
+	padding: 4px 10px;
+	border-radius: var(--MI-buttonRadius);
+	font-size: 0.86em;
+	font-weight: 650;
+}
+
+.primary {
+	background: var(--MI_THEME-accent);
+	color: var(--MI_THEME-fgOnAccent);
+}
+
+.secondary {
+	background: var(--MI_THEME-buttonBg);
+}
+
+@media (max-width: 500px) {
+	.root {
+		align-items: flex-start;
+		flex-wrap: wrap;
+		padding: 8px var(--MI-space10);
+	}
+
+	.title {
+		padding-top: 5px;
+	}
+
+	.actions {
+		width: 100%;
+		padding-left: calc(1.1em + var(--MI-space10));
+	}
 }
 </style>

@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	:leaveToClass="prefer.s.animation ? $style.transition_popup_leaveTo : ''"
 	appear @afterLeave="emit('closed')"
 >
-	<div v-if="showing" :class="$style.root" class="_popup _shadow" :style="{ zIndex, top: top + 'px', left: left + 'px' }" @mouseover="() => { emit('mouseover'); }" @mouseleave="() => { emit('mouseleave'); }">
+	<div ref="rootEl" v-if="showing" :class="$style.root" class="_popup _shadow" :style="{ zIndex, top: top + 'px', left: left + 'px', transformOrigin }" @mouseover="() => { emit('mouseover'); }" @mouseleave="() => { emit('mouseleave'); }">
 		<MkError v-if="error" @retry="fetchUser()"/>
 		<div v-else-if="user != null">
 			<div :class="$style.banner" :style="user.bannerUrl ? { backgroundImage: `url(${prefer.s.disableShowingAnimatedImages ? getStaticImageUrl(user.bannerUrl) : user.bannerUrl})` } : ''">
@@ -58,7 +58,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkFollowButton from '@/components/MkFollowButton.vue';
 import { userPage } from '@/filters/user.js';
@@ -71,6 +71,7 @@ import { prefer } from '@/preferences.js';
 import { $i } from '@/i.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/utility/isFfVisibleForMe.js';
 import { getStaticImageUrl } from '@/utility/media-proxy.js';
+import { calcPopupPosition } from '@/utility/popup-position.js';
 
 const props = defineProps<{
 	showing: boolean;
@@ -88,7 +89,32 @@ const zIndex = os.claimZIndex('middle');
 const user = ref<Misskey.entities.UserDetailed | null>(null);
 const top = ref(0);
 const left = ref(0);
+const transformOrigin = ref('center top');
 const error = ref(false);
+const rootEl = useTemplateRef('rootEl');
+let resizeObserver: ResizeObserver | null = null;
+let positionFrame: number | null = null;
+
+function updatePosition() {
+	if (!rootEl.value || !props.source.isConnected) return;
+	const position = calcPopupPosition(rootEl.value, {
+		anchorElement: props.source,
+		innerMargin: 8,
+		direction: 'bottom',
+		align: 'center',
+	});
+	top.value = position.top;
+	left.value = position.left;
+	transformOrigin.value = position.transformOrigin;
+}
+
+function schedulePositionUpdate() {
+	if (positionFrame != null) return;
+	positionFrame = window.requestAnimationFrame(() => {
+		positionFrame = null;
+		updatePosition();
+	});
+}
 
 function showMenu(ev: PointerEvent) {
 	if (user.value == null) return;
@@ -118,32 +144,59 @@ async function fetchUser() {
 
 onMounted(() => {
 	fetchUser();
+	updatePosition();
 
-	const rect = props.source.getBoundingClientRect();
-	const x = ((rect.left + (props.source.offsetWidth / 2)) - (300 / 2)) + window.scrollX;
-	const y = rect.top + props.source.offsetHeight + window.scrollY;
+	window.addEventListener('resize', schedulePositionUpdate, { passive: true });
+	window.addEventListener('scroll', schedulePositionUpdate, { passive: true, capture: true });
+	window.visualViewport?.addEventListener('resize', schedulePositionUpdate, { passive: true });
+	window.visualViewport?.addEventListener('scroll', schedulePositionUpdate, { passive: true });
 
-	top.value = y;
-	left.value = x;
+	if (typeof ResizeObserver !== 'undefined') {
+		resizeObserver = new ResizeObserver(schedulePositionUpdate);
+		resizeObserver.observe(props.source);
+	}
+
+	nextTick(schedulePositionUpdate);
+});
+
+watch(() => props.showing, showing => {
+	if (showing) nextTick(schedulePositionUpdate);
+});
+
+watch([user, error], () => nextTick(schedulePositionUpdate));
+
+onBeforeUnmount(() => {
+	window.removeEventListener('resize', schedulePositionUpdate);
+	window.removeEventListener('scroll', schedulePositionUpdate, true);
+	window.visualViewport?.removeEventListener('resize', schedulePositionUpdate);
+	window.visualViewport?.removeEventListener('scroll', schedulePositionUpdate);
+	resizeObserver?.disconnect();
+	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
 });
 </script>
 
 <style lang="scss" module>
 .transition_popup_enterActive,
 .transition_popup_leaveActive {
-	transition: opacity 0.15s, transform 0.15s !important;
+	transition: opacity var(--MI-motionDurationFast) ease, transform var(--MI-motionDurationFast) cubic-bezier(.2, .8, .2, 1) !important;
 }
 .transition_popup_enterFrom,
 .transition_popup_leaveTo {
 	opacity: 0;
-	transform: scale(0.9);
+	transform: translateY(var(--MI-motionDistanceNegative35)) scale(0.97);
 }
 
 .root {
 	position: absolute;
-	width: 300px;
-	overflow: clip;
+	width: min(300px, calc(100vw - var(--MI-floatingGapDouble)));
+	max-height: calc(100vh - var(--MI-floatingGapDouble));
+	max-height: calc(100dvh - var(--MI-floatingGapDouble));
+	overflow: auto;
+	overscroll-behavior: contain;
 	transform-origin: center top;
+	background: var(--MI-surfacePopup, var(--MI_THEME-popup));
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	box-sizing: border-box;
 }
 
 .banner {
@@ -207,7 +260,7 @@ onMounted(() => {
 }
 
 .description {
-	padding: 16px 26px;
+	padding: var(--MI-space16) var(--MI-space24);
 	font-size: 0.8em;
 	text-align: center;
 	border-top: solid 1px var(--MI_THEME-divider);
@@ -222,7 +275,7 @@ onMounted(() => {
 }
 
 .status {
-	padding: 16px 26px 16px 26px;
+	padding: var(--MI-space16) var(--MI-space24);
 }
 
 .statusItem {

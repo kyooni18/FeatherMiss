@@ -14,8 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		v-if="drawerMenuShowing"
 		:class="$style.menuDrawerBg"
 		class="_modalBg"
-		@click="drawerMenuShowing = false"
-		@touchstart.passive="drawerMenuShowing = false"
+		@click.self="drawerMenuShowing = false"
 	></div>
 </Transition>
 
@@ -40,8 +39,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		v-if="widgetsShowing"
 		:class="$style.widgetsDrawerBg"
 		class="_modalBg"
-		@click="widgetsShowing = false"
-		@touchstart.passive="widgetsShowing = false"
+		@click.self="widgetsShowing = false"
 	></div>
 </Transition>
 
@@ -177,7 +175,7 @@ if ($i) {
 .transition_menuDrawerBg_leaveActive {
 	opacity: 1;
 	will-change: opacity;
-	transition: opacity 220ms ease;
+	transition: opacity var(--MI-motionDurationNormal) ease;
 }
 .transition_menuDrawerBg_enterFrom,
 .transition_menuDrawerBg_leaveTo {
@@ -188,26 +186,26 @@ if ($i) {
 	opacity: 1;
 	transform: translate3d(0, 0, 0) scale(1);
 	will-change: transform, opacity, filter;
-	transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+	transition: transform var(--MI-motionDurationSlow) cubic-bezier(0.22, 1, 0.36, 1), opacity var(--MI-motionDurationNormal) ease;
 }
 
 .transition_menuDrawer_leaveActive {
 	opacity: 1;
 	transform: translate3d(0, 0, 0) scale(1);
 	will-change: transform, opacity, filter;
-	transition: transform 240ms cubic-bezier(0.4, 0, 1, 1), opacity 180ms ease;
+	transition: transform var(--MI-motionDurationNormal) cubic-bezier(0.4, 0, 1, 1), opacity var(--MI-motionDurationFast) ease;
 }
 .transition_menuDrawer_enterFrom,
 .transition_menuDrawer_leaveTo {
 	opacity: 0;
-	transform: translate3d(calc(-100% - 10px), 0, 0) scale(0.985);
+	transform: translate3d(calc(-100% - var(--MI-floatingGap)), 0, 0) scale(0.985);
 }
 
 .transition_widgetsDrawerBg_enterActive,
 .transition_widgetsDrawerBg_leaveActive {
 	opacity: 1;
 	will-change: opacity;
-	transition: opacity 220ms ease;
+	transition: opacity var(--MI-motionDurationNormal) ease;
 }
 .transition_widgetsDrawerBg_enterFrom,
 .transition_widgetsDrawerBg_leaveTo {
@@ -218,33 +216,33 @@ if ($i) {
 	opacity: 1;
 	transform: translate3d(0, 0, 0) scale(1);
 	will-change: transform, opacity, filter;
-	transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
+	transition: transform var(--MI-motionDurationSlow) cubic-bezier(0.22, 1, 0.36, 1), opacity var(--MI-motionDurationNormal) ease;
 }
 
 .transition_widgetsDrawer_leaveActive {
 	opacity: 1;
 	transform: translate3d(0, 0, 0) scale(1);
 	will-change: transform, opacity, filter;
-	transition: transform 240ms cubic-bezier(0.4, 0, 1, 1), opacity 180ms ease;
+	transition: transform var(--MI-motionDurationNormal) cubic-bezier(0.4, 0, 1, 1), opacity var(--MI-motionDurationFast) ease;
 }
 .transition_widgetsDrawer_enterFrom,
 .transition_widgetsDrawer_leaveTo {
 	opacity: 0;
-	transform: translate3d(calc(-100% - 10px), 0, 0) scale(0.985);
+	transform: translate3d(calc(-100% - var(--MI-floatingGap)), 0, 0) scale(0.985);
 }
 
 .transition_notification_move,
 .transition_notification_enterActive,
 .transition_notification_leaveActive {
-	transition: opacity 0.3s, transform 0.3s !important;
+	transition: opacity var(--MI-motionDurationNormal) ease, transform var(--MI-motionDurationNormal) cubic-bezier(.2, .8, .2, 1) !important;
 }
 .transition_notification_enterFrom {
 	opacity: 0;
-	transform: translateX(250px);
+	transform: translateX(calc(100% + var(--MI-floatingGap)));
 }
 .transition_notification_leaveTo {
 	opacity: 0;
-	transform: translateX(-250px);
+	transform: translateX(calc(-100% - var(--MI-floatingGap)));
 }
 
 .menuDrawerBg {
@@ -257,21 +255,21 @@ if ($i) {
 	top: 0;
 	left: 0;
 	z-index: 1001;
-	width: min(82vw, 320px);
+	width: min(82vw, var(--MI-drawerWidth));
 	height: 100dvh;
 	overflow: hidden;
 	will-change: transform, opacity, filter;
-	background: transparent;
-	border-right: 1px solid var(--MI-surfaceBorder);
-	-webkit-backdrop-filter: none;
-	backdrop-filter: none;
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
+	border-right: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter);
+	backdrop-filter: var(--MI-surfaceFilter);
 	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
-	box-shadow: 14px 0 36px color(from var(--MI_THEME-shadow) srgb r g b / 0.28);
+	box-shadow: var(--MI-surfaceShadowRaised);
 
 	@media (max-width: 500px) {
-		width: min(88vw, 320px);
+		width: min(88vw, var(--MI-drawerWidth));
 		border-radius: 0 calc(var(--MI-radius) + 8px) calc(var(--MI-radius) + 8px) 0;
-		box-shadow: 10px 0 26px color(from var(--MI_THEME-shadow) srgb r g b / 0.24);
+		box-shadow: var(--MI-surfaceShadowRaised);
 	}
 }
 
@@ -285,15 +283,15 @@ if ($i) {
 	top: 0;
 	left: 0;
 	z-index: 1001;
-	width: min(90vw, 310px);
+	width: min(90vw, var(--MI-drawerWidth));
 	height: 100dvh;
 	padding: var(--MI-margin) var(--MI-margin) calc(var(--MI-margin) + env(safe-area-inset-bottom, 0px)) !important;
 	box-sizing: border-box;
 	overflow: auto;
 	overscroll-behavior: contain;
 	will-change: transform, opacity, filter;
-	background: var(--MI-materialBg);
-	border-right: 1px solid var(--MI-surfaceBorder);
+	background: var(--MI-surfacePanel, var(--MI-materialBg));
+	border-right: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	border-radius: 0 calc(var(--MI-radius) + 10px) calc(var(--MI-radius) + 10px) 0;
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);

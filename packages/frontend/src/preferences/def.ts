@@ -62,6 +62,7 @@ export type UiGraphicsStore = {
 	mobileDockPaddingBottom: number;
 	blur: number;
 	saturate: number;
+	brightness: number;
 	panelAlpha: number;
 	popupAlpha: number;
 	navAlpha: number;
@@ -79,6 +80,15 @@ export type UiGraphicsStore = {
 	shadowYOffset: number;
 	shadowRaisedStrength: number;
 	shadowRaisedYOffset: number;
+	spacingScale: number;
+	menuItemHeight: number;
+	menuMinWidth: number;
+	floatingGap: number;
+	drawerWidth: number;
+	dialogPadding: number;
+	tooltipRadius: number;
+	motionScale: number;
+	motionDistance: number;
 };
 
 type OmitStrict<T, K extends keyof T> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
@@ -280,33 +290,43 @@ export const PREF_DEF = definePreferences({
 	},
 	uiGraphics: {
 		default: {
-			enabled: false,
-			radius: 12,
-			buttonRadius: 12,
+			enabled: true,
+			radius: 14,
+			buttonRadius: 13,
 			buttonPillRadius: 999,
-			mobileDockRadius: 22,
+			mobileDockRadius: 24,
 			mobileDockPaddingX: 10,
 			mobileDockPaddingTop: 8,
-			mobileDockPaddingBottom: 0,
-			blur: 9,
-			saturate: 125,
-			panelAlpha: 0.62,
-			popupAlpha: 0.52,
-			navAlpha: 0.58,
-			pageAlpha: 0.62,
-			borderAlpha: 0.07,
+			mobileDockPaddingBottom: 2,
+			blur: 12,
+			saturate: 128,
+			brightness: 102,
+			panelAlpha: 0.66,
+			popupAlpha: 0.72,
+			navAlpha: 0.68,
+			pageAlpha: 0.72,
+			borderAlpha: 0.09,
 			borderWidth: 1,
-			overlayOpacity: 0.18,
-			modalBlur: 4,
-			squircleSize: 28,
-			popupRadiusOffset: 12,
-			postFormRadiusOffset: 12,
+			overlayOpacity: 0.2,
+			modalBlur: 7,
+			squircleSize: 30,
+			popupRadiusOffset: 8,
+			postFormRadiusOffset: 10,
 			focusWidth: 2,
-			focusOffset: -2,
-			shadowStrength: 1,
-			shadowYOffset: 14,
-			shadowRaisedStrength: 1,
-			shadowRaisedYOffset: 26,
+			focusOffset: 2,
+			shadowStrength: 0.78,
+			shadowYOffset: 12,
+			shadowRaisedStrength: 0.86,
+			shadowRaisedYOffset: 22,
+			spacingScale: 1.06,
+			menuItemHeight: 38,
+			menuMinWidth: 220,
+			floatingGap: 10,
+			drawerWidth: 324,
+			dialogPadding: 30,
+			tooltipRadius: 10,
+			motionScale: 1,
+			motionDistance: 10,
 		} as UiGraphicsStore,
 	},
 	useStickyIcons: {

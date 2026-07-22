@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, onUnmounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
 import { mainRouter } from '@/router.js';
@@ -97,7 +97,14 @@ watch(rootEl, (el) => {
 	immediate: true,
 });
 
+onMounted(() => {
+	window.addEventListener('resize', syncBottomSpacing, { passive: true });
+	window.visualViewport?.addEventListener('resize', syncBottomSpacing, { passive: true });
+});
+
 onUnmounted(() => {
+	window.removeEventListener('resize', syncBottomSpacing);
+	window.visualViewport?.removeEventListener('resize', syncBottomSpacing);
 	rootResizeObserver?.disconnect();
 	rootResizeObserver = null;
 	window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
@@ -125,10 +132,10 @@ onUnmounted(() => {
 	column-gap: calc(2px + (var(--MI-mobileDockPaddingX) * 0.15));
 	box-sizing: border-box;
 	color: var(--MI_THEME-navFg);
-	background: var(--MI-materialBg);
-	border: 1px solid var(--MI-surfaceBorder);
+	background: var(--MI-surfaceNav, var(--MI-materialBg));
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	border-radius: var(--MI-mobileDockRadius);
-	box-shadow: var(--MI-surfaceShadow);
+	box-shadow: var(--MI-surfaceShadowRaised);
 	-webkit-backdrop-filter: var(--MI-surfaceFilter);
 	backdrop-filter: var(--MI-surfaceFilter);
 	overflow: visible;
@@ -174,6 +181,7 @@ onUnmounted(() => {
 	height: 46px;
 	margin: auto;
 	border-radius: var(--MI-buttonPillRadius);
+	transition: transform var(--MI-motionDurationFast) ease, background-color var(--MI-motionDurationFast) ease;
 
 	&:hover {
 		background: var(--MI_THEME-panelHighlight);
@@ -181,6 +189,7 @@ onUnmounted(() => {
 
 	&:active {
 		background: var(--MI_THEME-panelHighlight);
+		transform: scale(0.94);
 	}
 }
 

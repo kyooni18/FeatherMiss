@@ -72,6 +72,11 @@ export const ROUTE_DEF = [{
 	path: '/instance-info/:host',
 	component: page(() => import('@/pages/instance-info.vue')),
 }, {
+	name: 'uiCustomization',
+	path: '/ui-customization',
+	component: page(() => import('@/pages/ui-customization.vue')),
+	loginRequired: true,
+}, {
 	name: 'settings',
 	path: '/settings',
 	component: page(() => import('@/pages/settings/index.vue')),

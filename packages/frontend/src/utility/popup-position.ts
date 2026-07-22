@@ -11,167 +11,80 @@ export function calcPopupPosition(el: HTMLElement, props: {
 	alignOffset?: number;
 	x?: number;
 	y?: number;
+	strategy?: 'absolute' | 'fixed';
 }): { top: number; left: number; transformOrigin: string; } {
-	const contentWidth = el.offsetWidth;
-	const contentHeight = el.offsetHeight;
+	const width = el.offsetWidth;
+	const height = el.offsetHeight;
+	const viewport = window.visualViewport;
+	const strategy = props.strategy ?? 'absolute';
+	const documentLeft = viewport?.pageLeft ?? window.scrollX;
+	const documentTop = viewport?.pageTop ?? window.scrollY;
+	const viewportLeft = strategy === 'fixed' ? (viewport?.offsetLeft ?? 0) : documentLeft;
+	const viewportTop = strategy === 'fixed' ? (viewport?.offsetTop ?? 0) : documentTop;
+	const viewportWidth = viewport?.width ?? window.innerWidth;
+	const viewportHeight = viewport?.height ?? window.innerHeight;
+	const viewportRight = viewportLeft + viewportWidth;
+	const viewportBottom = viewportTop + viewportHeight;
+	const configuredEdge = Number.parseFloat(window.getComputedStyle(window.document.documentElement).getPropertyValue('--MI-floatingGap'));
+	const edge = Number.isFinite(configuredEdge) ? Math.max(4, configuredEdge) : 8;
+	const gap = Math.max(0, props.innerMargin);
 
-	let rect: DOMRect;
-
-	if (props.anchorElement) {
-		rect = props.anchorElement.getBoundingClientRect();
-	}
-
-	const calcPosWhenTop = () => {
-		let left: number;
-		let top: number;
-
-		if (props.anchorElement) {
-			left = rect.left + window.scrollX + (props.anchorElement.offsetWidth / 2);
-			top = (rect.top + window.scrollY - contentHeight) - props.innerMargin;
-		} else {
-			left = props.x!;
-			top = (props.y! - contentHeight) - props.innerMargin;
-		}
-
-		left -= (el.offsetWidth / 2);
-
-		if (left + contentWidth - window.scrollX > window.innerWidth) {
-			left = window.innerWidth - contentWidth + window.scrollX - 1;
-		}
-
-		if (left < window.scrollX) {
-			left = window.scrollX;
-		}
-
-		return [left, top];
+	const rect = props.anchorElement?.getBoundingClientRect();
+	const coordinateOffsetLeft = strategy === 'fixed' ? 0 : documentLeft;
+	const coordinateOffsetTop = strategy === 'fixed' ? 0 : documentTop;
+	const anchor = rect ? {
+		left: rect.left + coordinateOffsetLeft,
+		right: rect.right + coordinateOffsetLeft,
+		top: rect.top + coordinateOffsetTop,
+		bottom: rect.bottom + coordinateOffsetTop,
+		width: rect.width,
+		height: rect.height,
+	} : {
+		left: props.x ?? viewportLeft + viewportWidth / 2,
+		right: props.x ?? viewportLeft + viewportWidth / 2,
+		top: props.y ?? viewportTop + viewportHeight / 2,
+		bottom: props.y ?? viewportTop + viewportHeight / 2,
+		width: 0,
+		height: 0,
 	};
 
-	const calcPosWhenBottom = () => {
-		let left: number;
-		let top: number;
-
-		if (props.anchorElement) {
-			left = rect.left + window.scrollX + (props.anchorElement.offsetWidth / 2);
-			top = (rect.top + window.scrollY + props.anchorElement.offsetHeight) + props.innerMargin;
-		} else {
-			left = props.x!;
-			top = (props.y!) + props.innerMargin;
-		}
-
-		left -= (el.offsetWidth / 2);
-
-		if (left + contentWidth - window.scrollX > window.innerWidth) {
-			left = window.innerWidth - contentWidth + window.scrollX - 1;
-		}
-
-		if (left < window.scrollX) {
-			left = window.scrollX;
-		}
-
-		return [left, top];
+	const horizontalAlignedLeft = () => {
+		if (props.align === 'left') return anchor.left + (props.alignOffset ?? 0);
+		if (props.align === 'right') return anchor.right - width + (props.alignOffset ?? 0);
+		return anchor.left + (anchor.width - width) / 2 + (props.alignOffset ?? 0);
 	};
 
-	const calcPosWhenLeft = () => {
-		let left: number;
-		let top: number;
-
-		if (props.anchorElement) {
-			left = (rect.left + window.scrollX - contentWidth) - props.innerMargin;
-			top = rect.top + window.scrollY + (props.anchorElement.offsetHeight / 2);
-		} else {
-			left = (props.x! - contentWidth) - props.innerMargin;
-			top = props.y!;
-		}
-
-		top -= (el.offsetHeight / 2);
-
-		if (top + contentHeight - window.scrollY > window.innerHeight) {
-			top = window.innerHeight - contentHeight + window.scrollY - 1;
-		}
-
-		if (left < window.scrollX) {
-			left = window.scrollX;
-		}
-
-		return [left, top];
+	const verticalAlignedTop = () => {
+		if (props.align === 'top') return anchor.top + (props.alignOffset ?? 0);
+		if (props.align === 'bottom') return anchor.bottom - height + (props.alignOffset ?? 0);
+		return anchor.top + (anchor.height - height) / 2 + (props.alignOffset ?? 0);
 	};
 
-	const calcPosWhenRight = () => {
-		let left = 0; // TSを黙らすためとりあえず初期値を0に
-		let top = 0; // TSを黙らすためとりあえず初期値を0に
-
-		if (props.anchorElement) {
-			left = (rect.left + props.anchorElement.offsetWidth + window.scrollX) + props.innerMargin;
-
-			if (props.align === 'top') {
-				top = rect.top + window.scrollY;
-				if (props.alignOffset != null) top += props.alignOffset;
-			} else if (props.align === 'bottom') {
-				// TODO
-			} else { // center
-				top = rect.top + window.scrollY + (props.anchorElement.offsetHeight / 2);
-				top -= (el.offsetHeight / 2);
-			}
-		} else {
-			left = props.x! + props.innerMargin;
-			top = props.y!;
-			top -= (el.offsetHeight / 2);
-		}
-
-		if (top + contentHeight - window.scrollY > window.innerHeight) {
-			top = window.innerHeight - contentHeight + window.scrollY - 1;
-		}
-
-		if (left < window.scrollX) {
-			left = window.scrollX;
-		}
-
-		return [left, top];
+	const candidates = {
+		top: { left: horizontalAlignedLeft(), top: anchor.top - height - gap, origin: 'center bottom' },
+		bottom: { left: horizontalAlignedLeft(), top: anchor.bottom + gap, origin: 'center top' },
+		left: { left: anchor.left - width - gap, top: verticalAlignedTop(), origin: 'right center' },
+		right: { left: anchor.right + gap, top: verticalAlignedTop(), origin: 'left center' },
 	};
 
-	const calc = (): {
-		left: number;
-		top: number;
-		transformOrigin: string;
-	} => {
-		switch (props.direction) {
-			case 'top': {
-				const [left, top] = calcPosWhenTop();
-
-				// ツールチップを上に向かって表示するスペースがなければ下に向かって出す
-				if (top - window.scrollY < 0) {
-					const [left, top] = calcPosWhenBottom();
-					return { left, top, transformOrigin: 'center top' };
-				}
-
-				return { left, top, transformOrigin: 'center bottom' };
-			}
-
-			case 'bottom': {
-				const [left, top] = calcPosWhenBottom();
-				// TODO: ツールチップを下に向かって表示するスペースがなければ上に向かって出す
-				return { left, top, transformOrigin: 'center top' };
-			}
-
-			case 'left': {
-				const [left, top] = calcPosWhenLeft();
-
-				// ツールチップを左に向かって表示するスペースがなければ右に向かって出す
-				if (left - window.scrollX < 0) {
-					const [left, top] = calcPosWhenRight();
-					return { left, top, transformOrigin: 'left center' };
-				}
-
-				return { left, top, transformOrigin: 'right center' };
-			}
-
-			case 'right': {
-				const [left, top] = calcPosWhenRight();
-				// TODO: ツールチップを右に向かって表示するスペースがなければ左に向かって出す
-				return { left, top, transformOrigin: 'left center' };
-			}
-		}
+	const opposite = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
+	const fits = (direction: keyof typeof candidates) => {
+		const candidate = candidates[direction];
+		return candidate.left >= viewportLeft + edge &&
+			candidate.top >= viewportTop + edge &&
+			candidate.left + width <= viewportRight - edge &&
+			candidate.top + height <= viewportBottom - edge;
 	};
 
-	return calc();
+	let direction = props.direction;
+	if (!fits(direction) && fits(opposite[direction])) direction = opposite[direction];
+	const candidate = candidates[direction];
+	const left = Math.min(Math.max(candidate.left, viewportLeft + edge), Math.max(viewportLeft + edge, viewportRight - width - edge));
+	const top = Math.min(Math.max(candidate.top, viewportTop + edge), Math.max(viewportTop + edge, viewportBottom - height - edge));
+
+	return {
+		left: Math.round(left),
+		top: Math.round(top),
+		transformOrigin: candidate.origin,
+	};
 }

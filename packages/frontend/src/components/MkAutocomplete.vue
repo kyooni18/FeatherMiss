@@ -194,6 +194,8 @@ const mfmTags = ref<string[]>([]);
 const mfmParams = ref<string[]>([]);
 const select = ref(-1);
 const zIndex = os.claimZIndex('high');
+let resizeObserver: ResizeObserver | null = null;
+let positionFrame: number | null = null;
 
 function completeMfmParam(param: string) {
 	if (props.type !== 'mfmParam') throw new Error('Invalid type');
@@ -213,18 +215,32 @@ function complete<T extends keyof CompleteInfo>(type: T, value: CompleteInfo[T][
 
 function setPosition() {
 	if (!rootEl.value) return;
-	if (props.x + rootEl.value.offsetWidth > window.innerWidth) {
-		rootEl.value.style.left = (window.innerWidth - rootEl.value.offsetWidth) + 'px';
-	} else {
-		rootEl.value.style.left = `${props.x}px`;
-	}
-	if (props.y + rootEl.value.offsetHeight > window.innerHeight) {
-		rootEl.value.style.top = (props.y - rootEl.value.offsetHeight) + 'px';
-		rootEl.value.style.marginTop = '0';
-	} else {
-		rootEl.value.style.top = props.y + 'px';
-		rootEl.value.style.marginTop = 'calc(1em + 8px)';
-	}
+	const viewport = window.visualViewport;
+	const viewportLeft = viewport?.offsetLeft ?? 0;
+	const viewportTop = viewport?.offsetTop ?? 0;
+	const viewportRight = viewportLeft + (viewport?.width ?? window.innerWidth);
+	const viewportBottom = viewportTop + (viewport?.height ?? window.innerHeight);
+	const styles = getComputedStyle(document.documentElement);
+	const edge = Number.parseFloat(styles.getPropertyValue('--MI-floatingGap')) || 8;
+	const caretHeight = Number.parseFloat(getComputedStyle(props.textarea).lineHeight) || 20;
+	const width = rootEl.value.offsetWidth;
+	const height = rootEl.value.offsetHeight;
+	const below = props.y + caretHeight + edge;
+	const above = props.y - height - edge;
+	const top = below + height <= viewportBottom - edge || above < viewportTop + edge ? below : above;
+	const left = Math.min(Math.max(props.x, viewportLeft + edge), Math.max(viewportLeft + edge, viewportRight - width - edge));
+
+	rootEl.value.style.left = `${Math.round(left)}px`;
+	rootEl.value.style.top = `${Math.round(Math.min(Math.max(top, viewportTop + edge), Math.max(viewportTop + edge, viewportBottom - height - edge)))}px`;
+	rootEl.value.style.transformOrigin = top === above ? 'left bottom' : 'left top';
+}
+
+function schedulePositionUpdate() {
+	if (positionFrame != null) return;
+	positionFrame = window.requestAnimationFrame(() => {
+		positionFrame = null;
+		setPosition();
+	});
 }
 
 function exec() {
@@ -401,16 +417,26 @@ function chooseUser() {
 }
 
 onUpdated(() => {
-	setPosition();
+	schedulePositionUpdate();
 	items.value = suggests.value?.children ?? [];
 });
 
 onMounted(() => {
 	setPosition();
+	schedulePositionUpdate();
 
 	props.textarea.addEventListener('keydown', onKeydown);
 
 	window.document.body.addEventListener('mousedown', onMousedown);
+	window.addEventListener('resize', schedulePositionUpdate, { passive: true });
+	window.addEventListener('scroll', schedulePositionUpdate, { passive: true, capture: true });
+	window.visualViewport?.addEventListener('resize', schedulePositionUpdate, { passive: true });
+	window.visualViewport?.addEventListener('scroll', schedulePositionUpdate, { passive: true });
+	if (typeof ResizeObserver !== 'undefined' && rootEl.value) {
+		resizeObserver = new ResizeObserver(schedulePositionUpdate);
+		resizeObserver.observe(rootEl.value);
+		resizeObserver.observe(props.textarea);
+	}
 
 	nextTick(() => {
 		exec();
@@ -423,28 +449,42 @@ onMounted(() => {
 	});
 });
 
+watch(() => [props.x, props.y] as const, schedulePositionUpdate);
+
 onBeforeUnmount(() => {
 	props.textarea.removeEventListener('keydown', onKeydown);
 
 	window.document.body.removeEventListener('mousedown', onMousedown);
+	window.removeEventListener('resize', schedulePositionUpdate);
+	window.removeEventListener('scroll', schedulePositionUpdate, true);
+	window.visualViewport?.removeEventListener('resize', schedulePositionUpdate);
+	window.visualViewport?.removeEventListener('scroll', schedulePositionUpdate);
+	resizeObserver?.disconnect();
+	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
 });
 </script>
 
 <style lang="scss" module>
 .root {
 	position: fixed;
-	max-width: 100%;
-	margin-top: calc(1em + 8px);
+	max-width: calc(100vw - var(--MI-floatingGapDouble));
+	max-height: calc(100vh - var(--MI-floatingGapDouble));
+	max-height: calc(100dvh - var(--MI-floatingGapDouble));
 	overflow: clip;
-	transition: top 0.1s ease, left 0.1s ease;
+	transform-origin: left top;
+	transition: top var(--MI-motionDurationFast) cubic-bezier(.2, .8, .2, 1), left var(--MI-motionDurationFast) cubic-bezier(.2, .8, .2, 1), opacity var(--MI-motionDurationFast) ease;
+	background: var(--MI-surfacePopup, var(--MI_THEME-popup));
+	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	box-sizing: border-box;
 }
 
 .list {
 	display: block;
 	margin: 0;
-	padding: 4px 0;
-	max-height: 190px;
-	max-width: 500px;
+	padding: var(--MI-space7) 0;
+	max-height: min(240px, calc(100vh - var(--MI-space30)));
+	max-height: min(240px, calc(100dvh - var(--MI-space30)));
+	max-width: min(500px, calc(100vw - var(--MI-floatingGapDouble)));
 	overflow: auto;
 	list-style: none;
 }
@@ -452,7 +492,8 @@ onBeforeUnmount(() => {
 .item {
 	display: flex;
 	align-items: center;
-	padding: 4px 12px;
+	min-height: var(--MI-menuItemHeight);
+	padding: var(--MI-space7) var(--MI-space12);
 	white-space: nowrap;
 	overflow: clip;
 	font-size: 0.9em;

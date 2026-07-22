@@ -45,9 +45,42 @@
 	--MI-overlayOpacity: 0.18;
 	--MI-squircleSize: 28px;
 	--MI-popupRadiusOffset: 12px;
+	--MI-popupRadius: 24px;
+	--MI-drawerRadius: 24px;
 	--MI-postFormRadiusOffset: 12px;
 	--MI-focusOutlineWidth: 2px;
-	--MI-focusOutlineOffset: -2px;
+	--MI-focusOutlineOffset: 2px;
+	--MI-spacingScale: 1;
+	--MI-space7: 7px;
+	--MI-space8: 8px;
+	--MI-space10: 10px;
+	--MI-space12: 12px;
+	--MI-space13: 13px;
+	--MI-space16: 16px;
+	--MI-space18: 18px;
+	--MI-space20: 20px;
+	--MI-space21: 21px;
+	--MI-space24: 24px;
+	--MI-space30: 30px;
+	--MI-gapDefault: var(--MI-space16);
+	--MI-menuItemHeight: 38px;
+	--MI-menuMinWidth: 220px;
+	--MI-floatingGap: 10px;
+	--MI-floatingGapDouble: 20px;
+	--MI-drawerWidth: 324px;
+	--MI-dialogPadding: 30px;
+	--MI-dialogPaddingNarrow: 16.5px;
+	--MI-tooltipRadius: 10px;
+	--MI-motionScale: 1;
+	--MI-motionDistance: 10px;
+	--MI-motionDistance35: 3.5px;
+	--MI-motionDistance40: 4px;
+	--MI-motionDistance45: 4.5px;
+	--MI-motionDistanceNegative35: -3.5px;
+	--MI-motionDistanceNegative3: -30px;
+	--MI-motionDurationFast: 130ms;
+	--MI-motionDurationNormal: 220ms;
+	--MI-motionDurationSlow: 340ms;
 	--MI-baseFontFamily: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
 	--MI-baseFontWeight: 400;
 
@@ -59,6 +92,7 @@
 
 	@media (max-width: 500px) {
 		--MI-margin: var(--MI-marginHalf);
+		--MI-gapDefault: var(--MI-space10);
 		--MI-radius: 14px;
 		--MI-buttonRadius: 14px;
 		--MI-buttonPaddingY: 6px;
@@ -77,6 +111,8 @@
 		--MI-uiModalBlur: 2px;
 		--MI-modalBgFilter: blur(2px);
 		--MI-popupRadiusOffset: 10px;
+		--MI-popupRadius: 24px;
+		--MI-drawerRadius: 24px;
 		--MI-postFormRadiusOffset: 10px;
 		--MI-materialShadow: 0 10px 24px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.1);
 		--MI-materialShadowRaised: 0 16px 44px rgba(0, 0, 0, 0.26), 0 6px 18px rgba(0, 0, 0, 0.13);
@@ -499,7 +535,7 @@ a._button {
 }
 
 ._panel {
-	background: var(--MI-materialBg);
+	background: var(--MI-surfacePanel, var(--MI-materialBg));
 	border-radius: var(--MI-radius);
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	box-shadow: var(--MI-surfaceShadow);
@@ -515,24 +551,24 @@ a._button {
 ._gaps_m {
 	display: flex;
 	flex-direction: column;
-	gap: 21px;
+	gap: var(--MI-space21);
 }
 
 ._gaps_s {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: var(--MI-space10);
 }
 
 ._gaps {
 	display: flex;
 	flex-direction: column;
-	gap: var(--MI-margin);
+	gap: var(--MI-gapDefault);
 }
 
 ._buttons {
 	display: flex;
-	gap: 8px;
+	gap: var(--MI-space8);
 	flex-wrap: wrap;
 }
 
@@ -558,7 +594,7 @@ a._button {
 }
 
 ._popup {
-	background: var(--MI-materialBg);
+	background: var(--MI-surfacePopup, var(--MI-materialBg));
 	border-radius: calc(var(--MI-radius) + var(--MI-popupRadiusOffset));
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
 	box-shadow: var(--MI-surfaceShadowRaised);
@@ -568,7 +604,7 @@ a._button {
 }
 
 ._acrylic {
-	background: var(--MI-materialBg);
+	background: var(--MI-surfacePopup, var(--MI-materialBg));
 	-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
 	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
@@ -925,4 +961,65 @@ html[data-color-scheme=dark] ._woodenFrame {
 @keyframes mfm-rainbow {
 	0% { filter: hue-rotate(0deg) contrast(150%) saturate(150%); }
 	100% { filter: hue-rotate(360deg) contrast(150%) saturate(150%); }
+}
+
+/* Shared floating-surface behavior. Keeping this global prevents menus, dialogs,
+ * tooltips and transient cards from drifting into slightly different systems. */
+._panel,
+._popup,
+._acrylic {
+	background-clip: padding-box;
+}
+
+html.uiSurfaceBlurDisabled {
+	._panel,
+	._popup,
+	._acrylic {
+		-webkit-backdrop-filter: none !important;
+		backdrop-filter: none !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--MI-motionScale: 0;
+		--MI-motionDistance: 0px;
+		--MI-motionDistance35: 0px;
+		--MI-motionDistance40: 0px;
+		--MI-motionDistance45: 0px;
+		--MI-motionDistanceNegative3: 0px;
+		--MI-motionDurationFast: 1ms;
+		--MI-motionDurationNormal: 1ms;
+		--MI-motionDurationSlow: 1ms;
+	}
+
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+
+@media (prefers-reduced-transparency: reduce) {
+	:root {
+		--MI-surfaceFilter: none !important;
+		--MI-modalBgFilter: none !important;
+	}
+
+	._panel,
+	._popup,
+	._acrylic {
+		-webkit-backdrop-filter: none !important;
+		backdrop-filter: none !important;
+	}
+}
+
+@media (forced-colors: active) {
+	._panel,
+	._popup,
+	._acrylic {
+		border: 1px solid CanvasText;
+		box-shadow: none !important;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
 }
