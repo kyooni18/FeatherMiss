@@ -61,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<i v-if="store.r.realtimeMode.value" class="ti ti-bolt ti-fw"></i>
 				<i v-else class="ti ti-bolt-off ti-fw"></i>
 			</button>
-			<button v-tooltip.noDelay.right="i18n.ts.note" class="_button" :class="[$style.post]" data-cy-open-post-form @click="() => { os.post(); }">
+			<button v-tooltip.noDelay.right="i18n.ts.note" class="_button" :class="[$style.post]" data-testid="open-post-form" @click="() => { os.post(); }">
 				<i class="ti ti-pencil ti-fw" :class="$style.postIcon"></i><span :class="$style.postText">{{ i18n.ts.note }}</span>
 			</button>
 			<button v-if="$i != null" v-tooltip.noDelay.right="`${i18n.ts.account}: @${$i.username}`" class="_button" :class="[$style.account]" @click="openAccountMenu">
@@ -149,8 +149,6 @@ const instanceIconCandidates = computed(() => {
 	const candidates = [
 		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
 		instance.iconUrl ?? null,
-		getProxiedImageUrlNullable(instance.faviconUrl, 'preview'),
-		instance.faviconUrl ?? null,
 		FALLBACK_INSTANCE_ICON,
 		LAST_RESORT_INSTANCE_ICON,
 	].filter((url): url is string => !!url);
@@ -163,7 +161,7 @@ const instanceIconUrl = computed(() => {
 	return candidates[index] ?? LAST_RESORT_INSTANCE_ICON;
 });
 
-watch(() => [instance.iconUrl, instance.faviconUrl, instance.mediaProxy], () => {
+watch(() => [instance.iconUrl, instance.mediaProxy], () => {
 	instanceIconCandidateIndex.value = 0;
 });
 

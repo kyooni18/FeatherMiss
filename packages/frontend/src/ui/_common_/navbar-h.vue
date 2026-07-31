@@ -84,8 +84,6 @@ const instanceIconCandidates = computed(() => {
 	const candidates = [
 		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
 		instance.iconUrl ?? null,
-		getProxiedImageUrlNullable(instance.faviconUrl, 'preview'),
-		instance.faviconUrl ?? null,
 		FALLBACK_INSTANCE_ICON,
 		LAST_RESORT_INSTANCE_ICON,
 	].filter((url): url is string => !!url);
@@ -105,7 +103,7 @@ function onInstanceIconError() {
 	}
 }
 
-watch(() => [instance.iconUrl, instance.faviconUrl, instance.mediaProxy], () => {
+watch(() => [instance.iconUrl, instance.mediaProxy], () => {
 	instanceIconCandidateIndex.value = 0;
 });
 

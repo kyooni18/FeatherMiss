@@ -33,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	:duration="transitionDuration" appear @afterLeave="onClosed" @enter="emit('opening')" @afterEnter="onOpened"
 >
 	<div v-show="manualShowing != null ? manualShowing : showing" ref="modalRootEl" v-hotkey.global="keymap" tabindex="-1" :role="type === 'dialog' ? 'dialog' : undefined" :aria-modal="type === 'dialog' ? 'true' : undefined" :class="[$style.root, { [$style.drawer]: type === 'drawer', [$style.drawerInset]: type === 'drawer' && drawerInset, [$style.dialog]: type === 'dialog', [$style.popup]: type === 'popup' }]" :style="{ zIndex, pointerEvents: (manualShowing != null ? manualShowing : showing) ? 'auto' : 'none', '--transformOrigin': transformOrigin }">
-		<div data-cy-bg :data-cy-transparent="isEnableBgTransparent" class="_modalBg" :class="[$style.bg, { [$style.bgTransparent]: isEnableBgTransparent }]" :style="{ zIndex }" @click.self="onBgClick" @contextmenu.prevent.stop="() => {}"></div>
+		<div data-cy-bg data-testid="bg" :data-cy-transparent="isEnableBgTransparent" :data-test-is-transparent="isEnableBgTransparent" class="_modalBg" :class="[$style.bg, { [$style.bgTransparent]: isEnableBgTransparent }]" :style="{ zIndex }" @click="onBgClick" @mousedown="onBgClick" @contextmenu.prevent.stop="() => {}"></div>
 		<div ref="content" :class="[$style.content, { [$style.fixed]: fixed }]" :style="{ zIndex }" @click.self="onBgClick">
 			<slot :max-height="maxHeight" :type="type"></slot>
 		</div>

@@ -220,7 +220,7 @@ function setPosition() {
 	const viewportTop = viewport?.offsetTop ?? 0;
 	const viewportRight = viewportLeft + (viewport?.width ?? window.innerWidth);
 	const viewportBottom = viewportTop + (viewport?.height ?? window.innerHeight);
-	const styles = getComputedStyle(document.documentElement);
+	const styles = window.getComputedStyle(window.document.documentElement);
 	const edge = Number.parseFloat(styles.getPropertyValue('--MI-floatingGap')) || 8;
 	const caretHeight = Number.parseFloat(getComputedStyle(props.textarea).lineHeight) || 20;
 	const width = rootEl.value.offsetWidth;
@@ -524,6 +524,7 @@ onBeforeUnmount(() => {
 	max-height: 28px;
 	margin: 0 8px 0 0;
 	border-radius: 100%;
+	object-fit: cover;
 }
 
 .userName {

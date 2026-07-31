@@ -92,7 +92,6 @@ if (store.s.realtimeMode) {
 	font-size: 1.35em;
 }
 
-
 .command {
 	margin-top: var(--MI-space12);
 	padding-left: calc(1.35em + var(--MI-space12));

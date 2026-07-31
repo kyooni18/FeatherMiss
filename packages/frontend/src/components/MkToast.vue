@@ -12,12 +12,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 	appear
 	@afterLeave="emit('closed')"
 >
-	<div
-		v-if="showing"
-		role="status"
-		aria-live="polite"
-		aria-atomic="true"
-		ref="rootEl"
+		<div
+			v-if="showing"
+			ref="rootEl"
+			role="status"
+			aria-live="polite"
+			aria-atomic="true"
 		class="_acrylic"
 		:class="$style.root"
 		:style="{ zIndex, '--toastOffset': `${stackOffset}px` }"

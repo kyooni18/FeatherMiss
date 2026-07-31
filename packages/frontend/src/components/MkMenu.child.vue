@@ -5,7 +5,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div ref="el" class="_popup _shadow" :class="[$style.root, { [$style.animated]: prefer.s.animation }]" :style="{ '--transformOrigin': transformOrigin, '--entryOffset': entryOffset }">
-	<MkMenu ref="menu" :items="items" :align="align" :width="width" :asDrawer="false" :surface="false" :class="$style.menuContent" @close="onChildClosed"/>
+	<MkMenu
+		ref="menu"
+		:items="items"
+		:align="align"
+		:width="width"
+		:asDrawer="false"
+		:surface="false"
+		:debugDisablePredictionCone="debugDisablePredictionCone"
+		:debugShowPredictionCone="debugShowPredictionCone"
+		:class="$style.menuContent"
+		@close="onChildClosed"
+	/>
 </div>
 </template>
 
@@ -20,6 +31,8 @@ const props = defineProps<{
 	anchorElement: HTMLElement;
 	rootElement: HTMLElement;
 	width?: number;
+	debugDisablePredictionCone?: boolean;
+	debugShowPredictionCone?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -138,6 +151,7 @@ onUnmounted(() => {
 
 defineExpose({
 	focusFirst: () => menu.value?.focusFirst(),
+	rootElement: el,
 	checkHit: (ev: MouseEvent) => {
 		return ev.target === el.value || el.value?.contains(ev.target as Node);
 	},

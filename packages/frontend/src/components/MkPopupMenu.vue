@@ -4,13 +4,27 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<MkModal ref="modal" v-slot="{ type, maxHeight }" :manualShowing="manualShowing" :zPriority="'high'" :anchorElement="anchorElement" :preferType="preferType" :transparentBg="true" :drawerInset="contextMenu" :returnFocusTo="returnFocusTo" @click="click" @close="onModalClose" @closed="onModalClosed">
+<MkModal
+	ref="modal"
+	v-slot="{ type, maxHeight }"
+	:manualShowing="manualShowing"
+	:zPriority="'high'"
+	:anchorElement="anchorElement"
+	:transparentBg="true"
+	:returnFocusTo="returnFocusTo"
+	@click="click"
+	@close="onModalClose"
+	@closed="onModalClosed"
+>
 	<MkMenu
 		:items="items"
 		:align="align"
 		:width="width"
 		:max-height="maxHeight"
 		:asDrawer="type === 'drawer'"
+		:returnFocusTo="returnFocusTo"
+		:debugDisablePredictionCone="debugDisablePredictionCone"
+		:debugShowPredictionCone="debugShowPredictionCone"
 		:drawerLabel="contextMenu ? i18n.ts.quickAction : undefined"
 		:insetDrawer="contextMenu"
 		:class="{ [$style.drawer]: type === 'drawer', [$style.contextDrawer]: type === 'drawer' && contextMenu }"
@@ -34,6 +48,8 @@ defineProps<{
 	returnFocusTo?: HTMLElement | null;
 	preferType?: 'auto' | 'popup' | 'drawer';
 	contextMenu?: boolean;
+	debugDisablePredictionCone?: boolean;
+	debugShowPredictionCone?: boolean;
 }>();
 
 const emit = defineEmits<{

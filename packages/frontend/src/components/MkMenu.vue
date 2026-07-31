@@ -41,6 +41,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 		}"
 		@keydown.stop="onMenuKeydown"
 		@contextmenu.self.prevent="() => {}"
+		@mousemove.passive="onMouseMove"
+		@mouseleave.passive="onMouseLeave"
 	>
 		<template v-for="item in (items2 ?? [])">
 			<div v-if="item.type === 'divider'" role="separator" tabindex="-1" :class="$style.divider"></div>
@@ -150,6 +152,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				@keydown.enter.prevent="showRadioOptions(item, $event)"
 				@keydown.right.prevent="showRadioOptions(item, $event)"
 				@keydown.space.prevent="showRadioOptions(item, $event)"
+				@mousemove="parentMouseMove"
 				@click.prevent="!preferClick ? null : showRadioOptions(item, $event)"
 			>
 				<i v-if="item.icon" class="ti-fw" :class="[$style.icon, item.icon]" style="pointer-events: none;"></i>
@@ -194,6 +197,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				@keydown.enter.prevent="showChildren(item, $event)"
 				@keydown.right.prevent="showChildren(item, $event)"
 				@keydown.space.prevent="showChildren(item, $event)"
+				@mousemove="parentMouseMove"
 				@click.prevent="!preferClick ? null : showChildren(item, $event)"
 			>
 				<i v-if="item.icon" class="ti-fw" :class="[$style.icon, item.icon]" style="pointer-events: none;"></i>
@@ -230,15 +234,29 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-if="items2 == null || items2.length === 0" tabindex="-1" :class="[$style.none, $style.item]">
 			<span>{{ i18n.ts.none }}</span>
 		</span>
+
+		<div
+			:class="[$style.guard, { [$style.showGuard]: debugShowPredictionCone }]"
+			:style="{ clipPath: guardPolygon, top: guard.top + 'px' }"
+			@mousemove="guardMouseMove"
+		></div>
 	</div>
-	<div v-if="childMenu">
-		<XChild ref="child" :items="childMenu" :anchorElement="childTarget!" :rootElement="itemsEl!" @actioned="childActioned" @closed="closeChild(true)"/>
-	</div>
+	<XChild
+		v-if="childMenu" :key="childMenuKey"
+		ref="child"
+		:items="childMenu"
+		:anchorElement="childTarget!"
+		:rootElement="itemsEl!"
+		:debugDisablePredictionCone="props.debugDisablePredictionCone"
+		:debugShowPredictionCone="props.debugShowPredictionCone"
+		@actioned="childActioned"
+		@closed="closeChild(true)"
+	/>
 </div>
 </template>
 
 <script lang="ts">
-import { computed, defineAsyncComponent, inject, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, unref, watch, shallowRef } from 'vue';
+import { computed, defineAsyncComponent, inject, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, unref, watch, shallowRef, reactive, isRef } from 'vue';
 import type { MenuItem, InnerMenuItem, MenuPending, MenuAction, MenuSwitch, MenuRadio, MenuRadioOption, MenuParent } from '@/types/menu.js';
 import type { Keymap } from '@/utility/hotkey.js';
 import MkSwitchButton from '@/components/MkSwitch.button.vue';
@@ -262,6 +280,8 @@ const props = withDefaults(defineProps<{
 	drawerLabel?: string;
 	insetDrawer?: boolean;
 	surface?: boolean;
+	debugDisablePredictionCone?: boolean;
+	debugShowPredictionCone?: boolean;
 }>(), {
 	asDrawer: false,
 	insetDrawer: false,
@@ -336,7 +356,7 @@ type DrawerLevel = {
 	label?: string;
 };
 
-const drawerHistory = ref<DrawerLevel[]>([]);
+const drawerHistory = shallowRef<DrawerLevel[]>([]);
 const currentDrawerItems = shallowRef<MenuItem[]>(props.items);
 const activeDrawerLabel = ref(props.drawerLabel);
 const canGoBackInDrawer = computed(() => drawerHistory.value.length > 0);
@@ -393,6 +413,7 @@ watch(() => props.drawerLabel, label => {
 });
 
 const childMenu = ref<MenuItem[] | null>();
+const childMenuKey = ref(0);
 const childTarget = shallowRef<HTMLElement>();
 
 function closeChild(restoreFocus = false) {
@@ -439,34 +460,34 @@ function onItemMouseLeave() {
 }
 
 async function showRadioOptions(item: MenuRadio, ev: MouseEvent | PointerEvent | KeyboardEvent) {
-	const children: MenuItem[] = Object.keys(item.options).map<MenuRadioOption>(key => {
-		const value = item.options[key];
+	const children: MenuItem[] = item.options.map<MenuRadioOption>(def => {
 		return {
 			type: 'radioOption',
-			text: key,
+			text: def.label,
 			action: () => {
-				if ('value' in item.ref) {
-					item.ref.value = value;
+				if (isRef(item.ref)) {
+					item.ref.value = def.value;
 				} else {
 					// @ts-expect-error リアクティビティは保たれる
-					item.ref = value;
+					item.ref = def.value;
 				}
 			},
 			active: computed(() => {
-				if ('value' in item.ref) {
-					return item.ref.value === value;
+				if (isRef(item.ref)) {
+					return item.ref.value === def.value;
 				} else {
-					return item.ref === value;
+					return item.ref === def.value;
 				}
 			}),
 		};
 	});
 
 	if (props.asDrawer) {
-		openDrawerLevel(children, item.text);
+		openDrawerLevel(children, unref(item.text));
 	} else {
 		childTarget.value = (ev.currentTarget ?? ev.target) as HTMLElement;
 		childMenu.value = children;
+		childMenuKey.value++;
 		childShowingItem.value = item;
 		focusChildFromKeyboard(ev);
 	}
@@ -490,11 +511,12 @@ async function showChildren(item: MenuParent, ev: MouseEvent | PointerEvent | Ke
 	childrenCache.set(item, children);
 
 	if (props.asDrawer) {
-		openDrawerLevel(children, item.text);
+		openDrawerLevel(children, unref(item.text));
 	} else {
 		childTarget.value = (ev.currentTarget ?? ev.target) as HTMLElement;
 		// これでもリアクティビティは保たれる
 		childMenu.value = children;
+		childMenuKey.value++;
 		childShowingItem.value = item;
 		focusChildFromKeyboard(ev);
 	}
@@ -515,9 +537,14 @@ function close(actioned = false) {
 	});
 }
 
-function switchItem(item: MenuSwitch & { ref: any }) {
+function switchItem(item: MenuSwitch) {
 	if (item.disabled !== undefined && (typeof item.disabled === 'boolean' ? item.disabled : item.disabled.value)) return;
-	item.ref = !item.ref;
+	if (isRef(item.ref)) {
+		item.ref.value = !item.ref.value;
+	} else {
+		// @ts-expect-error リアクティビティは保たれる
+		item.ref = !item.ref;
+	}
 }
 
 function focusableMenuItems(): HTMLElement[] {
@@ -636,6 +663,66 @@ onBeforeUnmount(() => {
 defineExpose({
 	focusFirst,
 });
+const guard = reactive({
+	enabled: false,
+	top: 0,
+	cursorSideX: 0,
+	cursorSideY: 0,
+	childSideTopY: 0,
+	childSideBottomY: 0,
+	direction: 'toRight',
+});
+
+const guardPolygon = computed(() =>
+	guard.enabled
+		? guard.direction === 'toRight'
+			? `polygon(${guard.cursorSideX}px ${guard.cursorSideY}px, 101% ${guard.childSideTopY}px, 101% ${guard.childSideBottomY}px)` // ぴったり端に100%で覆ってもなぜか端でカーソルのイベントが後ろに貫通するので1%だけ伸ばす
+			: `polygon(0% ${guard.childSideTopY}px, 0% ${guard.childSideBottomY}px, ${guard.cursorSideX}px ${guard.cursorSideY}px)`
+		: 'polygon(0 0, 0 0, 0 0)',
+);
+
+function parentMouseMove(ev: MouseEvent) {
+	if (props.debugDisablePredictionCone) return;
+	if (isTouchUsing) return;
+	if (child.value == null || child.value.rootElement == null) return;
+
+	ev.stopPropagation();
+
+	const itemBounding = (ev.currentTarget as HTMLElement).getBoundingClientRect();
+	const rootBounding = itemsEl.value!.getBoundingClientRect();
+	const childBounding = child.value.rootElement.getBoundingClientRect();
+	const isChildRight = childBounding.left > rootBounding.left;
+
+	const CURSOR_SIDE_X_PADDING = 3; // (px)
+	const CHILD_SIDE_Y_PADDING_BASE = 70; // (px)
+	const CHILD_SIDE_Y_PADDING_EXTEND = 30; // (px)
+	const SCALE_FACTOR_COMPUTE_DISTANCE = 300; // コーンの広さが最大になる距離(px)
+	const localMouseX = ev.clientX - itemBounding.left;
+	const localMouseY = ev.clientY - rootBounding.top;
+	const scaleFactor = isChildRight ? Math.min((itemBounding.width - localMouseX), SCALE_FACTOR_COMPUTE_DISTANCE) / SCALE_FACTOR_COMPUTE_DISTANCE : Math.min(localMouseX, SCALE_FACTOR_COMPUTE_DISTANCE) / SCALE_FACTOR_COMPUTE_DISTANCE;
+	const cursorSideXPadding = isChildRight ? CURSOR_SIDE_X_PADDING : -CURSOR_SIDE_X_PADDING;
+	const childSideYPadding = CHILD_SIDE_Y_PADDING_BASE + (CHILD_SIDE_Y_PADDING_EXTEND * scaleFactor);
+
+	guard.enabled = true;
+	guard.top = itemsEl.value!.scrollTop;
+	guard.cursorSideX = localMouseX - cursorSideXPadding;
+	guard.cursorSideY = localMouseY;
+	guard.childSideTopY = (childBounding.top - rootBounding.top) - childSideYPadding;
+	guard.childSideBottomY = (childBounding.bottom - rootBounding.top) + childSideYPadding;
+	guard.direction = isChildRight ? 'toRight' : 'toLeft';
+}
+
+function onMouseLeave() {
+	guard.enabled = false;
+}
+
+function onMouseMove() {
+	guard.enabled = false;
+}
+
+function guardMouseMove(ev: MouseEvent) {
+	ev.stopPropagation();
+}
 </script>
 
 <style lang="scss" module>
@@ -802,8 +889,26 @@ defineExpose({
 	}
 
 	&:not(:disabled) {
-		&:hover, &:focus-visible:active, &:focus-visible.active { color: var(--menuHoverFg); &::before { background-color: var(--menuHoverBg); } }
-		&:not(:focus-visible):active, &:not(:focus-visible).active { color: var(--menuActiveFg); transform: scale(0.99); &::before { background-color: var(--menuActiveBg); } }
+		&:hover,
+		&:focus-visible:active,
+		&:focus-visible.active {
+			color: var(--menuHoverFg, var(--MI_THEME-accent));
+			position: relative;
+			z-index: 10; // guardより上にする
+
+			&::before {
+				background-color: var(--menuHoverBg, var(--MI_THEME-accentedBg));
+			}
+		}
+
+		&:not(:focus-visible):active,
+		&:not(:focus-visible).active {
+			color: var(--menuActiveFg, var(--MI_THEME-fgOnAccent));
+
+			&::before {
+				background-color: var(--menuActiveBg, var(--MI_THEME-accent));
+			}
+		}
 	}
 
 	&:disabled { cursor: not-allowed; opacity: 0.52; }
@@ -851,5 +956,21 @@ defineExpose({
 	.root.asDrawer { max-height: min(86dvh, 720px); }
 	.root.asDrawer > .menu { padding-inline: 8px; }
 	.drawerHeader { padding-inline: 8px; }
+}
+
+.guard {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+
+	&.showGuard {
+		background: #0f04;
+
+		&:hover {
+			background: #f004;
+		}
+	}
 }
 </style>

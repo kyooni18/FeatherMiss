@@ -673,7 +673,6 @@ function reset() {
 	flex-wrap: wrap;
 }
 
-
 @media (max-width: 900px) {
 	.studio {
 		grid-template-columns: 1fr;
