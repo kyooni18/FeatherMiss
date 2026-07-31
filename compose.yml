@@ -2,6 +2,7 @@ name: feathermiss
 services:
   web:
     build: .
+    image: kyooni18/feathermiss-web:latest
     restart: always
     links:
       - db
