@@ -71,19 +71,19 @@ function close() {
 <style lang="scss" scoped>
 .szkkfdyq {
 	max-height: 100%;
-	width: min(460px, calc(100vw - var(--MI-floatingGapDouble)));
+	width: min(460px, 100vw);
 	margin: auto;
-	padding: var(--MI-space24);
+	padding: 24px;
 	box-sizing: border-box;
 	overflow: auto;
 	overscroll-behavior: contain;
 	text-align: left;
-	border-radius: var(--MI-popupRadius);
+	border-radius: 16px;
 
 	&.asDrawer {
 		width: 100%;
-		padding: var(--MI-space16) var(--MI-space16) max(env(safe-area-inset-bottom, 0px), var(--MI-space16)) var(--MI-space16);
-		border-radius: var(--MI-drawerRadius);
+		padding: 16px 16px max(env(safe-area-inset-bottom, 0px), 16px) 16px;
+		border-radius: 24px;
 		border-bottom-right-radius: 0;
 		border-bottom-left-radius: 0;
 		text-align: center;
@@ -101,8 +101,8 @@ function close() {
 			justify-content: center;
 			vertical-align: bottom;
 			height: 100px;
-			border-radius: var(--MI-buttonRadius);
-			padding: var(--MI-space10);
+			border-radius: 10px;
+			padding: 10px;
 			box-sizing: border-box;
 
 			&:hover {

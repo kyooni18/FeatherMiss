@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div class="_popup _shadow" :class="$style.root" role="region" aria-live="polite">
+<div class="_panel _shadow" :class="$style.root">
 	<div :class="$style.icon">
 		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-open-source" width="40" height="40" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -35,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkButton @click="close">{{ i18n.ts.gotIt }}</MkButton>
 		</div>
 	</div>
-	<button class="_button" :class="$style.close" :aria-label="i18n.ts.close" @click="close"><i class="ti ti-x" aria-hidden="true"></i></button>
+	<button class="_button" :class="$style.close" @click="close"><i class="ti ti-x"></i></button>
 </div>
 </template>
 
@@ -63,22 +63,20 @@ function close() {
 .root {
 	position: fixed;
 	z-index: v-bind(zIndex);
-	bottom: calc(var(--MI-minBottomSpacing) + max(var(--MI-floatingGap), env(safe-area-inset-bottom, 0px)));
-	left: max(var(--MI-floatingGap), env(safe-area-inset-left, 0px));
-	right: max(var(--MI-floatingGap), env(safe-area-inset-right, 0px));
+	bottom: var(--MI-margin);
+	left: 0;
+	right: 0;
 	margin: auto;
 	box-sizing: border-box;
-	width: min(500px, calc(100vw - var(--MI-floatingGapDouble)));
-	max-height: calc(100dvh - var(--MI-floatingGapDouble));
+	width: calc(100% - (var(--MI-margin) * 2));
+	max-width: 500px;
 	display: flex;
-	overflow: clip auto;
-	overscroll-behavior: contain;
 }
 
 .icon {
 	text-align: center;
-	padding-top: var(--MI-space24);
-	width: 96px;
+	padding-top: 25px;
+	width: 100px;
 	color: var(--MI_THEME-accent);
 }
 @media (max-width: 500px) {
@@ -93,7 +91,7 @@ function close() {
 }
 
 .main {
-	padding: var(--MI-space24) var(--MI-space24) var(--MI-space24) 0;
+	padding: 25px 25px 25px 0;
 	flex: 1;
 }
 
@@ -101,10 +99,7 @@ function close() {
 	position: absolute;
 	top: 8px;
 	right: 8px;
-	width: 40px;
-	height: 40px;
-	border-radius: var(--MI-buttonPillRadius);
-	background: var(--MI_THEME-buttonBg);
+	padding: 8px;
 }
 
 .title {

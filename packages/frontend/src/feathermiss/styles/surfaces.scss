@@ -1,0 +1,66 @@
+/*
+ * SPDX-FileCopyrightText: syuilo and misskey-project
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+:root[data-feathermiss='enabled'] {
+	._panel {
+		border-radius: var(--feathermiss-panel-radius);
+		border: var(--MI-surfaceBorderWidth, 1px) solid var(--feathermiss-surface-border);
+		box-shadow: var(--feathermiss-surface-shadow);
+		-webkit-backdrop-filter: var(--feathermiss-surface-filter);
+		backdrop-filter: var(--feathermiss-surface-filter);
+	}
+
+	._popup,
+	._acrylic {
+		border-radius: var(--feathermiss-popup-radius);
+		border: var(--MI-surfaceBorderWidth, 1px) solid var(--feathermiss-surface-border);
+		box-shadow: var(--feathermiss-surface-shadow-raised);
+		-webkit-backdrop-filter: var(--feathermiss-surface-filter);
+		backdrop-filter: var(--feathermiss-surface-filter);
+	}
+
+	._shadow {
+		box-shadow: var(--feathermiss-surface-shadow-raised) !important;
+	}
+
+	._button,
+	._buttonPrimary,
+	._buttonGradate,
+	._borderButton,
+	._textButton,
+	button._button,
+	a._button {
+		box-shadow: none !important;
+	}
+
+	._buttonPrimary {
+		padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
+		min-height: var(--MI-buttonMinHeight);
+		border-radius: var(--MI-buttonRadius);
+	}
+
+	._pageScrollable,
+	._pageScrollableReversed {
+		box-sizing: border-box;
+		padding-bottom: var(--MI-minBottomSpacing, 0px);
+		scroll-padding-bottom: calc(var(--MI-minBottomSpacing, 0px) + var(--MI-margin));
+	}
+
+	._modalBg {
+		background: color-mix(in srgb, var(--MI_THEME-modalBg) calc(var(--MI-overlayOpacity) * 100%), transparent);
+		-webkit-backdrop-filter: var(--MI-modalBgFilter);
+		backdrop-filter: var(--MI-modalBgFilter);
+	}
+
+	:focus-visible {
+		outline-width: var(--MI-focusOutlineWidth);
+		outline-offset: var(--MI-focusOutlineOffset);
+	}
+
+	._panel.mkw-post-form {
+		border-radius: calc(var(--MI-radius) + var(--MI-postFormRadiusOffset));
+		box-shadow: var(--feathermiss-surface-shadow-raised);
+	}
+}

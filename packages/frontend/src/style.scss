@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+@use './feathermiss/styles/index';
+
 /*
  * SPDX-FileCopyrightText: syuilo and misskey-project
  *
@@ -8,176 +10,24 @@
 
 :root {
 	--MI-radius: 12px;
-	--MI-buttonRadius: 12px;
-	--MI-buttonPillRadius: 999px;
-	--MI-buttonPaddingY: 7px;
-	--MI-buttonPaddingX: 14px;
-	--MI-buttonPaddingYSmall: 6px;
-	--MI-buttonPaddingXSmall: 12px;
-	--MI-buttonPaddingYLarge: 8px;
-	--MI-buttonPaddingXLarge: 16px;
-	--MI-buttonMinHeight: 34px;
-	--MI-buttonMinHeightSmall: 30px;
-	--MI-buttonMinHeightLarge: 38px;
-	--MI-buttonIconSize: 40px;
-	--MI-mobileDockRadius: 22px;
-	--MI-mobileDockPaddingX: 10px;
-	--MI-mobileDockPaddingTop: 8px;
-	--MI-mobileDockPaddingBottom: 0px;
 	--MI-marginFull: 16px;
 	--MI-marginHalf: 10px;
-	--MI-materialBg: rgba(255, 255, 255, 0.58);
-	--MI-materialFilter: blur(9px) saturate(125%);
-	--MI-materialBorder: rgba(0, 0, 0, 0.07);
-	--MI-materialShadow: 0 14px 38px rgba(0, 0, 0, 0.24), 0 4px 12px rgba(0, 0, 0, 0.12);
-	--MI-materialShadowRaised: 0 26px 90px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.16);
-	--MI-surfaceFilter: var(--MI-materialFilter);
-	--MI-surfacePanel: var(--MI-materialBg);
-	--MI-surfacePopup: var(--MI-materialBg);
-	--MI-surfaceNav: var(--MI-materialBg);
-	--MI-surfacePage: var(--MI-materialBg);
-	--MI-surfaceBorder: var(--MI-materialBorder);
-	--MI-surfaceBorderWidth: 1px;
-	--MI-surfaceShadow: var(--MI-materialShadow);
-	--MI-surfaceShadowRaised: var(--MI-materialShadowRaised);
-	--MI-uiModalBlur: 4px;
-	--MI-modalBgFilter: blur(6px);
-	--MI-overlayOpacity: 0.18;
-	--MI-squircleSize: 28px;
-	--MI-popupRadiusOffset: 12px;
-	--MI-popupRadius: 24px;
-	--MI-drawerRadius: 24px;
-	--MI-postFormRadiusOffset: 12px;
-	--MI-focusOutlineWidth: 2px;
-	--MI-focusOutlineOffset: 2px;
-	--MI-spacingScale: 1;
-	--MI-space7: 7px;
-	--MI-space8: 8px;
-	--MI-space10: 10px;
-	--MI-space12: 12px;
-	--MI-space13: 13px;
-	--MI-space16: 16px;
-	--MI-space18: 18px;
-	--MI-space20: 20px;
-	--MI-space21: 21px;
-	--MI-space24: 24px;
-	--MI-space30: 30px;
-	--MI-gapDefault: var(--MI-space16);
-	--MI-menuItemHeight: 38px;
-	--MI-menuMinWidth: 220px;
-	--MI-floatingGap: 10px;
-	--MI-floatingGapDouble: 20px;
-	--MI-drawerWidth: 324px;
-	--MI-dialogPadding: 30px;
-	--MI-dialogPaddingNarrow: 16.5px;
-	--MI-tooltipRadius: 10px;
-	--MI-motionScale: 1;
-	--MI-motionDistance: 10px;
-	--MI-motionDistance35: 3.5px;
-	--MI-motionDistance40: 4px;
-	--MI-motionDistance45: 4.5px;
-	--MI-motionDistanceNegative35: -3.5px;
-	--MI-motionDistanceNegative3: -30px;
-	--MI-motionDurationFast: 130ms;
-	--MI-motionDurationNormal: 220ms;
-	--MI-motionDurationSlow: 340ms;
-	--MI-baseFontFamily: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
-	--MI-baseFontWeight: 400;
 
 	--MI-margin: var(--MI-marginFull);
 
 	// switch dynamically
 	--MI-minBottomSpacingMobile: calc(72px + max(12px, env(safe-area-inset-bottom, 0px)));
-	--MI-minBottomSpacing: 0px;
+	--MI-minBottomSpacing: var(--MI-minBottomSpacingMobile);
 
 	@media (max-width: 500px) {
 		--MI-margin: var(--MI-marginHalf);
-		--MI-gapDefault: var(--MI-space10);
-		--MI-radius: 14px;
-		--MI-buttonRadius: 14px;
-		--MI-buttonPaddingY: 6px;
-		--MI-buttonPaddingX: 12px;
-		--MI-buttonPaddingYSmall: 5px;
-		--MI-buttonPaddingXSmall: 10px;
-		--MI-buttonPaddingYLarge: 7px;
-		--MI-buttonPaddingXLarge: 14px;
-		--MI-buttonMinHeight: 32px;
-		--MI-buttonMinHeightSmall: 28px;
-		--MI-buttonMinHeightLarge: 36px;
-		--MI-buttonIconSize: 38px;
-		--MI-mobileDockRadius: 20px;
-		--MI-squircleSize: 24px;
-		--MI-materialFilter: blur(6px) saturate(110%);
-		--MI-uiModalBlur: 2px;
-		--MI-modalBgFilter: blur(2px);
-		--MI-popupRadiusOffset: 10px;
-		--MI-popupRadius: 24px;
-		--MI-drawerRadius: 24px;
-		--MI-postFormRadiusOffset: 10px;
-		--MI-materialShadow: 0 10px 24px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(0, 0, 0, 0.1);
-		--MI-materialShadowRaised: 0 16px 44px rgba(0, 0, 0, 0.26), 0 6px 18px rgba(0, 0, 0, 0.13);
-		--MI-focusOutlineOffset: 1px;
-	}
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--MI-materialBg: rgba(20, 20, 22, 0.56);
-		--MI-materialBorder: rgba(255, 255, 255, 0.12);
-		--MI-materialShadow: 0 18px 46px rgba(0, 0, 0, 0.46), 0 6px 18px rgba(0, 0, 0, 0.34);
-		--MI-materialShadowRaised: 0 32px 110px rgba(0, 0, 0, 0.58), 0 12px 34px rgba(0, 0, 0, 0.4);
-		--MI-uiModalBlur: 4px;
-		--MI-modalBgFilter: blur(4px);
-		--MI-overlayOpacity: 0.3;
-	}
-}
-
-@media (prefers-color-scheme: dark) and (max-width: 500px) {
-	:root {
-		--MI-uiModalBlur: 2px;
-		--MI-modalBgFilter: blur(2px);
-		--MI-materialShadow: 0 12px 30px rgba(0, 0, 0, 0.34), 0 3px 12px rgba(0, 0, 0, 0.2);
-		--MI-materialShadowRaised: 0 20px 56px rgba(0, 0, 0, 0.4), 0 8px 22px rgba(0, 0, 0, 0.26);
-	}
-}
-
-@supports (color: color(from white srgb r g b)) {
-	:root {
-		--MI-materialBg: color(from var(--MI_THEME-panel) srgb r g b / 0.58);
-		--MI-materialBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.07);
-		--MI-materialShadow: 0 14px 38px color(from var(--MI_THEME-shadow) srgb r g b / 0.24), 0 4px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.12);
-		--MI-materialShadowRaised: 0 26px 90px color(from var(--MI_THEME-shadow) srgb r g b / 0.3), 0 10px 28px color(from var(--MI_THEME-shadow) srgb r g b / 0.16);
-	}
-
-	@media (max-width: 500px) {
-		:root {
-			--MI-materialShadow: 0 10px 24px color(from var(--MI_THEME-shadow) srgb r g b / 0.22), 0 2px 8px color(from var(--MI_THEME-shadow) srgb r g b / 0.1);
-			--MI-materialShadowRaised: 0 16px 44px color(from var(--MI_THEME-shadow) srgb r g b / 0.26), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.13);
-		}
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--MI-materialBg: color(from var(--MI_THEME-panel) srgb r g b / 0.56);
-			--MI-materialBorder: color(from var(--MI_THEME-fg) srgb r g b / 0.12);
-			--MI-materialShadow: 0 18px 46px color(from var(--MI_THEME-shadow) srgb r g b / 0.46), 0 6px 18px color(from var(--MI_THEME-shadow) srgb r g b / 0.34);
-			--MI-materialShadowRaised: 0 32px 110px color(from var(--MI_THEME-shadow) srgb r g b / 0.58), 0 12px 34px color(from var(--MI_THEME-shadow) srgb r g b / 0.4);
-		}
-	}
-
-	@media (prefers-color-scheme: dark) and (max-width: 500px) {
-		:root {
-			--MI-materialShadow: 0 12px 30px color(from var(--MI_THEME-shadow) srgb r g b / 0.34), 0 3px 12px color(from var(--MI_THEME-shadow) srgb r g b / 0.2);
-			--MI-materialShadowRaised: 0 20px 56px color(from var(--MI_THEME-shadow) srgb r g b / 0.4), 0 8px 22px color(from var(--MI_THEME-shadow) srgb r g b / 0.26);
-		}
 	}
 }
 
 html {
 	overflow: auto;
 	overflow-wrap: break-word;
-	font-family: var(--MI-baseFontFamily);
-	font-weight: var(--MI-baseFontWeight);
+	font-family: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-size: 14px;
 	line-height: 1.35;
 	text-size-adjust: 100%;
@@ -202,7 +52,7 @@ html {
 	}
 
 	&.useSystemFont {
-		--MI-baseFontFamily: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		font-family: system-ui;
 	}
 
 	&:not(.forceSelectableAll) {
@@ -302,8 +152,8 @@ rt {
 }
 
 :focus-visible {
-	outline: var(--MI_THEME-focus) solid var(--MI-focusOutlineWidth);
-	outline-offset: var(--MI-focusOutlineOffset);
+	outline: var(--MI_THEME-focus) solid 2px;
+	outline-offset: -2px;
 
 	&:hover {
 		text-decoration: none;
@@ -356,19 +206,16 @@ rt {
 
 ._pageContainer {
 	container-type: size;
-	contain: size layout style;
+	contain: strict;
 	overflow: auto;
 	overscroll-behavior: contain;
 }
 
 ._pageScrollable {
 	height: 100%;
-	box-sizing: border-box;
 	overflow: clip;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
-	padding-bottom: var(--MI-minBottomSpacing);
-	scroll-padding-bottom: calc(var(--MI-minBottomSpacing) + var(--MI-margin));
 
 	/*
 	理屈は知らないけど、ここでbackgroundを設定しておかないと
@@ -381,14 +228,11 @@ rt {
 
 ._pageScrollableReversed {
 	height: 100%;
-	box-sizing: border-box;
 	overflow: clip;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
 	display: flex;
 	flex-direction: column-reverse;
-	padding-bottom: var(--MI-minBottomSpacing);
-	scroll-padding-bottom: calc(var(--MI-minBottomSpacing) + var(--MI-margin));
 }
 
 ._indicatorCircle {
@@ -441,14 +285,13 @@ rt {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0, 0, 0, var(--MI-overlayOpacity));
-	background: color(from var(--MI_THEME-modalBg) srgb r g b / var(--MI-overlayOpacity));
+	background: var(--MI_THEME-modalBg);
 	-webkit-backdrop-filter: var(--MI-modalBgFilter);
 	backdrop-filter: var(--MI-modalBgFilter);
 }
 
 ._shadow {
-	box-shadow: var(--MI-surfaceShadowRaised) !important;
+	box-shadow: 0px 4px 32px var(--MI_THEME-shadow) !important;
 }
 
 ._button {
@@ -474,24 +317,10 @@ rt {
 	}
 }
 
-/* Keep button surfaces flat: disable drop shadows on button primitives. */
-._button,
-._buttonPrimary,
-._buttonGradate,
-._borderButton,
-._textButton,
-button._button,
-a._button {
-	box-shadow: none !important;
-}
-
 ._buttonPrimary {
 	@extend ._button;
-	padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
-	min-height: var(--MI-buttonMinHeight);
 	color: var(--MI_THEME-fgOnAccent);
 	background: var(--MI_THEME-accent);
-	border-radius: var(--MI-buttonRadius);
 
 	&:not(:disabled):hover {
 		background: hsl(from var(--MI_THEME-accent) h s calc(l + 5));
@@ -535,12 +364,8 @@ a._button {
 }
 
 ._panel {
-	background: var(--MI-surfacePanel, var(--MI-materialBg));
+	background: var(--MI_THEME-panel);
 	border-radius: var(--MI-radius);
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	box-shadow: var(--MI-surfaceShadow);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
 	overflow: clip;
 }
 
@@ -551,24 +376,24 @@ a._button {
 ._gaps_m {
 	display: flex;
 	flex-direction: column;
-	gap: var(--MI-space21);
+	gap: 21px;
 }
 
 ._gaps_s {
 	display: flex;
 	flex-direction: column;
-	gap: var(--MI-space10);
+	gap: 10px;
 }
 
 ._gaps {
 	display: flex;
 	flex-direction: column;
-	gap: var(--MI-gapDefault);
+	gap: var(--MI-margin);
 }
 
 ._buttons {
 	display: flex;
-	gap: var(--MI-space8);
+	gap: 8px;
 	flex-wrap: wrap;
 }
 
@@ -582,11 +407,11 @@ a._button {
 	@extend ._button;
 	display: block;
 	width: 100%;
-	padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
+	padding: 10px;
 	box-sizing: border-box;
 	text-align: center;
 	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: var(--MI-buttonRadius);
+	border-radius: var(--MI-radius);
 
 	&:active {
 		border-color: var(--MI_THEME-accent);
@@ -594,46 +419,15 @@ a._button {
 }
 
 ._popup {
-	background: var(--MI-surfacePopup, var(--MI-materialBg));
-	border-radius: calc(var(--MI-radius) + var(--MI-popupRadiusOffset));
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	box-shadow: var(--MI-surfaceShadowRaised);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
-	contain: layout style;
+	background: var(--MI_THEME-popup);
+	border-radius: var(--MI-radius);
+	contain: content;
 }
 
 ._acrylic {
-	background: var(--MI-surfacePopup, var(--MI-materialBg));
-	-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
-	backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	box-shadow: var(--MI-surfaceShadowRaised);
-}
-
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-	:root {
-		--MI-modalBgFilter: none;
-		--MI-materialBg: var(--MI_THEME-panel);
-	}
-
-	._panel,
-	._popup,
-	._acrylic {
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
-	}
-}
-
-._panel.mkw-post-form {
-	border-radius: calc(var(--MI-radius) + var(--MI-postFormRadiusOffset));
-	box-shadow: var(--MI-surfaceShadowRaised);
-}
-
-@media (max-width: 500px) {
-	._panel {
-		border-radius: calc(var(--MI-radius) + 2px);
-	}
+	background: color(from var(--MI_THEME-panel) srgb r g b / 0.5);
+	-webkit-backdrop-filter: var(--MI-blur, blur(15px));
+	backdrop-filter: var(--MI-blur, blur(15px));
 }
 
 ._formLinksGrid {
@@ -961,65 +755,4 @@ html[data-color-scheme=dark] ._woodenFrame {
 @keyframes mfm-rainbow {
 	0% { filter: hue-rotate(0deg) contrast(150%) saturate(150%); }
 	100% { filter: hue-rotate(360deg) contrast(150%) saturate(150%); }
-}
-
-/* Shared floating-surface behavior. Keeping this global prevents menus, dialogs,
- * tooltips and transient cards from drifting into slightly different systems. */
-._panel,
-._popup,
-._acrylic {
-	background-clip: padding-box;
-}
-
-html.uiSurfaceBlurDisabled {
-	._panel,
-	._popup,
-	._acrylic {
-		-webkit-backdrop-filter: none !important;
-		backdrop-filter: none !important;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	:root {
-		--MI-motionScale: 0;
-		--MI-motionDistance: 0px;
-		--MI-motionDistance35: 0px;
-		--MI-motionDistance40: 0px;
-		--MI-motionDistance45: 0px;
-		--MI-motionDistanceNegative3: 0px;
-		--MI-motionDurationFast: 1ms;
-		--MI-motionDurationNormal: 1ms;
-		--MI-motionDurationSlow: 1ms;
-	}
-
-	html {
-		scroll-behavior: auto;
-	}
-}
-
-
-@media (prefers-reduced-transparency: reduce) {
-	:root {
-		--MI-surfaceFilter: none !important;
-		--MI-modalBgFilter: none !important;
-	}
-
-	._panel,
-	._popup,
-	._acrylic {
-		-webkit-backdrop-filter: none !important;
-		backdrop-filter: none !important;
-	}
-}
-
-@media (forced-colors: active) {
-	._panel,
-	._popup,
-	._acrylic {
-		border: 1px solid CanvasText;
-		box-shadow: none !important;
-		-webkit-backdrop-filter: none;
-		backdrop-filter: none;
-	}
 }

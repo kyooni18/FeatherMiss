@@ -21,12 +21,8 @@ defineProps<{
 
 <style lang="scss" module>
 .root {
-	background: var(--MI-surfacePopup, var(--MI_THEME-popup));
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	border-radius: calc(var(--MI-radius) + 2px);
-	box-shadow: var(--MI-surfaceShadowRaised);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+	border-radius: 8px;
 	overflow: clip;
 	contain: content;
 }

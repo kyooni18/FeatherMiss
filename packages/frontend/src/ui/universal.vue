@@ -130,10 +130,10 @@ $widgets-hide-threshold: 1090px;
 .root {
 	height: 100dvh;
 	overflow: clip;
-	contain: size layout style;
+	contain: strict;
 	display: flex;
 	flex-direction: column;
-	background: var(--MI-materialBg);
+	background: var(--MI_THEME-navBg);
 }
 
 .nonTitlebarArea {
@@ -143,7 +143,7 @@ $widgets-hide-threshold: 1090px;
 }
 
 .sidebar {
-	border-right: solid 1px var(--MI-surfaceBorder);
+	border-right: solid 0.5px var(--MI_THEME-divider);
 }
 
 .contents {
@@ -154,13 +154,8 @@ $widgets-hide-threshold: 1090px;
 	min-width: 0;
 
 	&.withSidebarAndTitlebar {
-		background: var(--MI-materialBg);
-		border-radius: calc(var(--MI-radius) + 4px) 0 0 0;
-		border: 1px solid var(--MI-surfaceBorder);
-		border-right: none;
-		box-shadow: var(--MI-surfaceShadow);
-		-webkit-backdrop-filter: var(--MI-surfaceFilter);
-		backdrop-filter: var(--MI-surfaceFilter);
+		background: var(--MI_THEME-navBg);
+		border-radius: 12px 0 0 0;
 		overflow: clip;
 	}
 }
@@ -182,10 +177,8 @@ $widgets-hide-threshold: 1090px;
 	box-sizing: border-box;
 	overflow: auto;
 	padding: var(--MI-margin) var(--MI-margin) calc(var(--MI-margin) + env(safe-area-inset-bottom, 0px));
-	border-left: solid 1px var(--MI-surfaceBorder);
-	background: var(--MI-materialBg);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
+	border-left: solid 0.5px var(--MI_THEME-divider);
+	background: var(--MI_THEME-bg);
 
 	@media (max-width: $widgets-hide-threshold) {
 		display: none;

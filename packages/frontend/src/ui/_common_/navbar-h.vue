@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { openInstanceMenu } from './common.js';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
@@ -58,7 +58,7 @@ import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
-import { getProxiedImageUrlNullable } from '@/utility/media-proxy.js';
+import { useFeatherMissInstanceIcon } from '@/feathermiss/utilities/instance-icon.js';
 
 const WINDOW_THRESHOLD = 1400;
 
@@ -77,35 +77,7 @@ const otherNavItemIndicated = computed<boolean>(() => {
 	return false;
 });
 
-const FALLBACK_INSTANCE_ICON = '/favicon.ico';
-const LAST_RESORT_INSTANCE_ICON = '/client-assets/unknown.png';
-const instanceIconCandidateIndex = ref(0);
-const instanceIconCandidates = computed(() => {
-	const candidates = [
-		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
-		instance.iconUrl ?? null,
-		FALLBACK_INSTANCE_ICON,
-		LAST_RESORT_INSTANCE_ICON,
-	].filter((url): url is string => !!url);
-
-	return [...new Set(candidates)];
-});
-const instanceIconUrl = computed(() => {
-	const candidates = instanceIconCandidates.value;
-	const index = Math.min(instanceIconCandidateIndex.value, Math.max(0, candidates.length - 1));
-	return candidates[index] ?? LAST_RESORT_INSTANCE_ICON;
-});
-
-function onInstanceIconError() {
-	const maxIndex = instanceIconCandidates.value.length - 1;
-	if (instanceIconCandidateIndex.value < maxIndex) {
-		instanceIconCandidateIndex.value += 1;
-	}
-}
-
-watch(() => [instance.iconUrl, instance.mediaProxy], () => {
-	instanceIconCandidateIndex.value = 0;
-});
+const { url: instanceIconUrl, onError: onInstanceIconError } = useFeatherMissInstanceIcon(instance);
 
 async function more(ev: PointerEvent) {
 	const target = getHTMLElementOrNull(ev.currentTarget ?? ev.target);

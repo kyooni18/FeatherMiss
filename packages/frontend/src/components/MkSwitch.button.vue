@@ -43,57 +43,50 @@ const toggle = () => {
 <style lang="scss" module>
 .button {
 	--height: 21px;
-	--inset: 2px;
-	--radius: 12px;
 
 	position: relative;
 	display: inline-flex;
-	align-items: center;
 	flex-shrink: 0;
 	margin: 0;
 	box-sizing: border-box;
 	width: calc(var(--height) * 1.6);
-	height: var(--height);
-	padding: var(--inset);
+	height: calc(var(--height) + 2px); // 枠線
 	outline: none;
-	background: color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.38);
-	border: solid 1px color(from var(--MI_THEME-switchOffBg) srgb r g b / 0.48);
-	border-radius: var(--radius);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
+	background: var(--MI_THEME-switchOffBg);
+	background-clip: content-box;
+	border: solid 1px var(--MI_THEME-switchOffBg);
+	border-radius: 999px;
 	cursor: pointer;
-	transition: background-color 0.18s ease, border-color 0.18s ease;
+	transition: inherit;
 	user-select: none;
 }
 
 .buttonChecked {
-	background-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.34) !important;
-	border-color: color(from var(--MI_THEME-switchOnBg) srgb r g b / 0.48) !important;
+	background-color: var(--MI_THEME-switchOnBg) !important;
+	border-color: var(--MI_THEME-switchOnBg) !important;
 }
 
 .buttonDisabled {
 	cursor: not-allowed;
-	opacity: 0.6;
 }
 
 .knob {
 	position: absolute;
 	box-sizing: border-box;
-	top: 50%;
-	left: var(--inset);
-	width: calc(var(--height) - (var(--inset) * 2));
-	height: calc(var(--height) - (var(--inset) * 2));
-	transform: translateY(-50%);
-	border-radius: var(--radius);
-	transition: left 0.2s ease, background-color 0.2s ease;
+	top: 3px;
+	width: calc(var(--height) - 6px);
+	height: calc(var(--height) - 6px);
+	border-radius: 999px;
+	transition: all 0.2s ease;
 
 	&:not(.knobChecked) {
-		background: color(from var(--MI_THEME-switchOffFg) srgb r g b / 0.72);
+		left: 3px;
+		background: var(--MI_THEME-switchOffFg);
 	}
 }
 
 .knobChecked {
-	left: calc(100% - var(--height) + var(--inset));
-	background: color(from var(--MI_THEME-switchOnFg) srgb r g b / 0.78);
+	left: calc(calc(100% - var(--height)) + 3px);
+	background: var(--MI_THEME-switchOnFg);
 }
 </style>

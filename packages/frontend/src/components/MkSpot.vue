@@ -81,7 +81,6 @@ function setPosition() {
 		innerMargin: 16,
 		x: props.x,
 		y: props.y,
-		strategy: 'fixed',
 	});
 
 	bodyEl.value.style.transformOrigin = data.transformOrigin;

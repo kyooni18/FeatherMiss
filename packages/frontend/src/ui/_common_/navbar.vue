@@ -116,7 +116,7 @@ import { useRouter } from '@/router.js';
 import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
-import { getProxiedImageUrlNullable } from '@/utility/media-proxy.js';
+import { useFeatherMissInstanceIcon } from '@/feathermiss/utilities/instance-icon.js';
 
 const router = useRouter();
 
@@ -142,35 +142,7 @@ const otherMenuItemIndicated = computed(() => {
 	return false;
 });
 
-const FALLBACK_INSTANCE_ICON = '/favicon.ico';
-const LAST_RESORT_INSTANCE_ICON = '/client-assets/unknown.png';
-const instanceIconCandidateIndex = ref(0);
-const instanceIconCandidates = computed(() => {
-	const candidates = [
-		getProxiedImageUrlNullable(instance.iconUrl, 'preview'),
-		instance.iconUrl ?? null,
-		FALLBACK_INSTANCE_ICON,
-		LAST_RESORT_INSTANCE_ICON,
-	].filter((url): url is string => !!url);
-
-	return [...new Set(candidates)];
-});
-const instanceIconUrl = computed(() => {
-	const candidates = instanceIconCandidates.value;
-	const index = Math.min(instanceIconCandidateIndex.value, Math.max(0, candidates.length - 1));
-	return candidates[index] ?? LAST_RESORT_INSTANCE_ICON;
-});
-
-watch(() => [instance.iconUrl, instance.mediaProxy], () => {
-	instanceIconCandidateIndex.value = 0;
-});
-
-function onInstanceIconError() {
-	const maxIndex = instanceIconCandidates.value.length - 1;
-	if (instanceIconCandidateIndex.value < maxIndex) {
-		instanceIconCandidateIndex.value += 1;
-	}
-}
+const { url: instanceIconUrl, onError: onInstanceIconError } = useFeatherMissInstanceIcon(instance);
 
 function calcViewState() {
 	forceIconOnly.value = window.innerWidth <= 1279;

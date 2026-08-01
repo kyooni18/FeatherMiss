@@ -41,17 +41,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
 import { mainRouter } from '@/router.js';
 import { navbarItemDef } from '@/navbar.js';
+import { useFeatherMissMobileDockSpacing } from '@/feathermiss/utilities/mobile-dock-spacing.js';
 
 const drawerMenuShowing = defineModel<boolean>('drawerMenuShowing');
 const widgetsShowing = defineModel<boolean>('widgetsShowing');
 
 const rootEl = useTemplateRef('rootEl');
-let rootResizeObserver: ResizeObserver | null = null;
+useFeatherMissMobileDockSpacing(rootEl);
 
 const menuIndicated = computed(() => {
 	for (const def in navbarItemDef) {
@@ -61,54 +62,6 @@ const menuIndicated = computed(() => {
 	return false;
 });
 
-const rootElHeight = ref(0);
-
-function syncBottomSpacing() {
-	const el = rootEl.value;
-	if (!el) {
-		rootElHeight.value = 0;
-		window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
-		return;
-	}
-
-	const computedStyle = window.getComputedStyle(el);
-	const bottomInset = Number.parseFloat(computedStyle.bottom) || 0;
-	rootElHeight.value = (el.offsetHeight ?? 0) + bottomInset;
-	window.document.body.style.setProperty('--MI-minBottomSpacing', rootElHeight.value > 0 ? `${rootElHeight.value}px` : '0px');
-}
-
-watch(rootEl, (el) => {
-	rootResizeObserver?.disconnect();
-	rootResizeObserver = null;
-
-	if (el) {
-		syncBottomSpacing();
-		if (typeof ResizeObserver !== 'undefined') {
-			rootResizeObserver = new ResizeObserver(() => {
-				syncBottomSpacing();
-			});
-			rootResizeObserver.observe(el);
-		}
-	} else {
-		rootElHeight.value = 0;
-		window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
-	}
-}, {
-	immediate: true,
-});
-
-onMounted(() => {
-	window.addEventListener('resize', syncBottomSpacing, { passive: true });
-	window.visualViewport?.addEventListener('resize', syncBottomSpacing, { passive: true });
-});
-
-onUnmounted(() => {
-	window.removeEventListener('resize', syncBottomSpacing);
-	window.visualViewport?.removeEventListener('resize', syncBottomSpacing);
-	rootResizeObserver?.disconnect();
-	rootResizeObserver = null;
-	window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
-});
 </script>
 
 <style lang="scss" module>

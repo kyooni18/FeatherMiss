@@ -1,0 +1,130 @@
+/*
+ * SPDX-FileCopyrightText: syuilo and misskey-project
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+:root[data-feathermiss='enabled'] {
+	--feathermiss-panel-radius: 16px;
+	--feathermiss-popup-radius: 24px;
+	--feathermiss-surface-border: color-mix(in srgb, var(--MI_THEME-fg) 9%, transparent);
+	--feathermiss-surface-shadow: 0 14px 38px color-mix(in srgb, var(--MI_THEME-shadow) 24%, transparent), 0 4px 12px color-mix(in srgb, var(--MI_THEME-shadow) 12%, transparent);
+	--feathermiss-surface-shadow-raised: 0 26px 90px color-mix(in srgb, var(--MI_THEME-shadow) 30%, transparent), 0 10px 28px color-mix(in srgb, var(--MI_THEME-shadow) 16%, transparent);
+	--feathermiss-surface-filter: blur(9px) saturate(125%);
+	--feathermiss-floating-gap: 10px;
+	--feathermiss-nav-surface: color-mix(in srgb, var(--MI_THEME-panel) 58%, transparent);
+	--feathermiss-button-radius: 12px;
+	--feathermiss-button-pill-radius: 999px;
+	--feathermiss-button-padding-y: 7px;
+	--feathermiss-button-padding-x: 14px;
+	--feathermiss-button-min-height: 34px;
+	--feathermiss-menu-item-height: 38px;
+	--feathermiss-menu-min-width: 220px;
+	--feathermiss-motion-fast: 130ms;
+	--feathermiss-motion-normal: 220ms;
+	--feathermiss-motion-slow: 340ms;
+	--feathermiss-motion-distance: 10px;
+	--feathermiss-spacing: 1;
+	--MI-buttonRadius: var(--feathermiss-button-radius);
+	--MI-buttonPillRadius: var(--feathermiss-button-pill-radius);
+	--MI-buttonPaddingY: var(--feathermiss-button-padding-y);
+	--MI-buttonPaddingX: var(--feathermiss-button-padding-x);
+	--MI-buttonPaddingYSmall: 6px;
+	--MI-buttonPaddingXSmall: 12px;
+	--MI-buttonPaddingYLarge: 8px;
+	--MI-buttonPaddingXLarge: 16px;
+	--MI-buttonMinHeight: var(--feathermiss-button-min-height);
+	--MI-buttonMinHeightSmall: 30px;
+	--MI-buttonMinHeightLarge: 38px;
+	--MI-buttonIconSize: 40px;
+	--MI-mobileDockRadius: 22px;
+	--MI-mobileDockPaddingX: 10px;
+	--MI-mobileDockPaddingTop: 8px;
+	--MI-mobileDockPaddingBottom: 0px;
+	--MI-materialBg: color-mix(in srgb, var(--MI_THEME-panel) 58%, transparent);
+	--MI-materialFilter: var(--feathermiss-surface-filter);
+	--MI-materialBorder: var(--feathermiss-surface-border);
+	--MI-materialShadow: var(--feathermiss-surface-shadow);
+	--MI-materialShadowRaised: var(--feathermiss-surface-shadow-raised);
+	--MI-surfaceFilter: var(--feathermiss-surface-filter);
+	--MI-surfacePanel: var(--MI-materialBg);
+	--MI-surfacePopup: var(--MI-materialBg);
+	--MI-surfaceNav: var(--feathermiss-nav-surface);
+	--MI-surfacePage: var(--MI_THEME-bg);
+	--MI-surfaceBorder: var(--feathermiss-surface-border);
+	--MI-surfaceBorderWidth: 1px;
+	--MI-surfaceShadow: var(--feathermiss-surface-shadow);
+	--MI-surfaceShadowRaised: var(--feathermiss-surface-shadow-raised);
+	--MI-uiModalBlur: 4px;
+	--MI-modalBgFilter: blur(6px);
+	--MI-overlayOpacity: 0.18;
+	--MI-popupRadiusOffset: 12px;
+	--MI-popupRadius: var(--feathermiss-popup-radius);
+	--MI-drawerRadius: var(--feathermiss-popup-radius);
+	--MI-postFormRadiusOffset: 12px;
+	--MI-focusOutlineWidth: 2px;
+	--MI-focusOutlineOffset: 2px;
+	--MI-space7: 7px;
+	--MI-space8: 8px;
+	--MI-space10: 10px;
+	--MI-space12: 12px;
+	--MI-space16: 16px;
+	--MI-space18: 18px;
+	--MI-space20: 20px;
+	--MI-space21: 21px;
+	--MI-space24: 24px;
+	--MI-space30: 30px;
+	--MI-gapDefault: 16px;
+	--MI-menuItemHeight: var(--feathermiss-menu-item-height);
+	--MI-menuMinWidth: var(--feathermiss-menu-min-width);
+	--MI-floatingGap: var(--feathermiss-floating-gap);
+	--MI-floatingGapDouble: 20px;
+	--MI-drawerWidth: 324px;
+	--MI-tooltipRadius: 10px;
+	--MI-motionDistance: var(--feathermiss-motion-distance);
+	--MI-motionDistance35: 3.5px;
+	--MI-motionDistance40: 4px;
+	--MI-motionDistance45: 4.5px;
+	--MI-motionDistanceNegative35: -3.5px;
+	--MI-motionDurationFast: var(--feathermiss-motion-fast);
+	--MI-motionDurationNormal: var(--feathermiss-motion-normal);
+	--MI-motionDurationSlow: var(--feathermiss-motion-slow);
+	--MI-baseFontFamily: 'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif;
+	--MI-baseFontWeight: 400;
+
+	@media (max-width: 500px) {
+		--feathermiss-panel-radius: 18px;
+		--feathermiss-button-radius: 14px;
+		--feathermiss-button-padding-y: 6px;
+		--feathermiss-button-padding-x: 12px;
+		--feathermiss-button-min-height: 32px;
+		--MI-buttonRadius: var(--feathermiss-button-radius);
+		--MI-buttonPaddingY: var(--feathermiss-button-padding-y);
+		--MI-buttonPaddingX: var(--feathermiss-button-padding-x);
+		--MI-buttonMinHeight: var(--feathermiss-button-min-height);
+		--MI-buttonIconSize: 38px;
+		--MI-mobileDockRadius: 20px;
+		--MI-materialFilter: blur(6px) saturate(110%);
+		--MI-surfaceFilter: var(--MI-materialFilter);
+		--MI-uiModalBlur: 2px;
+		--MI-modalBgFilter: blur(2px);
+		--MI-materialShadow: 0 10px 24px color-mix(in srgb, var(--MI_THEME-shadow) 22%, transparent), 0 2px 8px color-mix(in srgb, var(--MI_THEME-shadow) 10%, transparent);
+		--MI-materialShadowRaised: 0 16px 44px color-mix(in srgb, var(--MI_THEME-shadow) 26%, transparent), 0 6px 18px color-mix(in srgb, var(--MI_THEME-shadow) 13%, transparent);
+		--MI-surfaceShadow: var(--MI-materialShadow);
+		--MI-surfaceShadowRaised: var(--MI-materialShadowRaised);
+		--MI-popupRadiusOffset: 10px;
+		--MI-postFormRadiusOffset: 10px;
+		--MI-focusOutlineOffset: 1px;
+	}
+}
+
+:root[data-feathermiss='enabled'][data-color-scheme='dark'] {
+	--feathermiss-surface-filter: blur(9px) saturate(125%);
+	--feathermiss-surface-border: color-mix(in srgb, var(--MI_THEME-fg) 12%, transparent);
+	--MI-materialBg: color-mix(in srgb, var(--MI_THEME-panel) 56%, transparent);
+	--MI-materialFilter: var(--feathermiss-surface-filter);
+	--MI-materialShadow: 0 18px 46px color-mix(in srgb, var(--MI_THEME-shadow) 46%, transparent), 0 6px 18px color-mix(in srgb, var(--MI_THEME-shadow) 34%, transparent);
+	--MI-materialShadowRaised: 0 32px 110px color-mix(in srgb, var(--MI_THEME-shadow) 58%, transparent), 0 12px 34px color-mix(in srgb, var(--MI_THEME-shadow) 40%, transparent);
+	--MI-surfaceShadow: var(--MI-materialShadow);
+	--MI-surfaceShadowRaised: var(--MI-materialShadowRaised);
+	--MI-overlayOpacity: 0.3;
+}
