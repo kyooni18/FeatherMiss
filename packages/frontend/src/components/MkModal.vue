@@ -51,7 +51,7 @@ import { focusTrap } from '@/utility/focus-trap.js';
 import { focusParent } from '@/utility/focus.js';
 import { prefer } from '@/preferences.js';
 import { DI } from '@/di.js';
-import { motionDuration } from '@/utility/ui-graphics.js';
+import { motionDuration } from '@/feathermiss/config.js';
 
 function getFixedContainer(el: Element | null): Element | null {
 	if (el == null || el.tagName === 'BODY') return null;

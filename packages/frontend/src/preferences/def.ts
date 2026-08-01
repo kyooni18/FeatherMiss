@@ -18,6 +18,7 @@ import type { ImageFramePreset } from '@/utility/image-frame-renderer/ImageFrame
 import { genId } from '@/utility/id.js';
 import { DEFAULT_DEVICE_KIND } from '@/utility/device-kind.js';
 import { deepEqual } from '@/utility/deep-equal.js';
+import type { UiGraphicsStore } from '@/feathermiss/preferences.js';
 
 /** サウンド設定 */
 export type SoundStore = {
@@ -50,46 +51,6 @@ export type DataSaverStore = {
 	urlPreviewThumbnail: boolean;
 	disableUrlPreview: boolean;
 	code: boolean;
-};
-
-export type UiGraphicsStore = {
-	enabled: boolean;
-	radius: number;
-	buttonRadius: number;
-	buttonPillRadius: number;
-	mobileDockRadius: number;
-	mobileDockPaddingX: number;
-	mobileDockPaddingTop: number;
-	mobileDockPaddingBottom: number;
-	blur: number;
-	saturate: number;
-	brightness: number;
-	panelAlpha: number;
-	popupAlpha: number;
-	navAlpha: number;
-	pageAlpha: number;
-	borderAlpha: number;
-	borderWidth: number;
-	overlayOpacity: number;
-	modalBlur: number;
-	squircleSize: number;
-	popupRadiusOffset: number;
-	postFormRadiusOffset: number;
-	focusWidth: number;
-	focusOffset: number;
-	shadowStrength: number;
-	shadowYOffset: number;
-	shadowRaisedStrength: number;
-	shadowRaisedYOffset: number;
-	spacingScale: number;
-	menuItemHeight: number;
-	menuMinWidth: number;
-	floatingGap: number;
-	drawerWidth: number;
-	dialogPadding: number;
-	tooltipRadius: number;
-	motionScale: number;
-	motionDistance: number;
 };
 
 type OmitStrict<T, K extends keyof T> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;

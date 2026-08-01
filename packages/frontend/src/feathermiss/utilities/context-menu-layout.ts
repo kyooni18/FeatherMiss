@@ -4,6 +4,7 @@
  */
 
 import type { DeviceKind } from '@/utility/device-kind.js';
+import { isFeatherMissEnabled } from '@/feathermiss/config.js';
 
 export const CONTEXT_MENU_DRAWER_MAX_WIDTH = 720;
 
@@ -12,6 +13,7 @@ export function shouldUseContextMenuDrawer(options: {
 	isTouchUsing: boolean;
 	viewportWidth: number;
 }): boolean {
+	if (!isFeatherMissEnabled()) return false;
 	return options.deviceKind === 'smartphone' || (
 		options.isTouchUsing && options.viewportWidth <= CONTEXT_MENU_DRAWER_MAX_WIDTH
 	);

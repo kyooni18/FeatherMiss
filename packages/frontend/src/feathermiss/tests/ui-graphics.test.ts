@@ -9,7 +9,7 @@ import {
 	cloneUiGraphicsPreset,
 	findUiGraphicsPreset,
 	normalizeUiGraphics,
-} from '@/utility/ui-graphics.js';
+} from '../config.js';
 
 describe('UI graphics preferences', () => {
 	test('fills missing fields and clamps unsafe imported values', () => {

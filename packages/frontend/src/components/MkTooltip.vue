@@ -26,7 +26,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { nextTick, onMounted, onUnmounted, useId, useTemplateRef, watch } from 'vue';
 import * as os from '@/os.js';
-import { calcPopupPosition } from '@/utility/popup-position.js';
+import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
 import { prefer } from '@/preferences.js';
 
 const props = withDefaults(defineProps<{

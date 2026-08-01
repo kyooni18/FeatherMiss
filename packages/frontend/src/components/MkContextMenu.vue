@@ -24,7 +24,7 @@ import type { MenuItem } from '@/types/menu.js';
 import { elementContains } from '@/utility/element-contains.js';
 import { prefer } from '@/preferences.js';
 import * as os from '@/os.js';
-import { calcPopupPosition } from '@/utility/popup-position.js';
+import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
 
 const props = defineProps<{
 	items: MenuItem[];

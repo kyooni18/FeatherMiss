@@ -36,7 +36,7 @@ import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
 import { focusParent } from '@/utility/focus.js';
 import { deviceKind } from '@/utility/device-kind.js';
 import { isTouchUsing } from '@/utility/touch.js';
-import { shouldUseContextMenuDrawer } from '@/utility/context-menu-layout.js';
+import { shouldUseContextMenuDrawer } from '@/feathermiss/utilities/context-menu-layout.js';
 
 export const openingWindowsCount = ref(0);
 

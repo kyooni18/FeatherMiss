@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { withAlphaFromCssColor } from './ui-graphics.js';
+import { withAlphaFromCssColor } from '../config.js';
 
 describe('withAlphaFromCssColor', () => {
 	test('applies opacity to an opaque rgb color', () => {

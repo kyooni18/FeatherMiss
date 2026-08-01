@@ -22,7 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				This studio changes frontend presentation preferences only. It does not modify accounts, notes, server data, or database configuration.
 			</MkInfo>
 
-			<MkUiCustomization/>
+			<UiCustomization/>
 		</div>
 	</div>
 </PageWithHeader>
@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed } from 'vue';
 import MkButton from '@/components/MkButton.vue';
 import MkInfo from '@/components/MkInfo.vue';
-import MkUiCustomization from '@/components/MkUiCustomization.vue';
+import UiCustomization from '@/feathermiss/components/UiCustomization.vue';
 import { definePage } from '@/page.js';
 
 const headerActions = computed(() => []);

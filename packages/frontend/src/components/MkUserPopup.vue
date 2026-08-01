@@ -71,7 +71,7 @@ import { prefer } from '@/preferences.js';
 import { $i } from '@/i.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/utility/isFfVisibleForMe.js';
 import { getStaticImageUrl } from '@/utility/media-proxy.js';
-import { calcPopupPosition } from '@/utility/popup-position.js';
+import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
 
 const props = defineProps<{
 	showing: boolean;

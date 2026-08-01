@@ -74,7 +74,7 @@ export const ROUTE_DEF = [{
 }, {
 	name: 'uiCustomization',
 	path: '/ui-customization',
-	component: page(() => import('@/pages/ui-customization.vue')),
+	component: page(() => import('@/feathermiss/components/UiCustomizationPage.vue')),
 	loginRequired: true,
 }, {
 	name: 'settings',

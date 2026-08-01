@@ -4,7 +4,7 @@
  */
 
 import { beforeEach, describe, expect, test } from 'vitest';
-import { calcPopupPosition } from '@/utility/popup-position.js';
+import { calcPopupPosition } from '../utilities/popup-position.js';
 
 function popupElement(width: number, height: number): HTMLElement {
 	const element = window.document.createElement('div');
@@ -31,9 +31,24 @@ beforeEach(() => {
 	Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
 	Object.defineProperty(window, 'visualViewport', { configurable: true, value: undefined });
 	window.document.documentElement.style.setProperty('--MI-floatingGap', '10px');
+	window.document.documentElement.dataset.feathermiss = 'enabled';
 });
 
 describe('calcPopupPosition', () => {
+	test('uses the original Misskey placement when FeatherMiss is disabled', () => {
+		delete window.document.documentElement.dataset.feathermiss;
+		const popup = popupElement(100, 60);
+
+		expect(calcPopupPosition(popup, {
+			x: 2,
+			y: 40,
+			innerMargin: 0,
+			direction: 'bottom',
+			align: 'left',
+			strategy: 'fixed',
+		}).left).toBe(0);
+	});
+
 	test('places a popup below its anchor when there is enough room', () => {
 		const popup = popupElement(120, 80);
 		const anchor = anchorElement({ left: 100, right: 140, top: 80, bottom: 100, width: 40, height: 20 });

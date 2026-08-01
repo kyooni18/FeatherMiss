@@ -30,7 +30,8 @@ import { fetchCustomEmojis } from '@/custom-emojis.js';
 import { prefer } from '@/preferences.js';
 import { $i } from '@/i.js';
 import { launchPlugins } from '@/plugin.js';
-import { applyUiGraphics } from '@/utility/ui-graphics.js';
+import { applyUiGraphics } from '@/feathermiss/config.js';
+import { initializeFeatherMiss } from '@/feathermiss/index.js';
 import { initTelemetry } from '@/telemetry.js';
 
 export async function common(createVue: () => Promise<App<Element>>) {
@@ -198,7 +199,8 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	}, { immediate: true });
 
 	const syncUiGraphics = () => {
-		applyUiGraphics(prefer.s.uiGraphics, {
+		const enabled = initializeFeatherMiss(prefer.s.uiGraphics.enabled);
+		applyUiGraphics({ ...prefer.s.uiGraphics, enabled }, {
 			surfaceBlur: prefer.s.useBlurEffect,
 			modalBlur: prefer.s.useBlurEffectForModal,
 		});

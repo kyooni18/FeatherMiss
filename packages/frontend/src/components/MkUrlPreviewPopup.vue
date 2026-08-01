@@ -23,7 +23,7 @@ import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from
 import MkUrlPreview from '@/components/MkUrlPreview.vue';
 import * as os from '@/os.js';
 import { prefer } from '@/preferences.js';
-import { calcPopupPosition } from '@/utility/popup-position.js';
+import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
 
 const props = defineProps<{
 	showing: boolean;

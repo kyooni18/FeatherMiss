@@ -213,9 +213,9 @@ import MkSwitch from '@/components/MkSwitch.vue';
 import { prefer } from '@/preferences.js';
 import * as os from '@/os.js';
 import { copyToClipboard } from '@/utility/copy-to-clipboard.js';
-import type { UiGraphicsStore } from '@/preferences/def.js';
-import { cloneUiGraphicsPreset, DEFAULT_UI_GRAPHICS, findUiGraphicsPreset, normalizeUiGraphics } from '@/utility/ui-graphics.js';
-import type { UiGraphicsPresetKey } from '@/utility/ui-graphics.js';
+import type { UiGraphicsStore } from '@/feathermiss/preferences.js';
+import { cloneUiGraphicsPreset, DEFAULT_UI_GRAPHICS, findUiGraphicsPreset, normalizeUiGraphics } from '@/feathermiss/config.js';
+import type { UiGraphicsPresetKey } from '@/feathermiss/config.js';
 
 const graphics = prefer.model('uiGraphics');
 

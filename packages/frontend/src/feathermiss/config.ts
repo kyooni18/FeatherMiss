@@ -3,7 +3,32 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import type { UiGraphicsStore } from '@/preferences/def.js';
+import type { UiGraphicsStore } from '@/feathermiss/preferences.js';
+
+export { type UiGraphicsStore } from '@/feathermiss/preferences.js';
+
+/** Resolve the build-time override while keeping the existing preference as the default. */
+export function resolveFeatherMissEnabled(preferenceEnabled: boolean): boolean {
+	const override = (import.meta as ImportMeta & {
+		readonly env?: Record<string, string | undefined>;
+	}).env?.FEATHERMISS_UI;
+	if (override === '0' || override === 'false') return false;
+	if (override === '1' || override === 'true') return true;
+	return preferenceEnabled;
+}
+
+export function isFeatherMissEnabled(): boolean {
+	return window.document.documentElement.getAttribute('data-feathermiss') === 'enabled';
+}
+
+export function setFeatherMissEnabled(enabled: boolean): void {
+	const root = window.document.documentElement;
+	if (enabled) {
+		root.setAttribute('data-feathermiss', 'enabled');
+	} else {
+		root.removeAttribute('data-feathermiss');
+	}
+}
 
 export const DEFAULT_UI_GRAPHICS: Readonly<UiGraphicsStore> = Object.freeze({
 	enabled: true,
@@ -317,6 +342,7 @@ export function applyUiGraphics(
 ): void {
 	const root = window.document.documentElement;
 	const graphics = normalizeUiGraphics(value);
+	setFeatherMissEnabled(graphics.enabled);
 
 	root.classList.toggle('uiGraphicsEnabled', graphics.enabled);
 	root.classList.toggle('uiSurfaceBlurDisabled', !options.surfaceBlur);
