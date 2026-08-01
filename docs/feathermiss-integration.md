@@ -41,7 +41,6 @@ implementation belongs below `packages/frontend/src/feathermiss/`.
 | `packages/frontend/src/components/MkModal.vue` | Port motion duration | One import through the FeatherMiss config adapter |
 | `packages/frontend/src/components/MkToast.vue` | Port toast stacking | One import through the FeatherMiss utility |
 | `packages/frontend/src/utility/popup-position.ts` | Preserve the upstream import path while selecting the active popup algorithm | One re-export to the FeatherMiss popup adapter |
-| `packages/frontend/src/components/MkStreamingNotesTimeline.vue` | Mark the two streaming-timeline surfaces for the downstream stylesheet | Two stable marker classes |
 | `packages/frontend/src/components/MkTooltip.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
 | `packages/frontend/src/components/MkUrlPreviewPopup.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
 | `packages/frontend/src/components/MkUserPopup.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
@@ -63,9 +62,6 @@ every one has an owner during an update PR.
 | `packages/frontend/src/ui/_common_/navbar-h.vue` | Move navigation styling to FeatherMiss styles |
 | `packages/frontend/src/ui/_common_/navbar.vue` | Move navigation styling to FeatherMiss styles |
 | `packages/frontend/src/ui/_common_/mobile-footer-menu.vue` | Delegate dock spacing to the FeatherMiss utility and retain the upstream shell |
-| `packages/frontend/src/ui/_common_/PreferenceRestore.vue` | Mark the upstream suggestion for scoped surface styling |
-| `packages/frontend/src/ui/_common_/ReloadSuggestion.vue` | Mark the upstream suggestion for scoped surface styling |
-| `packages/frontend/src/ui/_common_/announcements.vue` | Mark the upstream announcement banner for scoped surface styling |
 | `packages/frontend/src/pages/settings/index.vue` | Keep one link to Interface Studio |
 
 ## Layer layout

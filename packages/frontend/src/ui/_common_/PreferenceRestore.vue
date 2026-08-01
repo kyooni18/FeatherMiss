@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="$style.root" data-feathermiss-preference-restore>
+<div :class="$style.root">
 	<span :class="$style.icon">
 		<i class="ti ti-info-circle"></i>
 	</span>

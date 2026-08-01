@@ -19,25 +19,6 @@
 		border-radius: calc(var(--MI-radius) + 2px);
 	}
 
-	.feathermiss-stream-bg1,
-	.feathermiss-stream-bg2 {
-		background: linear-gradient(to top, transparent 0%, var(--MI-materialBg) 58%, var(--MI-materialBg) 100%);
-		-webkit-backdrop-filter: var(--MI-surfaceFilter);
-		backdrop-filter: var(--MI-surfaceFilter);
-	}
-
-	.feathermiss-stream-bg1 { bottom: 0; }
-	.feathermiss-stream-bg2 { height: 68%; opacity: 0.52; }
-
-	[data-feathermiss-preference-restore],
-	[data-feathermiss-reload-suggestion],
-	[data-feathermiss-announcements] {
-		background: var(--MI-surfacePanel, var(--MI_THEME-panel));
-		border-bottom: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-		-webkit-backdrop-filter: var(--MI-surfaceFilter);
-		backdrop-filter: var(--MI-surfaceFilter);
-	}
-
 	@media (max-width: 500px) {
 		._panel { border-radius: calc(var(--MI-radius) + 2px); }
 	}

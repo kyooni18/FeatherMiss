@@ -15,8 +15,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 	<div v-else ref="rootEl">
 		<div v-if="paginator.queuedAheadItemsCount.value > 0" :class="$style.new">
-			<div :class="$style.newBg1" class="feathermiss-stream-bg1"></div>
-			<div :class="$style.newBg2" class="feathermiss-stream-bg2"></div>
+			<div :class="$style.newBg1"></div>
+			<div :class="$style.newBg2"></div>
 			<button class="_button" :class="$style.newButton" @click="releaseQueue()"><i class="ti ti-circle-arrow-up"></i> {{ i18n.ts.newNote }}</button>
 		</div>
 		<component
