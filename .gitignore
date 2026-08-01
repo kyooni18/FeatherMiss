@@ -58,6 +58,7 @@ api-docs.json
 /redis
 *.code-workspace
 .DS_Store
+._*
 /files
 ormconfig.json
 temp

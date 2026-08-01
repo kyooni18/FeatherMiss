@@ -46,7 +46,7 @@ import { $i } from '@/i.js';
 import * as os from '@/os.js';
 import { mainRouter } from '@/router.js';
 import { navbarItemDef } from '@/navbar.js';
-import { useFeatherMissMobileDockSpacing } from '@/feathermiss/utilities/mobile-dock-spacing.js';
+import { useFeatherMissMobileDockSpacing } from '@/feathermiss/composables/mobile-dock-spacing.js';
 
 const drawerMenuShowing = defineModel<boolean>('drawerMenuShowing');
 const widgetsShowing = defineModel<boolean>('widgetsShowing');

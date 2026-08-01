@@ -1,0 +1,46 @@
+name: Discover Misskey release updates
+
+on:
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0
+          ref: main
+          submodules: true
+      - uses: pnpm/action-setup@v6.0.9
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: '.node-version'
+      - name: Fetch official tags
+        run: |
+          git remote add upstream https://github.com/misskey-dev/misskey.git
+          git fetch upstream --tags
+          git fetch origin misskey-upstream:misskey-upstream || git branch misskey-upstream 2026.7.0
+      - name: Create draft update pull request when needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          current="$(git describe --tags --match='2026.*' misskey-upstream 2>/dev/null || true)"
+          latest="$(git tag --list '2026.*' | grep -Ev -- '-(alpha|beta|rc)\.' | sort -V | tail -n 1)"
+          if [ -z "$latest" ] || [ "$latest" = "$current" ]; then
+            echo "No stable Misskey update found (current=$current latest=$latest)."
+            exit 0
+          fi
+          branch="update/misskey-${latest}"
+          git switch -c "$branch"
+          git merge --no-ff --no-edit "$latest"
+          git push --set-upstream origin "$branch"
+          gh pr create --draft --base main --head "$branch" \
+            --title "Update Misskey to ${latest}" \
+            --body "Automated upstream release merge for ${latest}. Review migrations, conflicts, and both FeatherMiss UI modes before merging."

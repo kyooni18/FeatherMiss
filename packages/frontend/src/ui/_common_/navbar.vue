@@ -116,7 +116,7 @@ import { useRouter } from '@/router.js';
 import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
-import { useFeatherMissInstanceIcon } from '@/feathermiss/utilities/instance-icon.js';
+import { useFeatherMissInstanceIcon } from '@/feathermiss/composables/instance-icon.js';
 
 const router = useRouter();
 

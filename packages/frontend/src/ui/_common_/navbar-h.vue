@@ -58,7 +58,7 @@ import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
-import { useFeatherMissInstanceIcon } from '@/feathermiss/utilities/instance-icon.js';
+import { useFeatherMissInstanceIcon } from '@/feathermiss/composables/instance-icon.js';
 
 const WINDOW_THRESHOLD = 1400;
 

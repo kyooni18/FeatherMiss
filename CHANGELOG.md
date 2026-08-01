@@ -1,3 +1,8 @@
+## Unreleased
+
+### Client
+- Enhance: FeatherMiss UI can be disabled at runtime or with `FEATHERMISS_UI=0` to restore Misskey behavior for diagnostics
+
 ## 2026.7.0
 
 ### Note
