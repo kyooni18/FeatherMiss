@@ -117,6 +117,11 @@ const menuDef = computed<SuperMenuDef[]>(() => [{
 		active: currentPage.value?.route.name === 'preferences',
 	}, {
 		icon: 'ti ti-palette',
+		text: 'Interface Studio',
+		to: '/ui-customization',
+		active: currentPage.value?.route.name === 'uiCustomization',
+	}, {
+		icon: 'ti ti-brush',
 		text: i18n.ts.theme,
 		to: '/settings/theme',
 		active: currentPage.value?.route.name === 'theme',

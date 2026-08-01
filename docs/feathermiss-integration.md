@@ -36,31 +36,18 @@ implementation belongs below `packages/frontend/src/feathermiss/`.
 | `packages/frontend/src/preferences/def.ts` | Register the persisted UI graphics preference | Import the FeatherMiss preference type and add one `uiGraphics` entry |
 | `packages/frontend/src/router.definition.ts` | Register Interface Studio | One route entry to `feathermiss/components/UiCustomizationPage.vue` |
 | `packages/frontend/src/style.scss` | Load the downstream stylesheet after Misskey styles | One stylesheet import |
-| `packages/frontend/src/os.ts` | Port context-menu selection | One call through `feathermiss/utilities/context-menu-layout.ts` |
-| `packages/frontend/src/components/MkContextMenu.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
-| `packages/frontend/src/components/MkModal.vue` | Port motion duration | One import through the FeatherMiss config adapter |
-| `packages/frontend/src/components/MkToast.vue` | Port toast stacking | One import through the FeatherMiss utility |
+| `packages/frontend/src/pages/settings/index.vue` | Make Interface Studio discoverable in settings | One navigation entry |
+| `packages/frontend/src/components/MkToast.vue` | Port stacked transient notifications | One import through `feathermiss/utilities/toast-stack.ts` |
 | `packages/frontend/src/utility/popup-position.ts` | Preserve the upstream import path while selecting the active popup algorithm | One re-export to the FeatherMiss popup adapter |
-| `packages/frontend/src/components/MkTooltip.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
-| `packages/frontend/src/components/MkUrlPreviewPopup.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
-| `packages/frontend/src/components/MkUserPopup.vue` | Port popup positioning | One import through the FeatherMiss popup adapter |
 
-The remaining direct ports below are intentionally explicit. They are the
-small set of upstream files that still need behavioral or structural hooks;
-every one has an owner during an update PR.
-
-| File | Migration owner |
-| --- | --- |
-| `packages/frontend/src/components/MkAutocomplete.vue` | Move presentation hooks to FeatherMiss composables |
-| `packages/frontend/src/components/MkDialog.vue` | Move surface styling to scoped FeatherMiss styles |
-| `packages/frontend/src/components/MkMenu.child.vue` | Move menu styling to FeatherMiss styles |
-| `packages/frontend/src/components/MkMenu.vue` | Move menu layout hooks to FeatherMiss utilities |
-| `packages/frontend/src/components/MkPopupMenu.vue` | Move drawer styling to FeatherMiss styles |
-| `packages/frontend/src/components/MkPostForm.vue` | Move note composer styling to FeatherMiss styles |
-| `packages/frontend/src/ui/_common_/navbar-h.vue` | Move navigation styling to FeatherMiss styles |
-| `packages/frontend/src/ui/_common_/navbar.vue` | Move navigation styling to FeatherMiss styles |
-| `packages/frontend/src/ui/_common_/mobile-footer-menu.vue` | Delegate dock spacing to the FeatherMiss utility and retain the upstream shell |
-| `packages/frontend/src/pages/settings/index.vue` | Keep one link to Interface Studio |
+The direct upstream surface is intentionally seven files: boot, persisted
+preference registration, the Interface Studio route and settings entry, the
+stylesheet import, the toast port, and the popup-position compatibility
+adapter. Menus,
+dialogs, navigation, composer, and transient popup components remain the
+official Misskey implementations; FeatherMiss changes their shared visual
+tokens and surfaces from its scoped stylesheet instead of forking each
+component.
 
 ## Layer layout
 
@@ -71,8 +58,7 @@ packages/frontend/src/feathermiss/
 ├── preferences.ts
 ├── components/
 ├── composables/
-│   ├── instance-icon.ts
-│   └── mobile-dock-spacing.ts
+│   └── (future behavior ports only when an upstream hook is unavoidable)
 ├── utilities/
 ├── styles/
 │   ├── tokens.scss
