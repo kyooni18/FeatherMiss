@@ -37,7 +37,7 @@ implementation belongs below `packages/frontend/src/feathermiss/`.
 | `packages/frontend/src/router.definition.ts` | Register Interface Studio | One route entry to `feathermiss/components/UiCustomizationPage.vue` |
 | `packages/frontend/src/style.scss` | Load the downstream stylesheet after Misskey styles | One stylesheet import |
 | `packages/frontend/src/pages/settings/index.vue` | Make Interface Studio discoverable in settings | One navigation entry |
-| `packages/frontend/src/components/MkToast.vue` | Port stacked transient notifications | One import through `feathermiss/utilities/toast-stack.ts` |
+| `packages/frontend/src/components/MkToast.vue` | Select the FeatherMiss toast while retaining Misskey fallback behavior | One conditional component port |
 | `packages/frontend/src/utility/popup-position.ts` | Preserve the upstream import path while selecting the active popup algorithm | One re-export to the FeatherMiss popup adapter |
 
 The direct upstream surface is intentionally seven files: boot, persisted
