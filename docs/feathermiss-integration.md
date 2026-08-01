@@ -67,9 +67,6 @@ every one has an owner during an update PR.
 | `packages/frontend/src/ui/_common_/ReloadSuggestion.vue` | Mark the upstream suggestion for scoped surface styling |
 | `packages/frontend/src/ui/_common_/announcements.vue` | Mark the upstream announcement banner for scoped surface styling |
 | `packages/frontend/src/pages/settings/index.vue` | Keep one link to Interface Studio |
-| `packages/frontend/src/pages/settings/preferences.vue` | Keep Misskey blur controls; remove embedded FeatherMiss controls |
-| `packages/frontend/src/local-storage.ts` | Keep only compatibility keys required by the layer |
-| `packages/frontend/public/loader/boot.js` | Keep branding-only loader hook |
 
 ## Layer layout
 
