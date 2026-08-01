@@ -57,8 +57,6 @@ every one has an owner during an update PR.
 | `packages/frontend/src/components/MkMenu.vue` | Move menu layout hooks to FeatherMiss utilities |
 | `packages/frontend/src/components/MkPopupMenu.vue` | Move drawer styling to FeatherMiss styles |
 | `packages/frontend/src/components/MkPostForm.vue` | Move note composer styling to FeatherMiss styles |
-| `packages/frontend/src/components/MkStreamingNotesTimeline.vue` | Move note presentation hook to FeatherMiss |
-| `packages/frontend/src/ui/_common_/mobile-footer-menu.vue` | Move navigation styling to FeatherMiss styles |
 | `packages/frontend/src/ui/_common_/navbar-h.vue` | Move navigation styling to FeatherMiss styles |
 | `packages/frontend/src/ui/_common_/navbar.vue` | Move navigation styling to FeatherMiss styles |
 | `packages/frontend/src/ui/_common_/mobile-footer-menu.vue` | Delegate dock spacing to the FeatherMiss utility and retain the upstream shell |
