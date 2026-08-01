@@ -4,27 +4,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<Transition
-	:enterActiveClass="prefer.s.animation ? $style.transition_enterActive : ''"
-	:leaveActiveClass="prefer.s.animation ? $style.transition_leaveActive : ''"
-	:enterFromClass="prefer.s.animation ? $style.transition_enterFrom : ''"
-	:leaveToClass="prefer.s.animation ? $style.transition_leaveTo : ''"
-	appear
-	@afterLeave="emit('closed')"
->
-	<div v-if="showing" ref="rootEl" :class="$style.root" class="_popup _shadow" :style="{ zIndex, top: top + 'px', left: left + 'px', transformOrigin }">
-		<MkUrlPreview :url="url" :showActions="false"/>
-	</div>
-</Transition>
+<div :class="$style.root" :style="{ zIndex, top: top + 'px', left: left + 'px' }">
+	<Transition :name="prefer.s.animation ? '_transition_zoom' : ''" @afterLeave="emit('closed')">
+		<MkUrlPreview v-if="showing" class="_popup _shadow" :url="url" :showActions="false"/>
+	</Transition>
+</div>
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import MkUrlPreview from '@/components/MkUrlPreview.vue';
 import * as os from '@/os.js';
 import { prefer } from '@/preferences.js';
-import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
-import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
 
 const props = defineProps<{
 	showing: boolean;
@@ -39,77 +30,22 @@ const emit = defineEmits<{
 const zIndex = os.claimZIndex('middle');
 const top = ref(0);
 const left = ref(0);
-const transformOrigin = ref('center top');
-const rootEl = useTemplateRef('rootEl');
-
-function updatePosition() {
-	if (rootEl.value == null || !props.anchorElement.isConnected) return;
-	const position = calcPopupPosition(rootEl.value, {
-		anchorElement: props.anchorElement,
-		direction: 'bottom',
-		align: 'center',
-		innerMargin: 8,
-	});
-	top.value = position.top;
-	left.value = position.left;
-	transformOrigin.value = position.transformOrigin;
-}
-
-const positionObserver = createFeatherMissPopupPositionObserver(updatePosition);
-const schedulePosition = positionObserver.schedule;
-
-function observePositionSources() {
-	positionObserver.observe([rootEl.value, props.anchorElement]);
-}
 
 onMounted(() => {
-	updatePosition();
-	nextTick(() => {
-		observePositionSources();
-		schedulePosition();
-	});
-	window.addEventListener('resize', schedulePosition, { passive: true });
-	window.addEventListener('scroll', schedulePosition, { passive: true, capture: true });
-	window.visualViewport?.addEventListener('resize', schedulePosition, { passive: true });
-	window.visualViewport?.addEventListener('scroll', schedulePosition, { passive: true });
-});
+	const rect = props.anchorElement.getBoundingClientRect();
+	const x = Math.max((rect.left + (props.anchorElement.offsetWidth / 2)) - (300 / 2), 6) + window.scrollX;
+	const y = rect.top + props.anchorElement.offsetHeight + window.scrollY;
 
-watch([() => props.showing, () => props.url, () => props.anchorElement], () => {
-	nextTick(() => {
-		observePositionSources();
-		schedulePosition();
-	});
-});
-
-onBeforeUnmount(() => {
-	positionObserver.dispose();
-	window.removeEventListener('resize', schedulePosition);
-	window.removeEventListener('scroll', schedulePosition, true);
-	window.visualViewport?.removeEventListener('resize', schedulePosition);
-	window.visualViewport?.removeEventListener('scroll', schedulePosition);
+	top.value = y;
+	left.value = x;
 });
 </script>
 
 <style lang="scss" module>
-.transition_enterActive,
-.transition_leaveActive {
-	transition: opacity var(--MI-motionDurationFast) ease, transform var(--MI-motionDurationFast) cubic-bezier(.2, .8, .2, 1) !important;
-}
-
-.transition_enterFrom,
-.transition_leaveTo {
-	opacity: 0;
-	transform: translateY(var(--MI-motionDistance35)) scale(0.975);
-}
-
 .root {
 	position: absolute;
-	width: min(500px, calc(100vw - var(--MI-floatingGapDouble)));
-	max-height: calc(100dvh - var(--MI-floatingGapDouble));
-	overflow: clip auto;
-	overscroll-behavior: contain;
-	box-sizing: border-box;
+	width: 500px;
+	max-width: calc(90vw - 12px);
 	pointer-events: none;
-	will-change: transform, opacity;
 }
 </style>

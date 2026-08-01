@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<MkModal ref="modal" :preferType="'dialog'" :zPriority="'high'" @click="onBgClick" @closed="emit('closed')" @esc="cancel()">
+<MkModal ref="modal" :preferType="'dialog'" :zPriority="'high'" @click="done(true)" @closed="emit('closed')" @esc="cancel()">
 	<div :class="$style.root">
 		<div v-if="icon" :class="$style.icon">
 			<i :class="icon"></i>
@@ -153,10 +153,11 @@ function cancel() {
 	done(true);
 }
 
+/*
 function onBgClick() {
 	if (props.cancelableByBgClick) cancel();
 }
-
+*/
 function onInputKeydown(evt: KeyboardEvent) {
 	if (evt.key === 'Enter' && okButtonDisabledReason.value === null) {
 		evt.preventDefault();
@@ -170,24 +171,13 @@ function onInputKeydown(evt: KeyboardEvent) {
 .root {
 	position: relative;
 	margin: auto;
-	padding: var(--MI-space30);
-	width: min(500px, calc(100vw - var(--MI-floatingGapDouble)));
-	min-width: 0;
-	max-width: 500px;
+	padding: 32px;
+	min-width: 320px;
+	max-width: 480px;
 	box-sizing: border-box;
 	text-align: center;
-	background: var(--MI-surfacePopup, var(--MI-materialBg));
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	border-radius: calc(var(--MI-radius) + 8px);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
-	box-shadow: var(--MI-surfaceShadowRaised);
-
-	@media (max-width: 500px) {
-		width: calc(100vw - var(--MI-floatingGapDouble));
-		padding: var(--MI-space20);
-		border-radius: calc(var(--MI-radius) + 10px);
-	}
+	background: var(--MI_THEME-panel);
+	border-radius: 16px;
 }
 
 .icon {
@@ -218,9 +208,9 @@ function onInputKeydown(evt: KeyboardEvent) {
 }
 
 .buttons {
-	margin-top: var(--MI-space18);
+	margin-top: 16px;
 	display: flex;
-	gap: var(--MI-space8);
+	gap: 8px;
 	flex-wrap: wrap;
 	justify-content: center;
 }

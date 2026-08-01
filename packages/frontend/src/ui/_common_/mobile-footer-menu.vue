@@ -41,18 +41,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { $i } from '@/i.js';
 import * as os from '@/os.js';
 import { mainRouter } from '@/router.js';
 import { navbarItemDef } from '@/navbar.js';
-import { useFeatherMissMobileDockSpacing } from '@/feathermiss/composables/mobile-dock-spacing.js';
 
 const drawerMenuShowing = defineModel<boolean>('drawerMenuShowing');
 const widgetsShowing = defineModel<boolean>('widgetsShowing');
 
 const rootEl = useTemplateRef('rootEl');
-useFeatherMissMobileDockSpacing(rootEl);
 
 const menuIndicated = computed(() => {
 	for (const def in navbarItemDef) {
@@ -62,51 +60,44 @@ const menuIndicated = computed(() => {
 	return false;
 });
 
+const rootElHeight = ref(0);
+
+watch(rootEl, () => {
+	if (rootEl.value) {
+		rootElHeight.value = rootEl.value.offsetHeight;
+		window.document.body.style.setProperty('--MI-minBottomSpacing', 'var(--MI-minBottomSpacingMobile)');
+	} else {
+		rootElHeight.value = 0;
+		window.document.body.style.setProperty('--MI-minBottomSpacing', '0px');
+	}
+}, {
+	immediate: true,
+});
 </script>
 
 <style lang="scss" module>
 .root {
-	--_dockOuterInsetX: calc(var(--MI-margin) + var(--MI-mobileDockPaddingX));
-	--_dockBottomInset: calc(max(env(safe-area-inset-bottom, 0px), 8px) + var(--MI-mobileDockPaddingBottom));
-	--_dockInnerPaddingY: calc(8px + var(--MI-mobileDockPaddingTop));
-	--_dockInnerPaddingX: calc(4px + (var(--MI-mobileDockPaddingX) * 0.2));
-	--_dockMaxWidth: min(calc(100vw - (var(--_dockOuterInsetX) * 2)), 332px);
-
-	position: fixed;
-	left: 50%;
-	right: auto;
-	bottom: var(--_dockBottomInset);
-	z-index: 1000;
-	width: var(--_dockMaxWidth);
-	transform: translateX(-50%);
-	padding: var(--_dockInnerPaddingY) var(--_dockInnerPaddingX);
+	position: relative;
+	z-index: 1;
+	padding-bottom: env(safe-area-inset-bottom, 0px);
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	column-gap: calc(2px + (var(--MI-mobileDockPaddingX) * 0.15));
+	width: 100%;
 	box-sizing: border-box;
+	background: var(--MI_THEME-navBg);
 	color: var(--MI_THEME-navFg);
-	background: var(--MI-surfaceNav, var(--MI-materialBg));
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
-	border-radius: var(--MI-mobileDockRadius);
-	box-shadow: var(--MI-surfaceShadowRaised);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
-	overflow: visible;
-	isolation: isolate;
-	pointer-events: none;
+	border-top: solid 0.5px var(--MI_THEME-divider);
 }
 
 .item {
-	min-width: 0;
-	padding: calc(2px + (var(--MI-mobileDockPaddingTop) * 0.08)) 0;
-	pointer-events: auto;
+	padding: 12px 0;
 
-	&:focus-visible {
-		outline: none;
+	&:first-child {
+		padding-left: 12px;
+	}
 
-		.itemInner {
-			box-shadow: 0 0 0 2px var(--MI_THEME-focus);
-		}
+	&:last-child {
+		padding-right: 12px;
 	}
 
 	&.post {
@@ -127,14 +118,13 @@ const menuIndicated = computed(() => {
 
 .itemInner {
 	position: relative;
-	display: grid;
-	place-items: center;
 	padding: 0;
-	width: min(100%, 48px);
-	height: 46px;
+	aspect-ratio: 1;
+	width: 100%;
+	max-width: 42px;
 	margin: auto;
-	border-radius: var(--MI-buttonPillRadius);
-	transition: transform var(--MI-motionDurationFast) ease, background-color var(--MI-motionDurationFast) ease;
+	align-content: center;
+	border-radius: 100%;
 
 	&:hover {
 		background: var(--MI_THEME-panelHighlight);
@@ -142,7 +132,6 @@ const menuIndicated = computed(() => {
 
 	&:active {
 		background: var(--MI_THEME-panelHighlight);
-		transform: scale(0.94);
 	}
 }
 

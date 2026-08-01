@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	appear :css="prefer.s.animation"
 	@afterLeave="emit('closed')"
 >
-		<div v-show="showing" :id="tooltipId" ref="el" role="tooltip" :aria-hidden="showing ? undefined : 'true'" :class="$style.root" class="_acrylic _shadow" :style="{ zIndex, maxWidth: maxWidth + 'px' }">
+	<div v-show="showing" ref="el" :class="$style.root" class="_acrylic _shadow" :style="{ zIndex, maxWidth: maxWidth + 'px' }">
 		<slot>
 			<template v-if="text">
 				<Mfm v-if="asMfm" :text="text"/>
@@ -24,10 +24,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, onUnmounted, useId, useTemplateRef, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, useTemplateRef } from 'vue';
 import * as os from '@/os.js';
-import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
-import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
+import { calcPopupPosition } from '@/utility/popup-position.js';
 import { prefer } from '@/preferences.js';
 
 const props = withDefaults(defineProps<{
@@ -54,7 +53,6 @@ const emit = defineEmits<{
 if (!props.showing) emit('closed');
 
 const el = useTemplateRef('el');
-const tooltipId = `mk-tooltip-${useId()}`;
 const zIndex = os.claimZIndex('high');
 
 function setPosition() {
@@ -73,71 +71,23 @@ function setPosition() {
 	el.value.style.top = data.top + 'px';
 }
 
-let describedAnchor: HTMLElement | null = null;
-
-function removeAnchorDescription() {
-	if (describedAnchor == null) return;
-	const ids = new Set((describedAnchor.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
-	ids.delete(tooltipId);
-	if (ids.size === 0) describedAnchor.removeAttribute('aria-describedby');
-	else describedAnchor.setAttribute('aria-describedby', [...ids].join(' '));
-	describedAnchor = null;
-}
-
-function syncAnchorDescription() {
-	removeAnchorDescription();
-	if (!props.showing || props.anchorElement == null) return;
-	describedAnchor = props.anchorElement;
-	const ids = new Set((describedAnchor.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
-	ids.add(tooltipId);
-	describedAnchor.setAttribute('aria-describedby', [...ids].join(' '));
-}
-
-const positionObserver = createFeatherMissPopupPositionObserver(setPosition);
-const schedulePosition = positionObserver.schedule;
-
-function observePositionSources() {
-	positionObserver.observe([el.value, props.anchorElement]);
-}
+let loopHandler: number | null = null;
 
 onMounted(() => {
-	syncAnchorDescription();
-	setPosition();
-	nextTick(schedulePosition);
-
-	observePositionSources();
-
-	window.addEventListener('resize', schedulePosition, { passive: true });
-	window.addEventListener('scroll', schedulePosition, { passive: true, capture: true });
-	window.visualViewport?.addEventListener('resize', schedulePosition, { passive: true });
-	window.visualViewport?.addEventListener('scroll', schedulePosition, { passive: true });
-});
-
-watch(() => props.showing, showing => {
-	syncAnchorDescription();
-	if (showing) nextTick(schedulePosition);
-});
-
-watch(
-	[() => props.x, () => props.y, () => props.direction, () => props.innerMargin, () => props.maxWidth],
-	() => nextTick(schedulePosition),
-);
-
-watch(() => props.anchorElement, () => {
-	syncAnchorDescription();
 	nextTick(() => {
-		observePositionSources();
-		schedulePosition();
+		setPosition();
+
+		const loop = () => {
+			setPosition();
+			loopHandler = window.requestAnimationFrame(loop);
+		};
+
+		loop();
 	});
 });
 
 onUnmounted(() => {
-	removeAnchorDescription();
-	positionObserver.dispose();
-	window.removeEventListener('resize', schedulePosition);
-	window.removeEventListener('scroll', schedulePosition, true);
-	window.visualViewport?.removeEventListener('resize', schedulePosition);
-	window.visualViewport?.removeEventListener('scroll', schedulePosition);
+	if (loopHandler != null) window.cancelAnimationFrame(loopHandler);
 });
 </script>
 
@@ -145,27 +95,24 @@ onUnmounted(() => {
 .transition_tooltip_enterActive,
 .transition_tooltip_leaveActive {
 	opacity: 1;
-	transform: translateY(0) scale(1);
-	transition: transform var(--MI-motionDurationFast) cubic-bezier(.2, .8, .2, 1), opacity var(--MI-motionDurationFast) ease;
+	transform: scale(1);
+	transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .transition_tooltip_enterFrom,
 .transition_tooltip_leaveTo {
 	opacity: 0;
-	transform: translateY(var(--MI-motionDistance35)) scale(0.96);
+	transform: scale(0.75);
 }
 
 .root {
 	position: absolute;
 	font-size: 0.8em;
-	line-height: 1.35;
-	padding: 7px 11px;
+	padding: 8px 12px;
 	box-sizing: border-box;
 	text-align: center;
-	text-wrap: balance;
-	border-radius: var(--MI-tooltipRadius);
-	border: var(--MI-surfaceBorderWidth) solid var(--MI-surfaceBorder);
+	border-radius: 4px;
+	border: solid 0.5px var(--MI_THEME-divider);
 	pointer-events: none;
 	transform-origin: center center;
-	will-change: transform, opacity;
 }
 </style>

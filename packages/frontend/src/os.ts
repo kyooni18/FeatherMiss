@@ -34,9 +34,6 @@ import { pleaseLogin } from '@/utility/please-login.js';
 import { showMovedDialog } from '@/utility/show-moved-dialog.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
 import { focusParent } from '@/utility/focus.js';
-import { deviceKind } from '@/utility/device-kind.js';
-import { isTouchUsing } from '@/utility/touch.js';
-import { shouldUseContextMenuDrawer } from '@/feathermiss/utilities/context-menu-layout.js';
 
 export const openingWindowsCount = ref(0);
 
@@ -661,31 +658,8 @@ export function contextMenu(items: MenuItem[], ev: PointerEvent): Promise<void> 
 	}
 
 	let returnFocusTo = getHTMLElementOrNull(ev.currentTarget ?? ev.target) ?? getHTMLElementOrNull(window.document.activeElement);
-	const useDrawer = shouldUseContextMenuDrawer({
-		deviceKind,
-		isTouchUsing,
-		viewportWidth: window.visualViewport?.width ?? window.innerWidth,
-	});
 	ev.preventDefault();
-
 	return new Promise(resolve => nextTick(() => {
-		if (useDrawer) {
-			const { dispose } = popup(MkPopupMenu, {
-				items,
-				anchorElement: null,
-				returnFocusTo,
-				preferType: 'drawer',
-				contextMenu: true,
-			}, {
-				closed: () => {
-					resolve();
-					dispose();
-					returnFocusTo = null;
-				},
-			});
-			return;
-		}
-
 		const { dispose } = popup(MkContextMenu, {
 			items,
 			ev,

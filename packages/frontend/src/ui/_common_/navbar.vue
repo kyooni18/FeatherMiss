@@ -4,11 +4,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div :class="[$style.root, { [$style.iconOnly]: iconOnly, [$style.asDrawer]: props.asDrawer }]">
+<div :class="[$style.root, { [$style.iconOnly]: iconOnly }]">
 	<div :class="$style.body">
 		<div :class="$style.top">
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img :src="instanceIconUrl" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;" @error="onInstanceIconError"/>
+				<img :src="instance.iconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
 			</button>
 			<button v-if="!iconOnly" v-tooltip.noDelay.right="i18n.ts.realtimeMode" class="_button" :class="[$style.realtimeMode, store.r.realtimeMode.value ? $style.on : null]" @click="toggleRealtimeMode">
 				<i v-if="store.r.realtimeMode.value" class="ti ti-bolt ti-fw"></i>
@@ -73,16 +73,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<!--
 	<svg viewBox="0 0 16 48" :class="$style.subButtonShape">
 		<g transform="matrix(0.333333,0,0,0.222222,0.000895785,13.3333)">
-			<path d="M23.935,-24C37.223,-24 47.995,-7.842 47.995,12.09C47.995,34.077 47.995,62.07 47.995,84.034C47.995,93.573 45.469,102.721 40.972,109.466C36.475,116.211 30.377,120 24.018,120L23.997,120C10.743,120 -0.003,136.118 -0.003,156C-0.003,156 -0.003,156 -0.003,156L-0.003,-60L-0.003,-59.901C-0.003,-50.379 2.519,-41.248 7.007,-34.515C11.496,-27.782 17.584,-24 23.931,-24C23.932,-24 23.934,-24 23.935,-24Z" style="fill:var(--MI-surfaceNav);"/>
+			<path d="M23.935,-24C37.223,-24 47.995,-7.842 47.995,12.09C47.995,34.077 47.995,62.07 47.995,84.034C47.995,93.573 45.469,102.721 40.972,109.466C36.475,116.211 30.377,120 24.018,120L23.997,120C10.743,120 -0.003,136.118 -0.003,156C-0.003,156 -0.003,156 -0.003,156L-0.003,-60L-0.003,-59.901C-0.003,-50.379 2.519,-41.248 7.007,-34.515C11.496,-27.782 17.584,-24 23.931,-24C23.932,-24 23.934,-24 23.935,-24Z" style="fill:var(--MI_THEME-navBg);"/>
 		</g>
 	</svg>
 	-->
 
-		<div v-if="!props.asDrawer && !forceIconOnly && prefer.r.showNavbarSubButtons.value" :class="$style.subButtons">
+	<div v-if="!forceIconOnly && prefer.r.showNavbarSubButtons.value" :class="$style.subButtons">
 		<div :class="$style.subButton">
 			<svg viewBox="0 0 16 64" :class="$style.subButtonShape">
 				<g transform="matrix(0.333333,0,0,0.222222,0.000895785,21.3333)">
-					<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI-surfaceNav);"/>
+					<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI_THEME-navBg);"/>
 				</g>
 			</svg>
 			<button class="_button" :class="$style.subButtonClickable" @click="menuEdit"><i :class="$style.subButtonIcon" class="ti ti-settings-2"></i></button>
@@ -93,7 +93,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div :class="$style.subButton">
 				<svg viewBox="0 0 16 64" :class="$style.subButtonShape">
 					<g transform="matrix(0.333333,0,0,0.222222,0.000895785,21.3333)">
-						<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI-surfaceNav);"/>
+						<path d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z" style="fill:var(--MI_THEME-navBg);"/>
 					</g>
 				</svg>
 				<button class="_button" :class="$style.subButtonClickable" @click="toggleIconOnly"><i v-if="iconOnly" class="ti ti-chevron-right" :class="$style.subButtonIcon"></i><i v-else class="ti ti-chevron-left" :class="$style.subButtonIcon"></i></button>
@@ -116,7 +116,6 @@ import { useRouter } from '@/router.js';
 import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
-import { useFeatherMissInstanceIcon } from '@/feathermiss/composables/instance-icon.js';
 
 const router = useRouter();
 
@@ -141,8 +140,6 @@ const otherMenuItemIndicated = computed(() => {
 	}
 	return false;
 });
-
-const { url: instanceIconUrl, onError: onInstanceIconError } = useFeatherMissInstanceIcon(instance);
 
 function calcViewState() {
 	forceIconOnly.value = window.innerWidth <= 1279;
@@ -205,46 +202,13 @@ function menuEdit() {
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
-	--nav-edge-blur-soft: 12px;
-	--nav-edge-blur-strong: 24px;
+	--nav-bg-transparent: color(from var(--MI_THEME-navBg) srgb r g b / 0.5);
 
 	--subButtonWidth: 20px;
 
 	flex: 0 0 var(--nav-width);
 	width: var(--nav-width);
 	box-sizing: border-box;
-}
-
-.root.asDrawer {
-	--nav-width: 100%;
-	--nav-icon-only-width: 100%;
-	--drawer-edge-padding: 10px;
-	--drawer-edge-bleed: 20px;
-
-	flex: 1 1 auto;
-	width: 100%;
-
-	.body {
-		width: 100%;
-		border-right: none;
-		border-radius: inherit;
-		padding-block: var(--drawer-edge-padding);
-		background: var(--MI-materialBg);
-		-webkit-backdrop-filter: var(--MI-surfaceFilter);
-		backdrop-filter: var(--MI-surfaceFilter);
-	}
-
-	.top {
-		top: var(--drawer-edge-padding);
-	}
-
-	.bottom {
-		bottom: var(--drawer-edge-padding);
-	}
-
-	.subButtons {
-		display: none;
-	}
 }
 
 .body {
@@ -255,49 +219,27 @@ function menuEdit() {
 	overflow: auto;
 	overflow-x: clip;
 	overscroll-behavior: contain;
-	background: var(--MI-materialBg);
-	border-right: 1px solid var(--MI-surfaceBorder);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
-	contain: layout style;
+	background: var(--MI_THEME-navBg);
+	contain: strict;
 
 	/* 画面が縦に長い、設置している項目数が少ないなどの環境においても確実にbottomを最下部に表示するため */
 	display: flex;
 	flex-direction: column;
 
 	direction: rtl; /* スクロールバーを左に表示したいため */
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-
-	&::-webkit-scrollbar {
-		display: none;
-		width: 0;
-		height: 0;
-	}
 }
 
 .top {
 	flex-shrink: 0;
 	direction: ltr;
 
+	/* 疑似progressive blur */
 	&::before {
 		position: absolute;
 		z-index: -1;
 		inset: 0;
 		content: "";
-		-webkit-backdrop-filter: blur(var(--nav-edge-blur-soft));
-		backdrop-filter: blur(var(--nav-edge-blur-soft));
-		-webkit-mask-image: linear-gradient(
-			to top,
-			rgb(0 0 0 / 0%) 0%,
-			rgb(0 0 0 / 4.9%) 7.75%,
-			rgb(0 0 0 / 10.4%) 11.25%,
-			rgb(0 0 0 / 45%) 23.55%,
-			rgb(0 0 0 / 55%) 26.45%,
-			rgb(0 0 0 / 89.6%) 38.75%,
-			rgb(0 0 0 / 95.1%) 42.25%,
-			rgb(0 0 0 / 100%) 50%
-		);
+		backdrop-filter: blur(8px);
 		mask-image: linear-gradient(
 			to top,
 			rgb(0 0 0 / 0%) 0%,
@@ -317,19 +259,7 @@ function menuEdit() {
 		inset: 0;
 		bottom: 25%;
 		content: "";
-		-webkit-backdrop-filter: blur(var(--nav-edge-blur-strong));
-		backdrop-filter: blur(var(--nav-edge-blur-strong));
-		-webkit-mask-image: linear-gradient(
-			to top,
-			rgb(0 0 0 / 0%) 0%,
-			rgb(0 0 0 / 4.9%) 15.5%,
-			rgb(0 0 0 / 10.4%) 22.5%,
-			rgb(0 0 0 / 45%) 47.1%,
-			rgb(0 0 0 / 55%) 52.9%,
-			rgb(0 0 0 / 89.6%) 77.5%,
-			rgb(0 0 0 / 95.1%) 91.9%,
-			rgb(0 0 0 / 100%) 100%
-		);
+		backdrop-filter: blur(16px);
 		mask-image: linear-gradient(
 			to top,
 			rgb(0 0 0 / 0%) 0%,
@@ -353,24 +283,13 @@ function menuEdit() {
 	flex-shrink: 0;
 	direction: ltr;
 
+	/* 疑似progressive blur */
 	&::before {
 		position: absolute;
 		z-index: -1;
 		inset: -30px 0 0 0;
 		content: "";
-		-webkit-backdrop-filter: blur(var(--nav-edge-blur-soft));
-		backdrop-filter: blur(var(--nav-edge-blur-soft));
-		-webkit-mask-image: linear-gradient(
-			to bottom,
-			rgb(0 0 0 / 0%) 0%,
-			rgb(0 0 0 / 4.9%) 7.75%,
-			rgb(0 0 0 / 10.4%) 11.25%,
-			rgb(0 0 0 / 45%) 23.55%,
-			rgb(0 0 0 / 55%) 26.45%,
-			rgb(0 0 0 / 89.6%) 38.75%,
-			rgb(0 0 0 / 95.1%) 42.25%,
-			rgb(0 0 0 / 100%) 50%
-		);
+		backdrop-filter: blur(8px);
 		mask-image: linear-gradient(
 			to bottom,
 			rgb(0 0 0 / 0%) 0%,
@@ -391,19 +310,7 @@ function menuEdit() {
 		inset: 0;
 		top: 25%;
 		content: "";
-		-webkit-backdrop-filter: blur(var(--nav-edge-blur-strong));
-		backdrop-filter: blur(var(--nav-edge-blur-strong));
-		-webkit-mask-image: linear-gradient(
-			to bottom,
-			rgb(0 0 0 / 0%) 0%,
-			rgb(0 0 0 / 4.9%) 15.5%,
-			rgb(0 0 0 / 10.4%) 22.5%,
-			rgb(0 0 0 / 45%) 47.1%,
-			rgb(0 0 0 / 55%) 52.9%,
-			rgb(0 0 0 / 89.6%) 77.5%,
-			rgb(0 0 0 / 95.1%) 91.9%,
-			rgb(0 0 0 / 100%) 100%
-		);
+		backdrop-filter: blur(16px);
 		mask-image: linear-gradient(
 			to bottom,
 			rgb(0 0 0 / 0%) 0%,
@@ -481,7 +388,7 @@ function menuEdit() {
 	margin-top: -32px;
 	margin-bottom: -32px;
 	pointer-events: none;
-	background: var(--MI-surfaceNav);
+	background: var(--MI_THEME-navBg);
 }
 
 .subButtonGapFillDivider {
@@ -518,14 +425,8 @@ function menuEdit() {
 	.instanceIcon {
 		display: inline-block;
 		width: 38px;
-		height: 38px;
 		aspect-ratio: 1;
 		border-radius: 8px;
-		object-fit: cover;
-		image-rendering: auto;
-		transform: translateZ(0);
-		position: relative;
-		z-index: 2;
 	}
 
 	.realtimeMode {
@@ -570,7 +471,7 @@ function menuEdit() {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			border-radius: var(--MI-buttonPillRadius);
+			border-radius: 999px;
 			background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
 		}
 
@@ -615,7 +516,7 @@ function menuEdit() {
 			outline: none;
 
 			> .avatar {
-				box-shadow: 0 0 0 2px var(--MI_THEME-focus);
+				box-shadow: 0 0 0 4px var(--MI_THEME-focus);
 			}
 		}
 	}
@@ -685,7 +586,7 @@ function menuEdit() {
 				left: 0;
 				right: 0;
 				bottom: 0;
-				border-radius: var(--MI-buttonPillRadius);
+				border-radius: 999px;
 				background: var(--MI_THEME-accentedBg);
 			}
 		}
@@ -755,14 +656,8 @@ function menuEdit() {
 	.instanceIcon {
 		display: inline-block;
 		width: 30px;
-		height: 30px;
 		aspect-ratio: 1;
 		border-radius: 8px;
-		object-fit: cover;
-		image-rendering: auto;
-		transform: translateZ(0);
-		position: relative;
-		z-index: 2;
 	}
 
 	.bottom {
@@ -809,7 +704,7 @@ function menuEdit() {
 			margin: auto;
 			width: 52px;
 			aspect-ratio: 1/1;
-			border-radius: var(--MI-buttonPillRadius);
+			border-radius: 100%;
 			background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
 		}
 
@@ -849,7 +744,7 @@ function menuEdit() {
 			outline: none;
 
 			> .avatar {
-				box-shadow: 0 0 0 2px var(--MI_THEME-focus);
+				box-shadow: 0 0 0 4px var(--MI_THEME-focus);
 			}
 		}
 	}
@@ -901,7 +796,7 @@ function menuEdit() {
 				left: 0;
 				right: 0;
 				bottom: 0;
-				border-radius: var(--MI-buttonPillRadius);
+				border-radius: 999px;
 				background: var(--MI_THEME-accentedBg);
 			}
 
@@ -940,109 +835,6 @@ function menuEdit() {
 
 	.subButtons {
 		left: var(--nav-icon-only-width);
-	}
-}
-
-.root.asDrawer:not(.iconOnly) {
-	.top {
-		top: var(--drawer-edge-padding);
-
-		&::before,
-		&::after {
-			left: calc(var(--drawer-edge-bleed) * -1);
-			right: calc(var(--drawer-edge-bleed) * -1);
-		}
-
-		&::before {
-			top: calc(var(--drawer-edge-bleed) * -1);
-		}
-
-		&::after {
-			top: calc(var(--drawer-edge-bleed) * -1);
-			bottom: 25%;
-		}
-	}
-
-	.bottom {
-		bottom: var(--drawer-edge-padding);
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		padding: 18px 0 max(12px, env(safe-area-inset-bottom, 0px));
-
-		&::before,
-		&::after {
-			left: calc(var(--drawer-edge-bleed) * -1);
-			right: calc(var(--drawer-edge-bleed) * -1);
-		}
-
-		&::before {
-			bottom: calc(var(--drawer-edge-bleed) * -1);
-		}
-
-		&::after {
-			top: 25%;
-			bottom: calc(var(--drawer-edge-bleed) * -1);
-		}
-	}
-
-	.post {
-		height: 46px;
-
-		&::before {
-			width: calc(100% - 24px);
-		}
-	}
-
-	.postIcon {
-		margin-left: 24px;
-	}
-
-	.account {
-		padding: 6px 24px 0;
-		min-height: 52px;
-	}
-
-	.avatar {
-		width: 36px;
-	}
-
-	.acct {
-		padding-right: 0;
-	}
-}
-
-@media (max-width: 500px) {
-	.root {
-		max-width: 100%;
-	}
-
-	.root:not(.iconOnly) {
-		.post {
-			&:focus-visible::before {
-				outline-offset: -2px;
-			}
-		}
-
-		.item {
-			&:focus-visible::before {
-				outline-offset: 0;
-			}
-		}
-	}
-
-	.root.iconOnly {
-		.post {
-			&:focus-visible::before {
-				outline-offset: -2px;
-			}
-		}
-
-		.item {
-			&:focus-visible::before {
-				outline-offset: 0;
-			}
-		}
 	}
 }
 </style>

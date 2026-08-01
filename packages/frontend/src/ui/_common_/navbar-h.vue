@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.body">
 		<div>
 			<button v-click-anime :class="[$style.item, $style.instance]" class="_button" @click="openInstanceMenu">
-				<img :class="$style.instanceIcon" :src="instanceIconUrl" draggable="false" @error="onInstanceIconError"/>
+				<img :class="$style.instanceIcon" :src="instance.iconUrl ?? '/favicon.ico'" draggable="false"/>
 			</button>
 			<MkA v-click-anime v-tooltip="i18n.ts.timeline" :class="$style.item" :activeClass="$style.active" to="/" exact>
 				<i :class="$style.itemIcon" class="ti ti-home ti-fw"></i>
@@ -58,7 +58,6 @@ import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
-import { useFeatherMissInstanceIcon } from '@/feathermiss/composables/instance-icon.js';
 
 const WINDOW_THRESHOLD = 1400;
 
@@ -76,8 +75,6 @@ const otherNavItemIndicated = computed<boolean>(() => {
 	}
 	return false;
 });
-
-const { url: instanceIconUrl, onError: onInstanceIconError } = useFeatherMissInstanceIcon(instance);
 
 async function more(ev: PointerEvent) {
 	const target = getHTMLElementOrNull(ev.currentTarget ?? ev.target);
@@ -116,16 +113,13 @@ onMounted(() => {
 	z-index: 1000;
 	width: 100%;
 	height: var(--height);
-	contain: layout style;
-	background: var(--MI-materialBg);
-	border-bottom: 1px solid var(--MI-surfaceBorder);
-	-webkit-backdrop-filter: var(--MI-surfaceFilter);
-	backdrop-filter: var(--MI-surfaceFilter);
+	contain: strict;
+	background: var(--MI_THEME-navBg);
 
 	&.acrylic {
-		background: var(--MI-materialBg);
-		-webkit-backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
-		backdrop-filter: var(--MI-blur, var(--MI-surfaceFilter));
+		background: color(from var(--MI_THEME-bg) srgb r g b / 0.75);
+		-webkit-backdrop-filter: var(--MI-blur, blur(15px));
+		backdrop-filter: var(--MI-blur, blur(15px));
 	}
 }
 
@@ -205,16 +199,12 @@ onMounted(() => {
 .instanceIcon {
 	display: inline-block;
 	width: 24px;
-	height: 24px;
 	position: absolute;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	margin: auto;
-	object-fit: cover;
-	image-rendering: auto;
-	transform: translateZ(0);
 }
 
 .right {
@@ -226,7 +216,7 @@ onMounted(() => {
 	right: 0;
 	z-index: 1;
 	contain: content;
-	background: var(--MI-surfaceNav);
+	background: var(--MI_THEME-navBg);
 }
 .acrylic .right {
 	background: transparent;

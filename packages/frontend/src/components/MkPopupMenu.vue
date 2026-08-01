@@ -25,10 +25,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 		:returnFocusTo="returnFocusTo"
 		:debugDisablePredictionCone="debugDisablePredictionCone"
 		:debugShowPredictionCone="debugShowPredictionCone"
-		:drawerLabel="contextMenu ? i18n.ts.quickAction : undefined"
-		:insetDrawer="contextMenu"
-		:class="{ [$style.drawer]: type === 'drawer', [$style.contextDrawer]: type === 'drawer' && contextMenu }"
+		:class="{ [$style.drawer]: type === 'drawer' }"
 		@close="onMenuClose"
+		@hide="hide"
 	/>
 </MkModal>
 </template>
@@ -38,7 +37,6 @@ import { ref, useTemplateRef } from 'vue';
 import MkModal from './MkModal.vue';
 import MkMenu from './MkMenu.vue';
 import type { MenuItem } from '@/types/menu.js';
-import { i18n } from '@/i18n.js';
 
 defineProps<{
 	items: MenuItem[];
@@ -46,8 +44,6 @@ defineProps<{
 	width?: number;
 	anchorElement?: HTMLElement | null;
 	returnFocusTo?: HTMLElement | null;
-	preferType?: 'auto' | 'popup' | 'drawer';
-	contextMenu?: boolean;
 	debugDisablePredictionCone?: boolean;
 	debugShowPredictionCone?: boolean;
 }>();
@@ -59,6 +55,7 @@ const emit = defineEmits<{
 
 const modal = useTemplateRef('modal');
 const manualShowing = ref(true);
+const hiding = ref(false);
 
 function click() {
 	close();
@@ -70,10 +67,25 @@ function onModalClose() {
 
 function onMenuClose() {
 	close();
+	if (hiding.value) {
+		// hidingであればclosedを発火
+		emit('closed');
+	}
 }
 
 function onModalClosed() {
-	emit('closed');
+	if (!hiding.value) {
+		// hidingでなければclosedを発火
+		emit('closed');
+	}
+}
+
+function hide() {
+	manualShowing.value = false;
+	hiding.value = true;
+
+	// closeは呼ぶ必要がある
+	modal.value?.close();
 }
 
 function close() {
@@ -86,11 +98,8 @@ function close() {
 
 <style lang="scss" module>
 .drawer {
-	border-radius: var(--MI-drawerRadius) var(--MI-drawerRadius) 0 0;
+	border-radius: 24px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
-
-.contextDrawer {
-	width: min(100%, 620px);
-}
-
 </style>

@@ -5,41 +5,27 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div
-	:class="[
-		surface && !asDrawer ? ['_popup', '_shadow'] : null,
-		{
-			[$style.root]: true,
-			[$style.center]: align === 'center',
-			[$style.big]: big,
-			[$style.asDrawer]: asDrawer,
-			[$style.insetDrawer]: asDrawer && insetDrawer,
-			[$style.widthSpecified]: width != null,
-		},
-	]"
+	role="menu"
+	:class="{
+		[$style.root]: true,
+		[$style.center]: align === 'center',
+		[$style.big]: big,
+		[$style.asDrawer]: asDrawer,
+		[$style.widthSpecified]: width != null,
+	}"
 	@focusin.passive.stop="() => {}"
 >
-	<div v-if="asDrawer" :class="$style.drawerHeader">
-		<div :class="$style.drawerHandle" aria-hidden="true"></div>
-		<button v-if="canGoBackInDrawer" type="button" class="_button" :class="$style.drawerBack" :aria-label="i18n.ts.goBack" @click="goBackInDrawer">
-			<i class="ti ti-chevron-left"></i>
-		</button>
-		<div v-else :class="$style.drawerHeaderSpacer" aria-hidden="true"></div>
-		<div v-if="activeDrawerLabel" :class="$style.drawerTitle">{{ activeDrawerLabel }}</div>
-		<button type="button" class="_button" :class="$style.drawerClose" :aria-label="i18n.ts.close" @click="close(false)">
-			<i class="ti ti-x"></i>
-		</button>
-	</div>
 	<div
 		ref="itemsEl"
 		v-hotkey="keymap"
-		role="menu"
 		tabindex="0"
+		class="_popup _shadow"
 		:class="$style.menu"
 		:style="{
 			width: (width && !asDrawer) ? `${width}px` : '',
-			maxHeight: menuMaxHeight,
+			maxHeight: maxHeight ? `min(${maxHeight}px, calc(100dvh - 32px))` : 'calc(100dvh - 32px)',
 		}"
-		@keydown.stop="onMenuKeydown"
+		@keydown.stop="() => {}"
 		@contextmenu.self.prevent="() => {}"
 		@mousemove.passive="onMouseMove"
 		@mouseleave.passive="onMouseLeave"
@@ -47,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<template v-for="item in (items2 ?? [])">
 			<div v-if="item.type === 'divider'" role="separator" tabindex="-1" :class="$style.divider"></div>
 
-			<div v-else-if="item.type === 'label'" role="presentation" :class="[$style.label]">
+			<div v-else-if="item.type === 'label'" role="menuitem" tabindex="-1" :class="[$style.label]">
 				<span>{{ item.text }}</span>
 			</div>
 
@@ -124,7 +110,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 				tabindex="0"
 				:class="['_button', $style.item]"
 				:disabled="unref(item.disabled)"
-				:aria-checked="unref(item.ref) ? 'true' : 'false'"
 				@click.prevent="switchItem(item)"
 				@mouseenter.passive="onItemMouseEnter"
 				@mouseleave.passive="onItemMouseLeave"
@@ -146,13 +131,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				tabindex="0"
 				:class="['_button', $style.item, $style.parent, { [$style.active]: childShowingItem === item }]"
 				:disabled="unref(item.disabled)"
-				aria-haspopup="menu"
-				:aria-expanded="childShowingItem === item ? 'true' : 'false'"
 				@mouseenter.prevent="preferClick ? null : showRadioOptions(item, $event)"
-				@keydown.enter.prevent="showRadioOptions(item, $event)"
-				@keydown.right.prevent="showRadioOptions(item, $event)"
-				@keydown.space.prevent="showRadioOptions(item, $event)"
 				@mousemove="parentMouseMove"
+				@keydown.enter.prevent="preferClick ? null : showRadioOptions(item, $event)"
 				@click.prevent="!preferClick ? null : showRadioOptions(item, $event)"
 			>
 				<i v-if="item.icon" class="ti-fw" :class="[$style.icon, item.icon]" style="pointer-events: none;"></i>
@@ -170,7 +151,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 				role="menuitemradio"
 				tabindex="0"
 				:class="['_button', $style.item, $style.radio, { [$style.active]: unref(item.active) }]"
-				:aria-checked="unref(item.active) ? 'true' : 'false'"
 				@click.prevent="unref(item.active) ? null : clicked(item.action, $event, false)"
 				@mouseenter.passive="onItemMouseEnter"
 				@mouseleave.passive="onItemMouseLeave"
@@ -191,13 +171,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				role="menuitem"
 				tabindex="0"
 				:class="['_button', $style.item, $style.parent, { [$style.active]: childShowingItem === item }]"
-				aria-haspopup="menu"
-				:aria-expanded="childShowingItem === item ? 'true' : 'false'"
 				@mouseenter.prevent="preferClick ? null : showChildren(item, $event)"
-				@keydown.enter.prevent="showChildren(item, $event)"
-				@keydown.right.prevent="showChildren(item, $event)"
-				@keydown.space.prevent="showChildren(item, $event)"
 				@mousemove="parentMouseMove"
+				@keydown.enter.prevent="preferClick ? null : showChildren(item, $event)"
 				@click.prevent="!preferClick ? null : showChildren(item, $event)"
 			>
 				<i v-if="item.icon" class="ti-fw" :class="[$style.icon, item.icon]" style="pointer-events: none;"></i>
@@ -241,6 +217,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			@mousemove="guardMouseMove"
 		></div>
 	</div>
+
 	<XChild
 		v-if="childMenu" :key="childMenuKey"
 		ref="child"
@@ -250,7 +227,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		:debugDisablePredictionCone="props.debugDisablePredictionCone"
 		:debugShowPredictionCone="props.debugShowPredictionCone"
 		@actioned="childActioned"
-		@closed="closeChild(true)"
+		@closed="closeChild"
 	/>
 </div>
 </template>
@@ -260,6 +237,7 @@ import { computed, defineAsyncComponent, inject, nextTick, onBeforeUnmount, onMo
 import type { MenuItem, InnerMenuItem, MenuPending, MenuAction, MenuSwitch, MenuRadio, MenuRadioOption, MenuParent } from '@/types/menu.js';
 import type { Keymap } from '@/utility/hotkey.js';
 import MkSwitchButton from '@/components/MkSwitch.button.vue';
+import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
 import { isTouchUsing } from '@/utility/touch.js';
 import { isFocusable } from '@/utility/focus.js';
@@ -271,25 +249,19 @@ const childrenCache = new WeakMap<MenuParent, MenuItem[]>();
 <script lang="ts" setup>
 const XChild = defineAsyncComponent(() => import('./MkMenu.child.vue'));
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	items: MenuItem[];
 	asDrawer?: boolean;
 	align?: 'center' | string;
 	width?: number;
 	maxHeight?: number;
-	drawerLabel?: string;
-	insetDrawer?: boolean;
-	surface?: boolean;
 	debugDisablePredictionCone?: boolean;
 	debugShowPredictionCone?: boolean;
-}>(), {
-	asDrawer: false,
-	insetDrawer: false,
-	surface: true,
-});
+}>();
 
 const emit = defineEmits<{
 	(ev: 'close', actioned?: boolean): void;
+	(ev: 'hide'): void;
 }>();
 
 const big = isTouchUsing;
@@ -301,7 +273,6 @@ const itemsEl = useTemplateRef('itemsEl');
 const items2 = ref<InnerMenuItem[]>();
 
 const child = useTemplateRef('child');
-let focusChildWhenReady = false;
 
 const keymap = {
 	'up|k|shift+tab': {
@@ -316,55 +287,14 @@ const keymap = {
 		allowRepeat: true,
 		callback: () => close(false),
 	},
-	'left|h': {
-		allowRepeat: true,
-		callback: () => {
-			if (props.asDrawer && canGoBackInDrawer.value) {
-				goBackInDrawer();
-			} else if (isNestingMenu) {
-				close(false);
-			}
-		},
-	},
-	'home': {
-		allowRepeat: true,
-		callback: () => focusFirst(),
-	},
-	'end': {
-		allowRepeat: true,
-		callback: () => focusLast(),
-	},
 } as const satisfies Keymap;
 
 const childShowingItem = ref<MenuItem | null>();
 
 let preferClick = isTouchUsing || props.asDrawer;
 
-const menuMaxHeight = computed(() => {
-	if (props.asDrawer) {
-		return props.maxHeight != null
-			? `${Math.max(120, Math.floor(props.maxHeight - 58))}px`
-			: 'calc(78dvh - 58px)';
-	}
-	return props.maxHeight != null
-		? `min(${props.maxHeight}px, calc(100dvh - var(--MI-floatingGapDouble)))`
-		: 'calc(100dvh - var(--MI-floatingGapDouble))';
-});
-
-type DrawerLevel = {
-	items: MenuItem[];
-	label?: string;
-};
-
-const drawerHistory = shallowRef<DrawerLevel[]>([]);
-const currentDrawerItems = shallowRef<MenuItem[]>(props.items);
-const activeDrawerLabel = ref(props.drawerLabel);
-const canGoBackInDrawer = computed(() => drawerHistory.value.length > 0);
-let itemsLoadVersion = 0;
-
-function setVisibleItems(source: MenuItem[]) {
-	const version = ++itemsLoadVersion;
-	const items = [...source].filter(item => item !== undefined) as (NonNullable<MenuItem> | MenuPending)[];
+watch(() => props.items, () => {
+	const items = [...props.items].filter(item => item !== undefined) as (NonNullable<MenuItem> | MenuPending)[];
 
 	for (let i = 0; i < items.length; i++) {
 		const item = items[i];
@@ -372,75 +302,24 @@ function setVisibleItems(source: MenuItem[]) {
 		if ('then' in item) { // if item is Promise
 			items[i] = { type: 'pending' };
 			item.then(actualItem => {
-				if (version !== itemsLoadVersion || items2.value?.[i] == null) return;
-				items2.value[i] = actualItem;
+				if (items2.value?.[i]) items2.value[i] = actualItem;
 			});
 		}
 	}
 
 	items2.value = items as InnerMenuItem[];
-}
-
-function openDrawerLevel(items: MenuItem[], label?: string) {
-	drawerHistory.value.push({
-		items: currentDrawerItems.value,
-		label: activeDrawerLabel.value,
-	});
-	currentDrawerItems.value = items;
-	activeDrawerLabel.value = label;
-	setVisibleItems(items);
-	nextTick(focusFirst);
-}
-
-function goBackInDrawer() {
-	const previous = drawerHistory.value.pop();
-	if (previous == null) return;
-	currentDrawerItems.value = previous.items;
-	activeDrawerLabel.value = previous.label;
-	setVisibleItems(previous.items);
-	nextTick(focusFirst);
-}
-
-watch(() => props.items, items => {
-	drawerHistory.value = [];
-	currentDrawerItems.value = items;
-	activeDrawerLabel.value = props.drawerLabel;
-	setVisibleItems(items);
-}, { immediate: true });
-
-watch(() => props.drawerLabel, label => {
-	if (drawerHistory.value.length === 0) activeDrawerLabel.value = label;
+}, {
+	immediate: true,
 });
 
 const childMenu = ref<MenuItem[] | null>();
 const childMenuKey = ref(0);
 const childTarget = shallowRef<HTMLElement>();
 
-function closeChild(restoreFocus = false) {
-	focusChildWhenReady = false;
-	const target = childTarget.value;
+function closeChild() {
 	childMenu.value = null;
 	childShowingItem.value = null;
-	if (restoreFocus && target?.isConnected) nextTick(() => target.focus({ preventScroll: true }));
 }
-
-function focusChildFromKeyboard(ev: MouseEvent | PointerEvent | KeyboardEvent) {
-	if (!(ev instanceof KeyboardEvent)) return;
-	focusChildWhenReady = true;
-	nextTick(() => {
-		if (child.value == null) return;
-		child.value.focusFirst();
-		focusChildWhenReady = false;
-	});
-}
-
-watch(child, instance => {
-	if (instance == null || !focusChildWhenReady) return;
-	nextTick(() => {
-		instance.focusFirst();
-		focusChildWhenReady = false;
-	});
-});
 
 function childActioned() {
 	closeChild();
@@ -483,13 +362,15 @@ async function showRadioOptions(item: MenuRadio, ev: MouseEvent | PointerEvent |
 	});
 
 	if (props.asDrawer) {
-		openDrawerLevel(children, unref(item.text));
+		os.popupMenu(children, ev.currentTarget ?? ev.target).finally(() => {
+			close(false);
+		});
+		emit('hide');
 	} else {
 		childTarget.value = (ev.currentTarget ?? ev.target) as HTMLElement;
 		childMenu.value = children;
 		childMenuKey.value++;
 		childShowingItem.value = item;
-		focusChildFromKeyboard(ev);
 	}
 }
 
@@ -511,14 +392,16 @@ async function showChildren(item: MenuParent, ev: MouseEvent | PointerEvent | Ke
 	childrenCache.set(item, children);
 
 	if (props.asDrawer) {
-		openDrawerLevel(children, unref(item.text));
+		os.popupMenu(children, ev.currentTarget ?? ev.target).finally(() => {
+			close(false);
+		});
+		emit('hide');
 	} else {
 		childTarget.value = (ev.currentTarget ?? ev.target) as HTMLElement;
 		// これでもリアクティビティは保たれる
 		childMenu.value = children;
 		childMenuKey.value++;
 		childShowingItem.value = item;
-		focusChildFromKeyboard(ev);
 	}
 }
 
@@ -547,52 +430,11 @@ function switchItem(item: MenuSwitch) {
 	}
 }
 
-function focusableMenuItems(): HTMLElement[] {
-	if (itemsEl.value == null) return [];
-	return Array.from(itemsEl.value.children).filter(isFocusable) as HTMLElement[];
-}
-
-function focusFirst() {
-	if (disposed) return;
-	(focusableMenuItems()[0] ?? itemsEl.value)?.focus({ preventScroll: true });
-}
-
-function focusLast() {
-	if (disposed) return;
-	const elements = focusableMenuItems();
-	(elements[elements.length - 1] ?? itemsEl.value)?.focus({ preventScroll: true });
-}
-
-let typeahead = '';
-let typeaheadTimer: number | null = null;
-
-function onMenuKeydown(ev: KeyboardEvent) {
-	if (ev.ctrlKey || ev.metaKey || ev.altKey || ev.key.length !== 1 || ev.key.trim() === '') return;
-	const elements = focusableMenuItems();
-	if (elements.length === 0) return;
-
-	if (typeaheadTimer != null) window.clearTimeout(typeaheadTimer);
-	const key = ev.key.toLocaleLowerCase();
-	typeahead = typeahead === key ? key : typeahead + key;
-	typeaheadTimer = window.setTimeout(() => {
-		typeahead = '';
-		typeaheadTimer = null;
-	}, 650);
-
-	const activeIndex = elements.indexOf(window.document.activeElement as HTMLElement);
-	const ordered = [...elements.slice(activeIndex + 1), ...elements.slice(0, activeIndex + 1)];
-	const match = ordered.find(element => (element.textContent ?? '').trim().toLocaleLowerCase().startsWith(typeahead));
-	if (match != null) {
-		ev.preventDefault();
-		match.focus({ preventScroll: true });
-	}
-}
-
 function focusUp() {
 	if (disposed) return;
 	if (!itemsEl.value?.contains(window.document.activeElement)) return;
 
-	const focusableElements = focusableMenuItems();
+	const focusableElements = Array.from(itemsEl.value.children).filter(isFocusable);
 	const activeIndex = focusableElements.findIndex(el => el === window.document.activeElement);
 	const targetIndex = (activeIndex !== -1 && activeIndex !== 0) ? (activeIndex - 1) : (focusableElements.length - 1);
 	const targetElement = focusableElements.at(targetIndex) ?? itemsEl.value;
@@ -604,7 +446,7 @@ function focusDown() {
 	if (disposed) return;
 	if (!itemsEl.value?.contains(window.document.activeElement)) return;
 
-	const focusableElements = focusableMenuItems();
+	const focusableElements = Array.from(itemsEl.value.children).filter(isFocusable);
 	const activeIndex = focusableElements.findIndex(el => el === window.document.activeElement);
 	const targetIndex = (activeIndex !== -1 && activeIndex !== (focusableElements.length - 1)) ? (activeIndex + 1) : 0;
 	const targetElement = focusableElements.at(targetIndex) ?? itemsEl.value;
@@ -656,13 +498,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-	if (typeaheadTimer != null) window.clearTimeout(typeaheadTimer);
 	disposeHandlers();
 });
 
-defineExpose({
-	focusFirst,
-});
 const guard = reactive({
 	enabled: false,
 	top: 0,
@@ -727,140 +565,83 @@ function guardMouseMove(ev: MouseEvent) {
 
 <style lang="scss" module>
 .root {
-	&.center > .menu > .item { text-align: center; }
-	&:not(.asDrawer):not(.widthSpecified) > .menu { max-width: min(420px, calc(100vw - var(--MI-floatingGapDouble))); }
-	&.big:not(.asDrawer) > .menu { min-width: max(230px, var(--MI-menuMinWidth)); > .item { min-height: max(44px, var(--MI-menuItemHeight)); font-size: 0.95em; } }
-
-	&.asDrawer {
-		display: flex;
-		flex-direction: column;
-		width: min(100%, 620px);
-		max-height: min(82dvh, 760px);
-		margin: auto;
-		overflow: hidden;
-
+	&.center {
 		> .menu {
-			position: relative;
-			padding: 4px 10px max(env(safe-area-inset-bottom, 0px), 14px);
-			width: 100%;
-			overflow-x: hidden;
-			overflow-y: auto;
-			scroll-padding-block: 8px 20px;
+			> .item {
+				text-align: center;
+			}
+		}
+	}
+
+	&:not(.asDrawer):not(.widthSpecified) {
+		> .menu {
+			max-width: 400px;
+		}
+	}
+
+	&.big:not(.asDrawer) {
+		> .menu {
+			min-width: 230px;
 
 			> .item {
-				min-height: max(48px, var(--MI-menuItemHeight));
+				padding: 6px 20px;
+				font-size: 0.95em;
+				line-height: 24px;
+			}
+		}
+	}
+
+	&.asDrawer {
+		max-width: 600px;
+		margin: auto;
+
+		> .menu {
+			padding: 12px 0 max(env(safe-area-inset-bottom, 0px), 12px) 0;
+			width: 100%;
+			border-radius: 24px;
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+
+			> .item {
 				font-size: 1em;
-				padding: 8px 16px;
-				white-space: normal;
-				border-radius: max(13px, var(--MI-buttonRadius));
-				> .icon { margin-right: 14px; width: 24px; }
+				padding: 12px 24px;
+
+				&::before {
+					width: calc(100% - 24px);
+					border-radius: 12px;
+				}
+
+				> .icon {
+					margin-right: 14px;
+					width: 24px;
+				}
 			}
 
-			> .divider { margin: 10px 8px; }
-		}
-
-		&.insetDrawer > .menu {
-			padding-bottom: 14px;
+			> .divider {
+				margin: 12px 0;
+			}
 		}
 	}
-}
-
-.drawerHeader {
-	position: relative;
-	display: grid;
-	grid-template-columns: 40px minmax(0, 1fr) 40px;
-	align-items: center;
-	min-height: 54px;
-	padding: 4px 10px 0;
-	border-bottom: 1px solid var(--MI_THEME-divider);
-	border-bottom-color: color-mix(in srgb, var(--MI_THEME-divider) 72%, transparent);
-	flex: 0 0 auto;
-}
-
-.drawerHandle {
-	position: absolute;
-	top: 8px;
-	left: 50%;
-	width: 38px;
-	height: 4px;
-	border-radius: 999px;
-	background: var(--MI_THEME-fg);
-	opacity: 0.18;
-	transform: translateX(-50%);
-}
-
-.drawerHeaderSpacer,
-.drawerBack {
-	grid-column: 1;
-}
-
-.drawerHeaderSpacer {
-	width: 36px;
-	height: 36px;
-}
-
-.drawerTitle {
-	grid-column: 2;
-	min-width: 0;
-	padding-top: 8px;
-	font-size: 0.92em;
-	font-weight: 700;
-	text-align: center;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.drawerBack,
-.drawerClose {
-	display: grid;
-	place-items: center;
-	width: 36px;
-	height: 36px;
-	margin-top: 6px;
-	border-radius: 999px;
-	background: var(--MI_THEME-buttonBg);
-	background: color-mix(in srgb, var(--MI_THEME-fg) 7%, transparent);
-	transition: background-color var(--MI-motionDurationFast) ease, transform var(--MI-motionDurationFast) ease;
-
-	&:hover, &:focus-visible {
-		background: var(--MI_THEME-buttonHoverBg);
-		background: color-mix(in srgb, var(--MI_THEME-fg) 12%, transparent);
-	}
-	&:active { transform: scale(0.96); }
-}
-
-.drawerBack {
-	justify-self: start;
-}
-
-.drawerClose {
-	grid-column: 3;
-	justify-self: end;
 }
 
 .menu {
-	padding: var(--MI-space7) 6px;
+	padding: 8px 0;
 	box-sizing: border-box;
-	max-width: calc(100vw - var(--MI-floatingGapDouble));
-	min-width: var(--MI-menuMinWidth);
+	max-width: 100vw;
+	min-width: 200px;
 	overflow: auto;
 	overscroll-behavior: contain;
-	scrollbar-gutter: stable;
-	&:focus-visible { outline: none; }
+
+	&:focus-visible {
+		outline: none;
+	}
 }
 
 .item {
-	--menuHoverFg: var(--MI_THEME-accent);
-	--menuHoverBg: var(--MI_THEME-accentedBg);
-	--menuActiveFg: var(--MI_THEME-accent);
-	--menuActiveBg: var(--MI_THEME-accentedBg);
 	display: flex;
 	align-items: center;
 	position: relative;
-	isolation: isolate;
-	min-height: var(--MI-menuItemHeight);
-	padding: 5px 14px;
+	padding: 5px 16px;
 	width: 100%;
 	box-sizing: border-box;
 	white-space: nowrap;
@@ -871,21 +652,28 @@ function guardMouseMove(ev: MouseEvent) {
 	text-overflow: ellipsis;
 	text-decoration: none !important;
 	color: var(--menuFg, var(--MI_THEME-fg));
-	border-radius: var(--MI-buttonRadius);
-	transition: color var(--MI-motionDurationFast) ease, transform var(--MI-motionDurationFast) ease;
 
 	&::before {
 		content: "";
+		display: block;
 		position: absolute;
 		z-index: -1;
-		inset: 0;
-		border-radius: inherit;
-		transition: background-color var(--MI-motionDurationFast) ease, opacity var(--MI-motionDurationFast) ease;
+		top: 0;
+		left: 0;
+		right: 0;
+		margin: auto;
+		width: calc(100% - 16px);
+		height: 100%;
+		border-radius: 6px;
 	}
 
 	&:focus-visible {
 		outline: none;
-		&:not(:hover):not(:active)::before { outline: var(--MI_THEME-focus) solid var(--MI-focusOutlineWidth); outline-offset: -1px; }
+
+		&:not(:hover):not(:active)::before {
+			outline: var(--MI_THEME-focus) solid 2px;
+			outline-offset: -2px;
+		}
 	}
 
 	&:not(:disabled) {
@@ -911,33 +699,114 @@ function guardMouseMove(ev: MouseEvent) {
 		}
 	}
 
-	&:disabled { cursor: not-allowed; opacity: 0.52; }
-	&.danger { --menuFg: var(--MI_THEME-error); --menuHoverFg: #fff; --menuHoverBg: var(--MI_THEME-error); --menuActiveFg: #fff; --menuActiveBg: var(--MI_THEME-error); }
-	&.radio, &.parent { --menuActiveFg: var(--MI_THEME-accent); --menuActiveBg: var(--MI_THEME-accentedBg); }
-	&.pending, &.none { pointer-events: none; opacity: 0.7; }
-}
+	&:disabled {
+		cursor: not-allowed;
+	}
 
-@supports (color: color-mix(in srgb, white 50%, black)) {
-	.item {
-		--menuHoverFg: color-mix(in srgb, var(--MI_THEME-accent) 84%, var(--MI_THEME-fg) 16%);
-		--menuHoverBg: color-mix(in srgb, var(--MI_THEME-accent) 12%, transparent);
-		--menuActiveFg: color-mix(in srgb, var(--MI_THEME-accent) 90%, var(--MI_THEME-fg) 10%);
-		--menuActiveBg: color-mix(in srgb, var(--MI_THEME-accent) 16%, transparent);
+	&.danger {
+		--menuFg: var(--MI_THEME-error);
+		--menuHoverFg: #fff;
+		--menuHoverBg: var(--MI_THEME-error);
+		--menuActiveFg: #fff;
+		--menuActiveBg: hsl(from var(--MI_THEME-error) h s calc(l - 10));
+	}
+
+	&.radio {
+		--menuActiveFg: var(--MI_THEME-accent);
+		--menuActiveBg: var(--MI_THEME-accentedBg);
+	}
+
+	&.parent {
+		--menuActiveFg: var(--MI_THEME-accent);
+		--menuActiveBg: var(--MI_THEME-accentedBg);
+	}
+
+	&.pending {
+		pointer-events: none;
+		opacity: 0.7;
+	}
+
+	&.none {
+		pointer-events: none;
+		opacity: 0.7;
 	}
 }
 
-.item_content { width: 100%; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; text-overflow: ellipsis; }
-.item_content_text { min-width: 0; max-width: calc(100vw - 4rem); }
-.item_content_text_title { text-overflow: ellipsis; overflow: hidden; }
-.item_content_text_caption { text-wrap: pretty; white-space: normal; font-size: 85%; line-height: 1.35; opacity: 0.68; }
-.switchButton { margin-left: 0; margin-right: 2px; align-self: center; --height: 1.3em; }
-.switchText { margin-left: 8px; overflow: hidden; text-overflow: ellipsis; }
-.icon { flex: 0 0 auto; margin-right: 9px; line-height: 1; }
-.caret { margin-left: auto; opacity: 0.65; }
-.avatar { flex: 0 0 auto; margin-right: 7px; width: 22px; height: 22px; }
-.indicator { display: flex; align-items: center; color: var(--MI_THEME-indicator); font-size: 12px; }
-.label { position: relative; padding: 8px 14px 5px; box-sizing: border-box; white-space: nowrap; font-size: 0.7em; font-weight: 700; text-align: left; overflow: hidden; text-overflow: ellipsis; opacity: 0.62; pointer-events: none; }
-.divider { margin: 7px 5px; border-top: solid 0.5px var(--MI_THEME-divider); }
+.item_content {
+	width: 100%;
+	max-width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	text-overflow: ellipsis;
+}
+
+.item_content_text {
+	max-width: calc(100vw - 4rem);
+}
+
+.item_content_text_title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.item_content_text_caption {
+	text-wrap: auto;
+	font-size: 85%;
+	opacity: 0.7;
+}
+
+.switchButton {
+	margin-left: -2px;
+	--height: 1.35em;
+}
+
+.switchText {
+	margin-left: 8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.icon {
+	margin-right: 8px;
+	line-height: 1;
+}
+
+.caret {
+	margin-left: auto;
+}
+
+.avatar {
+	margin-right: 5px;
+	width: 20px;
+	height: 20px;
+}
+
+.indicator {
+	display: flex;
+	align-items: center;
+	color: var(--MI_THEME-indicator);
+	font-size: 12px;
+}
+
+.label {
+	position: relative;
+	padding: 6px 16px;
+	box-sizing: border-box;
+	white-space: nowrap;
+	font-size: 0.7em;
+	text-align: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	opacity: 0.7;
+	pointer-events: none;
+}
+
+.divider {
+	margin: 8px 0;
+	border-top: solid 0.5px var(--MI_THEME-divider);
+}
 
 .radioIcon {
 	display: inline-block;
@@ -948,14 +817,23 @@ function guardMouseMove(ev: MouseEvent) {
 	border-radius: 50%;
 	border: solid 2px var(--MI_THEME-divider);
 	background-color: var(--MI_THEME-panel);
-	&.radioChecked { border-color: var(--MI_THEME-accent); &::after { content: ""; display: block; position: absolute; inset: 25%; border-radius: 50%; background-color: var(--MI_THEME-accent); } }
-}
 
-@media (max-width: 500px) {
-	.switchButton { margin-right: 4px; --height: 1.45em; }
-	.root.asDrawer { max-height: min(86dvh, 720px); }
-	.root.asDrawer > .menu { padding-inline: 8px; }
-	.drawerHeader { padding-inline: 8px; }
+	&.radioChecked {
+		border-color: var(--MI_THEME-accent);
+
+		&::after {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 50%;
+			height: 50%;
+			border-radius: 50%;
+			background-color: var(--MI_THEME-accent);
+		}
+	}
 }
 
 .guard {
