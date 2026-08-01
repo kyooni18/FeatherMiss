@@ -616,20 +616,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</MkRadios>
 						</SearchMarker>
 
-						<SearchMarker :keywords="['font', 'family', 'helvetica', 'apple sd gothic neo', 'sf pro']">
-							<MkSelect v-model="fontFamily" :items="fontFamilyItems" :disabled="useSystemFont">
-								<template #label><SearchLabel>Font Family</SearchLabel></template>
-								<template #caption><SearchText>Turn off "Use system font" to enable this selector.</SearchText></template>
-							</MkSelect>
-						</SearchMarker>
-
-						<SearchMarker :keywords="['font', 'weight', 'bold', 'light']">
-							<MkRange v-model="fontWeight" :min="100" :max="900" :step="100" easing>
-								<template #label><SearchLabel>Font Weight</SearchLabel></template>
-								<template #suffix>{{ fontWeight }}</template>
-							</MkRange>
-						</SearchMarker>
-
 						<SearchMarker :keywords="['font', 'system', 'native']">
 							<MkSwitch v-model="useSystemFont">
 								<template #label><SearchLabel>{{ i18n.ts.useSystemFont }}</SearchLabel></template>
@@ -637,10 +623,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</SearchMarker>
 					</div>
 				</MkFolder>
-				</SearchMarker>
+			</SearchMarker>
 
-				<SearchMarker v-slot="slotProps" :keywords="['performance']">
-					<MkFolder :defaultOpen="slotProps.isParentOfTarget">
+			<SearchMarker v-slot="slotProps" :keywords="['performance']">
+				<MkFolder :defaultOpen="slotProps.isParentOfTarget">
 					<template #label><SearchLabel>{{ i18n.ts.performance }}</SearchLabel></template>
 					<template #icon><SearchIcon><i class="ti ti-battery-vertical-eco"></i></SearchIcon></template>
 
@@ -972,49 +958,8 @@ const contextMenu = prefer.model('contextMenu');
 const menuStyle = prefer.model('menuStyle');
 const makeEveryTextElementsSelectable = prefer.model('makeEveryTextElementsSelectable');
 
-type AppFontFamily = 'default' | 'system' | 'helveticaNeue' | 'appleSdGothicNeo' | 'sfPro';
-
-const APP_FONT_FAMILY_MAP: Record<AppFontFamily, string> = {
-	default: `'Hiragino Maru Gothic Pro', "BIZ UDGothic", Roboto, HelveticaNeue, Arial, sans-serif`,
-	system: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-	helveticaNeue: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-	appleSdGothicNeo: '"Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif',
-	sfPro: '"SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
-};
-
-function isAppFontFamily(value: string | null): value is AppFontFamily {
-	return value != null && Object.prototype.hasOwnProperty.call(APP_FONT_FAMILY_MAP, value);
-}
-
-function normalizeFontWeight(value: string | number | null): number {
-	const parsed = Number(value);
-	if (!Number.isFinite(parsed)) return 400;
-	return Math.min(900, Math.max(100, Math.round(parsed / 100) * 100));
-}
-
-const fontFamilyItems = [
-	{ label: 'Default', value: 'default' },
-	{ label: 'System UI', value: 'system' },
-	{ label: 'Helvetica Neue', value: 'helveticaNeue' },
-	{ label: 'Apple SD Gothic Neo', value: 'appleSdGothicNeo' },
-	{ label: 'SF Pro', value: 'sfPro' },
-];
-
 const fontSize = ref(miLocalStorage.getItem('fontSize') as '1' | '2' | '3' | null);
-const storedFontFamily = miLocalStorage.getItem('fontFamily');
-const fontFamily = ref<AppFontFamily>(isAppFontFamily(storedFontFamily) ? storedFontFamily : 'default');
-const fontWeight = ref(normalizeFontWeight(miLocalStorage.getItem('fontWeight')));
 const useSystemFont = ref(miLocalStorage.getItem('useSystemFont') != null);
-
-function applyGlobalFontStyles(): void {
-	const familyKey = useSystemFont.value ? 'system' : fontFamily.value;
-	const family = APP_FONT_FAMILY_MAP[familyKey] ?? APP_FONT_FAMILY_MAP.default;
-	const html = window.document.documentElement;
-
-	html.style.setProperty('--MI-baseFontFamily', family);
-	html.style.setProperty('--MI-baseFontWeight', String(fontWeight.value));
-	html.classList.toggle('useSystemFont', useSystemFont.value);
-}
 
 watch(lang, () => {
 	miLocalStorage.setItem('lang', lang.value as string);
@@ -1028,41 +973,13 @@ watch(fontSize, () => {
 	}
 });
 
-watch(fontFamily, () => {
-	if (fontFamily.value === 'default') {
-		miLocalStorage.removeItem('fontFamily');
-	} else {
-		miLocalStorage.setItem('fontFamily', fontFamily.value);
-	}
-
-	applyGlobalFontStyles();
-});
-
-watch(fontWeight, () => {
-	const normalized = normalizeFontWeight(fontWeight.value);
-	if (fontWeight.value !== normalized) {
-		fontWeight.value = normalized;
-		return;
-	}
-
-	if (normalized === 400) {
-		miLocalStorage.removeItem('fontWeight');
-	} else {
-		miLocalStorage.setItem('fontWeight', String(normalized));
-	}
-
-	applyGlobalFontStyles();
-});
-
 watch(useSystemFont, () => {
 	if (useSystemFont.value) {
 		miLocalStorage.setItem('useSystemFont', 't');
 	} else {
 		miLocalStorage.removeItem('useSystemFont');
 	}
-
-	applyGlobalFontStyles();
-}, { immediate: true });
+});
 
 watch([
 	hemisphere,

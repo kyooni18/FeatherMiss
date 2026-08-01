@@ -20,8 +20,6 @@ export type Keys = (
 	'colorScheme' |
 	'useSystemFont' |
 	'fontSize' |
-	'fontFamily' |
-	'fontWeight' |
 	'ui' |
 	'ui_temp' |
 	'bootloaderLocales' |
