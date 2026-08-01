@@ -24,6 +24,7 @@ import MkUrlPreview from '@/components/MkUrlPreview.vue';
 import * as os from '@/os.js';
 import { prefer } from '@/preferences.js';
 import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
+import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
 
 const props = defineProps<{
 	showing: boolean;
@@ -40,8 +41,6 @@ const top = ref(0);
 const left = ref(0);
 const transformOrigin = ref('center top');
 const rootEl = useTemplateRef('rootEl');
-let resizeObserver: ResizeObserver | null = null;
-let positionFrame: number | null = null;
 
 function updatePosition() {
 	if (rootEl.value == null || !props.anchorElement.isConnected) return;
@@ -56,20 +55,11 @@ function updatePosition() {
 	transformOrigin.value = position.transformOrigin;
 }
 
-function schedulePosition() {
-	if (positionFrame != null) return;
-	positionFrame = window.requestAnimationFrame(() => {
-		positionFrame = null;
-		updatePosition();
-	});
-}
+const positionObserver = createFeatherMissPopupPositionObserver(updatePosition);
+const schedulePosition = positionObserver.schedule;
 
 function observePositionSources() {
-	resizeObserver?.disconnect();
-	if (typeof ResizeObserver === 'undefined' || rootEl.value == null) return;
-	resizeObserver ??= new ResizeObserver(schedulePosition);
-	resizeObserver.observe(rootEl.value);
-	resizeObserver.observe(props.anchorElement);
+	positionObserver.observe([rootEl.value, props.anchorElement]);
 }
 
 onMounted(() => {
@@ -92,8 +82,7 @@ watch([() => props.showing, () => props.url, () => props.anchorElement], () => {
 });
 
 onBeforeUnmount(() => {
-	resizeObserver?.disconnect();
-	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
+	positionObserver.dispose();
 	window.removeEventListener('resize', schedulePosition);
 	window.removeEventListener('scroll', schedulePosition, true);
 	window.visualViewport?.removeEventListener('resize', schedulePosition);

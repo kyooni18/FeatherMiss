@@ -72,6 +72,7 @@ import { $i } from '@/i.js';
 import { isFollowingVisibleForMe, isFollowersVisibleForMe } from '@/utility/isFfVisibleForMe.js';
 import { getStaticImageUrl } from '@/utility/media-proxy.js';
 import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
+import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
 
 const props = defineProps<{
 	showing: boolean;
@@ -92,8 +93,6 @@ const left = ref(0);
 const transformOrigin = ref('center top');
 const error = ref(false);
 const rootEl = useTemplateRef('rootEl');
-let resizeObserver: ResizeObserver | null = null;
-let positionFrame: number | null = null;
 
 function updatePosition() {
 	if (!rootEl.value || !props.source.isConnected) return;
@@ -108,13 +107,8 @@ function updatePosition() {
 	transformOrigin.value = position.transformOrigin;
 }
 
-function schedulePositionUpdate() {
-	if (positionFrame != null) return;
-	positionFrame = window.requestAnimationFrame(() => {
-		positionFrame = null;
-		updatePosition();
-	});
-}
+const positionObserver = createFeatherMissPopupPositionObserver(updatePosition);
+const schedulePositionUpdate = positionObserver.schedule;
 
 function showMenu(ev: PointerEvent) {
 	if (user.value == null) return;
@@ -151,10 +145,7 @@ onMounted(() => {
 	window.visualViewport?.addEventListener('resize', schedulePositionUpdate, { passive: true });
 	window.visualViewport?.addEventListener('scroll', schedulePositionUpdate, { passive: true });
 
-	if (typeof ResizeObserver !== 'undefined') {
-		resizeObserver = new ResizeObserver(schedulePositionUpdate);
-		resizeObserver.observe(props.source);
-	}
+	positionObserver.observe([props.source]);
 
 	nextTick(schedulePositionUpdate);
 });
@@ -170,8 +161,7 @@ onBeforeUnmount(() => {
 	window.removeEventListener('scroll', schedulePositionUpdate, true);
 	window.visualViewport?.removeEventListener('resize', schedulePositionUpdate);
 	window.visualViewport?.removeEventListener('scroll', schedulePositionUpdate);
-	resizeObserver?.disconnect();
-	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
+	positionObserver.dispose();
 });
 </script>
 

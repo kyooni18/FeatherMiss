@@ -27,6 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { nextTick, onMounted, onUnmounted, useId, useTemplateRef, watch } from 'vue';
 import * as os from '@/os.js';
 import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
+import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
 import { prefer } from '@/preferences.js';
 
 const props = withDefaults(defineProps<{
@@ -72,8 +73,6 @@ function setPosition() {
 	el.value.style.top = data.top + 'px';
 }
 
-let resizeObserver: ResizeObserver | null = null;
-let positionFrame: number | null = null;
 let describedAnchor: HTMLElement | null = null;
 
 function removeAnchorDescription() {
@@ -94,20 +93,11 @@ function syncAnchorDescription() {
 	describedAnchor.setAttribute('aria-describedby', [...ids].join(' '));
 }
 
-const schedulePosition = () => {
-	if (positionFrame != null) return;
-	positionFrame = window.requestAnimationFrame(() => {
-		positionFrame = null;
-		setPosition();
-	});
-};
+const positionObserver = createFeatherMissPopupPositionObserver(setPosition);
+const schedulePosition = positionObserver.schedule;
 
 function observePositionSources() {
-	resizeObserver?.disconnect();
-	if (typeof ResizeObserver === 'undefined' || el.value == null) return;
-	resizeObserver ??= new ResizeObserver(schedulePosition);
-	resizeObserver.observe(el.value);
-	if (props.anchorElement) resizeObserver.observe(props.anchorElement);
+	positionObserver.observe([el.value, props.anchorElement]);
 }
 
 onMounted(() => {
@@ -143,8 +133,7 @@ watch(() => props.anchorElement, () => {
 
 onUnmounted(() => {
 	removeAnchorDescription();
-	resizeObserver?.disconnect();
-	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
+	positionObserver.dispose();
 	window.removeEventListener('resize', schedulePosition);
 	window.removeEventListener('scroll', schedulePosition, true);
 	window.visualViewport?.removeEventListener('resize', schedulePosition);

@@ -25,6 +25,7 @@ import { elementContains } from '@/utility/element-contains.js';
 import { prefer } from '@/preferences.js';
 import * as os from '@/os.js';
 import { calcPopupPosition } from '@/feathermiss/utilities/popup-position.js';
+import { createFeatherMissPopupPositionObserver } from '@/feathermiss/composables/popup-position-observer.js';
 
 const props = defineProps<{
 	items: MenuItem[];
@@ -38,8 +39,6 @@ const emit = defineEmits<{
 const rootEl = useTemplateRef('rootEl');
 
 const zIndex = ref<number>(os.claimZIndex('high'));
-let resizeObserver: ResizeObserver | null = null;
-let positionFrame: number | null = null;
 
 function positionMenu() {
 	if (rootEl.value == null) return;
@@ -56,13 +55,8 @@ function positionMenu() {
 	rootEl.value.style.transformOrigin = position.transformOrigin;
 }
 
-function schedulePosition() {
-	if (positionFrame != null) return;
-	positionFrame = window.requestAnimationFrame(() => {
-		positionFrame = null;
-		positionMenu();
-	});
-}
+const positionObserver = createFeatherMissPopupPositionObserver(positionMenu);
+const schedulePosition = positionObserver.schedule;
 
 onMounted(() => {
 	positionMenu();
@@ -71,10 +65,7 @@ onMounted(() => {
 	window.addEventListener('resize', schedulePosition, { passive: true });
 	window.visualViewport?.addEventListener('resize', schedulePosition, { passive: true });
 	window.visualViewport?.addEventListener('scroll', schedulePosition, { passive: true });
-	if (typeof ResizeObserver !== 'undefined' && rootEl.value != null) {
-		resizeObserver = new ResizeObserver(schedulePosition);
-		resizeObserver.observe(rootEl.value);
-	}
+	positionObserver.observe([rootEl.value]);
 });
 
 onBeforeUnmount(() => {
@@ -82,8 +73,7 @@ onBeforeUnmount(() => {
 	window.removeEventListener('resize', schedulePosition);
 	window.visualViewport?.removeEventListener('resize', schedulePosition);
 	window.visualViewport?.removeEventListener('scroll', schedulePosition);
-	resizeObserver?.disconnect();
-	if (positionFrame != null) window.cancelAnimationFrame(positionFrame);
+	positionObserver.dispose();
 });
 
 function onMousedown(evt: MouseEvent) {
