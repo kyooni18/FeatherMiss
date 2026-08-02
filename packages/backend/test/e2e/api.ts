@@ -10,6 +10,7 @@ import { describe, beforeAll, test } from 'vitest';
 import { IncomingMessage } from 'node:http';
 import {
 	api,
+	castAsError,
 	connectStream,
 	createAppToken,
 	failedApiCall,
@@ -29,6 +30,53 @@ describe('API', () => {
 		alice = await signup({ username: 'alice' });
 		bob = await signup({ username: 'bob' });
 	}, 1000 * 60 * 2);
+
+	describe('feathermiss/notes/translate', () => {
+		test('keeps the native API path unavailable when FeatherMiss AI is disabled', async () => {
+			const res = await api('feathermiss/notes/translate', {
+				noteId: alice.id,
+				targetLang: 'ja',
+			}, alice);
+
+			assert.strictEqual(res.status, 400);
+			assert.strictEqual(castAsError(res.body as unknown as Record<string, unknown>).error.code, 'UNAVAILABLE');
+		});
+	});
+
+	describe('feathermiss/notes/translate/enqueue', () => {
+		test('keeps background translation unavailable when FeatherMiss AI is disabled', async () => {
+			const res = await api('feathermiss/notes/translate/enqueue', {
+				noteId: alice.id,
+				targetLangs: ['ja'],
+				timelineId: 'home',
+			}, alice);
+
+			assert.strictEqual(res.status, 400);
+			assert.strictEqual(castAsError(res.body as unknown as Record<string, unknown>).error.code, 'UNAVAILABLE');
+		});
+	});
+
+	describe('feathermiss/preferences', () => {
+		test('keeps extension-owned preferences unavailable when FeatherMiss is disabled', async () => {
+			const getRes = await api('feathermiss/preferences/get', {}, alice);
+			assert.strictEqual(getRes.status, 400);
+			assert.strictEqual(castAsError(getRes.body as unknown as Record<string, unknown>).error.code, 'UNAVAILABLE');
+
+			const setRes = await api('feathermiss/preferences/set', {
+				uiGraphics: { enabled: true },
+			}, alice);
+			assert.strictEqual(setRes.status, 400);
+			assert.strictEqual(castAsError(setRes.body as unknown as Record<string, unknown>).error.code, 'UNAVAILABLE');
+		});
+	});
+
+	describe('feathermiss/account/unlink', () => {
+		test('keeps account unlink unavailable when FeatherMiss is disabled', async () => {
+			const res = await api('feathermiss/account/unlink', {}, alice);
+			assert.strictEqual(res.status, 400);
+			assert.strictEqual(castAsError(res.body as unknown as Record<string, unknown>).error.code, 'UNAVAILABLE');
+		});
+	});
 
 	describe('General validation', () => {
 		test('wrong type', async () => {

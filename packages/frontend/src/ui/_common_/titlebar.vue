@@ -36,7 +36,10 @@ function goBack() {
 .root {
 	--height: 36px;
 
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
+	border-bottom: var(--MI-surfaceBorderWidth, 0.5px) solid var(--MI-surfaceBorder, var(--MI_THEME-divider));
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 	height: var(--height);
 	font-size: 90%;
 }

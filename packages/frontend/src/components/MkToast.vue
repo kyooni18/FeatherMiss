@@ -24,11 +24,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
 import * as os from '@/os.js';
 import { prefer } from '@/preferences.js';
-import FeatherMissToast from '@/feathermiss/components/Toast.vue';
 import { isFeatherMissEnabled } from '@/feathermiss/config.js';
+
+const FeatherMissToast = defineAsyncComponent(() => import('@/feathermiss/components/Toast.vue'));
 
 const { message } = defineProps<{
 	message: string;

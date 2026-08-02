@@ -114,10 +114,14 @@ onMounted(() => {
 	width: 100%;
 	height: var(--height);
 	contain: strict;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
+	border-bottom: var(--MI-surfaceBorderWidth, 0.5px) solid var(--MI-surfaceBorder, var(--MI_THEME-divider));
+	box-shadow: var(--MI-surfaceShadow, none);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 
 	&.acrylic {
-		background: color(from var(--MI_THEME-bg) srgb r g b / 0.75);
+		background: var(--MI-surfaceNav, color(from var(--MI_THEME-bg) srgb r g b / 0.75));
 		-webkit-backdrop-filter: var(--MI-blur, blur(15px));
 		backdrop-filter: var(--MI-blur, blur(15px));
 	}
@@ -216,7 +220,7 @@ onMounted(() => {
 	right: 0;
 	z-index: 1;
 	contain: content;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
 }
 .acrylic .right {
 	background: transparent;

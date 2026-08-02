@@ -19,23 +19,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<div :class="$style.previewTextShort"></div>
 				</div>
 				<div :class="$style.previewPopup">
-					<div :class="$style.previewMenuItem"><i class="ti ti-sparkles"></i><span>Floating surface</span></div>
-					<div :class="$style.previewMenuItem"><i class="ti ti-adjustments"></i><span>Custom controls</span></div>
-					<div :class="$style.previewMenuItem"><i class="ti ti-check"></i><span>Stable motion</span></div>
-				</div>
-				<div :class="$style.previewTooltip">Airy UI</div>
+				<div :class="$style.previewMenuItem"><i class="ti ti-sparkles"></i><span>{{ i18n.ts._feathermiss.previewFloatingSurface }}</span></div>
+				<div :class="$style.previewMenuItem"><i class="ti ti-adjustments"></i><span>{{ i18n.ts._feathermiss.previewCustomControls }}</span></div>
+				<div :class="$style.previewMenuItem"><i class="ti ti-check"></i><span>{{ i18n.ts._feathermiss.previewStableMotion }}</span></div>
+			</div>
+			<div :class="$style.previewTooltip">{{ i18n.ts._feathermiss.previewAiryUi }}</div>
 			</div>
 		</div>
 
-		<MkPreferenceContainer k="uiGraphics">
+		<div>
 			<MkSwitch v-model="enabled">
-				<template #label>Advanced interface styling</template>
-				<template #caption>Applies immediately. This only changes frontend preferences and presentation.</template>
+				<template #label>{{ i18n.ts._feathermiss.advancedInterfaceStyling }}</template>
+				<template #caption>{{ i18n.ts._feathermiss.advancedInterfaceStylingDescription }}</template>
 			</MkSwitch>
-		</MkPreferenceContainer>
+		</div>
 
 		<div>
-			<div :class="$style.sectionLabel">Presets</div>
+			<div :class="$style.sectionLabel">{{ i18n.ts._feathermiss.presets }}</div>
 			<div :class="$style.presetGrid">
 				<button
 					v-for="preset in presets"
@@ -56,16 +56,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</div>
 
-		<div :class="$style.toolRow" aria-label="Interface configuration tools">
+		<div :class="$style.toolRow" :aria-label="i18n.ts._feathermiss.interfaceConfigurationTools">
 			<div :class="$style.historyButtons">
-				<MkButton :disabled="!canUndo" @click="undo"><i class="ti ti-arrow-back-up"></i> Undo</MkButton>
-				<MkButton :disabled="!canRedo" @click="redo"><i class="ti ti-arrow-forward-up"></i> Redo</MkButton>
+				<MkButton :disabled="!canUndo" @click="undo"><i class="ti ti-arrow-back-up"></i> {{ i18n.ts._feathermiss.undo }}</MkButton>
+				<MkButton :disabled="!canRedo" @click="redo"><i class="ti ti-arrow-forward-up"></i> {{ i18n.ts._feathermiss.redo }}</MkButton>
 			</div>
 			<div :class="$style.transferButtons">
-				<MkButton @click="copyConfiguration"><i class="ti ti-copy"></i> Copy</MkButton>
-				<MkButton @click="pasteConfiguration"><i class="ti ti-clipboard"></i> Paste</MkButton>
-				<MkButton @click="exportConfiguration"><i class="ti ti-download"></i> Export file</MkButton>
-				<MkButton @click="importConfiguration"><i class="ti ti-upload"></i> Import file</MkButton>
+				<MkButton @click="copyConfiguration"><i class="ti ti-copy"></i> {{ i18n.ts._feathermiss.copy }}</MkButton>
+				<MkButton @click="pasteConfiguration"><i class="ti ti-clipboard"></i> {{ i18n.ts._feathermiss.paste }}</MkButton>
+				<MkButton @click="exportConfiguration"><i class="ti ti-download"></i> {{ i18n.ts._feathermiss.exportFile }}</MkButton>
+				<MkButton @click="importConfiguration"><i class="ti ti-upload"></i> {{ i18n.ts._feathermiss.importFile }}</MkButton>
 			</div>
 		</div>
 	</aside>
@@ -74,127 +74,127 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkDisableSection :disabled="!enabled">
 			<div class="_gaps_m">
 				<MkFolder :defaultOpen="true">
-					<template #label>Shape and spacing</template>
+					<template #label>{{ i18n.ts._feathermiss.shapeAndSpacing }}</template>
 					<template #icon><i class="ti ti-layout-dashboard"></i></template>
 					<div class="_gaps_s">
 						<MkRange v-model="radius" :min="0" :max="32" :step="1" easing>
-							<template #label>Surface corner radius</template><template #suffix>{{ radius }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.surfaceCornerRadius }}</template><template #suffix>{{ radius }}px</template>
 						</MkRange>
 						<MkRange v-model="buttonRadius" :min="0" :max="32" :step="1" easing>
-							<template #label>Button radius</template><template #suffix>{{ buttonRadius }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.buttonRadius }}</template><template #suffix>{{ buttonRadius }}px</template>
 						</MkRange>
 						<MkRange v-model="spacingScale" :min="0.72" :max="1.4" :step="0.02" easing>
-							<template #label>Interface breathing room</template><template #suffix>{{ spacingScale.toFixed(2) }}×</template>
+							<template #label>{{ i18n.ts._feathermiss.interfaceBreathingRoom }}</template><template #suffix>{{ spacingScale.toFixed(2) }}×</template>
 						</MkRange>
 						<MkRange v-model="menuItemHeight" :min="28" :max="52" :step="1" easing>
-							<template #label>Menu row height</template><template #suffix>{{ menuItemHeight }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.menuRowHeight }}</template><template #suffix>{{ menuItemHeight }}px</template>
 						</MkRange>
 						<MkRange v-model="menuMinWidth" :min="176" :max="320" :step="4" easing>
-							<template #label>Menu minimum width</template><template #suffix>{{ menuMinWidth }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.menuMinimumWidth }}</template><template #suffix>{{ menuMinWidth }}px</template>
 						</MkRange>
 						<MkRange v-model="floatingGap" :min="4" :max="24" :step="1" easing>
-							<template #label>Floating edge gap</template><template #suffix>{{ floatingGap }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.floatingEdgeGap }}</template><template #suffix>{{ floatingGap }}px</template>
 						</MkRange>
 						<MkRange v-model="drawerWidth" :min="260" :max="420" :step="4" easing>
-							<template #label>Side drawer width</template><template #suffix>{{ drawerWidth }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.sideDrawerWidth }}</template><template #suffix>{{ drawerWidth }}px</template>
 						</MkRange>
 						<MkRange v-model="dialogPadding" :min="12" :max="56" :step="2" easing>
-							<template #label>Dialog viewport padding</template><template #suffix>{{ dialogPadding }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.dialogViewportPadding }}</template><template #suffix>{{ dialogPadding }}px</template>
 						</MkRange>
 					</div>
 				</MkFolder>
 
 				<MkFolder>
-					<template #label>Navigation and specialized geometry</template>
+					<template #label>{{ i18n.ts._feathermiss.navigationSpecializedGeometry }}</template>
 					<template #icon><i class="ti ti-shape"></i></template>
 					<div class="_gaps_s">
 						<MkRange v-model="buttonPillRadius" :min="12" :max="999" :step="1" easing>
-							<template #label>Pill button radius</template><template #suffix>{{ buttonPillRadius }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.pillButtonRadius }}</template><template #suffix>{{ buttonPillRadius }}px</template>
 						</MkRange>
 						<MkRange v-model="mobileDockRadius" :min="0" :max="48" :step="1" easing>
-							<template #label>Mobile dock radius</template><template #suffix>{{ mobileDockRadius }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.mobileDockRadius }}</template><template #suffix>{{ mobileDockRadius }}px</template>
 						</MkRange>
 						<MkRange v-model="mobileDockPaddingX" :min="0" :max="32" :step="1" easing>
-							<template #label>Mobile dock horizontal inset</template><template #suffix>{{ mobileDockPaddingX }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.mobileDockHorizontalInset }}</template><template #suffix>{{ mobileDockPaddingX }}px</template>
 						</MkRange>
 						<MkRange v-model="mobileDockPaddingTop" :min="0" :max="32" :step="1" easing>
-							<template #label>Mobile dock top padding</template><template #suffix>{{ mobileDockPaddingTop }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.mobileDockTopPadding }}</template><template #suffix>{{ mobileDockPaddingTop }}px</template>
 						</MkRange>
 						<MkRange v-model="mobileDockPaddingBottom" :min="0" :max="40" :step="1" easing>
-							<template #label>Mobile dock bottom lift</template><template #suffix>{{ mobileDockPaddingBottom }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.mobileDockBottomLift }}</template><template #suffix>{{ mobileDockPaddingBottom }}px</template>
 						</MkRange>
 						<MkRange v-model="squircleSize" :min="8" :max="48" :step="1" easing>
-							<template #label>Squircle size</template><template #suffix>{{ squircleSize }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.squircleSize }}</template><template #suffix>{{ squircleSize }}px</template>
 						</MkRange>
 						<MkRange v-model="popupRadiusOffset" :min="0" :max="32" :step="1" easing>
-							<template #label>Popup radius offset</template><template #suffix>{{ popupRadiusOffset }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.popupRadiusOffset }}</template><template #suffix>{{ popupRadiusOffset }}px</template>
 						</MkRange>
 						<MkRange v-model="postFormRadiusOffset" :min="0" :max="32" :step="1" easing>
-							<template #label>Post form radius offset</template><template #suffix>{{ postFormRadiusOffset }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.postFormRadiusOffset }}</template><template #suffix>{{ postFormRadiusOffset }}px</template>
 						</MkRange>
 					</div>
 				</MkFolder>
 
 				<MkFolder>
-					<template #label>Glass and layers</template>
+					<template #label>{{ i18n.ts._feathermiss.glassAndLayers }}</template>
 					<template #icon><i class="ti ti-blur"></i></template>
 					<div class="_gaps_s">
 						<MkRange v-model="blur" :min="0" :max="30" :step="1" easing>
-							<template #label>Surface blur</template><template #suffix>{{ blur }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.surfaceBlur }}</template><template #suffix>{{ blur }}px</template>
 						</MkRange>
 						<MkRange v-model="modalBlur" :min="0" :max="24" :step="1" easing>
-							<template #label>Backdrop blur</template><template #suffix>{{ modalBlur }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.backdropBlur }}</template><template #suffix>{{ modalBlur }}px</template>
 						</MkRange>
 						<MkRange v-model="saturate" :min="50" :max="220" :step="2" easing>
-							<template #label>Backdrop saturation</template><template #suffix>{{ saturate }}%</template>
+							<template #label>{{ i18n.ts._feathermiss.backdropSaturation }}</template><template #suffix>{{ saturate }}%</template>
 						</MkRange>
 						<MkRange v-model="brightness" :min="80" :max="130" :step="1" easing>
-							<template #label>Backdrop brightness</template><template #suffix>{{ brightness }}%</template>
+							<template #label>{{ i18n.ts._feathermiss.backdropBrightness }}</template><template #suffix>{{ brightness }}%</template>
 						</MkRange>
-						<MkRange v-model="panelAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>Panel opacity</template></MkRange>
-						<MkRange v-model="popupAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>Popup opacity</template></MkRange>
-						<MkRange v-model="navAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>Navigation opacity</template></MkRange>
-						<MkRange v-model="pageAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>Page opacity</template></MkRange>
-						<MkRange v-model="overlayOpacity" :min="0" :max="0.8" :step="0.01" easing><template #label>Modal overlay darkness</template></MkRange>
-						<MkRange v-model="borderAlpha" :min="0" :max="0.5" :step="0.01" easing><template #label>Hairline contrast</template></MkRange>
+						<MkRange v-model="panelAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.panelOpacity }}</template></MkRange>
+						<MkRange v-model="popupAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.popupOpacity }}</template></MkRange>
+						<MkRange v-model="navAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.navigationOpacity }}</template></MkRange>
+						<MkRange v-model="pageAlpha" :min="0.2" :max="1" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.pageOpacity }}</template></MkRange>
+						<MkRange v-model="overlayOpacity" :min="0" :max="0.8" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.modalOverlayDarkness }}</template></MkRange>
+						<MkRange v-model="borderAlpha" :min="0" :max="0.5" :step="0.01" easing><template #label>{{ i18n.ts._feathermiss.hairlineContrast }}</template></MkRange>
 						<MkRange v-model="borderWidth" :min="0" :max="3" :step="0.1" easing>
-							<template #label>Hairline width</template><template #suffix>{{ borderWidth.toFixed(1) }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.hairlineWidth }}</template><template #suffix>{{ borderWidth.toFixed(1) }}px</template>
 						</MkRange>
 					</div>
 				</MkFolder>
 
 				<MkFolder>
-					<template #label>Motion and depth</template>
+					<template #label>{{ i18n.ts._feathermiss.motionAndDepth }}</template>
 					<template #icon><i class="ti ti-wand"></i></template>
 					<div class="_gaps_s">
 						<MkRange v-model="motionScale" :min="0.5" :max="1.8" :step="0.05" easing>
-							<template #label>Motion duration</template><template #suffix>{{ motionScale.toFixed(2) }}×</template>
+							<template #label>{{ i18n.ts._feathermiss.motionDuration }}</template><template #suffix>{{ motionScale.toFixed(2) }}×</template>
 						</MkRange>
 						<MkRange v-model="motionDistance" :min="0" :max="28" :step="1" easing>
-							<template #label>Motion travel</template><template #suffix>{{ motionDistance }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.motionTravel }}</template><template #suffix>{{ motionDistance }}px</template>
 						</MkRange>
-						<MkRange v-model="shadowStrength" :min="0" :max="2" :step="0.05" easing><template #label>Panel shadow</template></MkRange>
+						<MkRange v-model="shadowStrength" :min="0" :max="2" :step="0.05" easing><template #label>{{ i18n.ts._feathermiss.panelShadow }}</template></MkRange>
 						<MkRange v-model="shadowYOffset" :min="0" :max="40" :step="1" easing>
-							<template #label>Panel shadow depth</template><template #suffix>{{ shadowYOffset }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.panelShadowDepth }}</template><template #suffix>{{ shadowYOffset }}px</template>
 						</MkRange>
-						<MkRange v-model="shadowRaisedStrength" :min="0" :max="2" :step="0.05" easing><template #label>Floating shadow</template></MkRange>
+						<MkRange v-model="shadowRaisedStrength" :min="0" :max="2" :step="0.05" easing><template #label>{{ i18n.ts._feathermiss.floatingShadow }}</template></MkRange>
 						<MkRange v-model="shadowRaisedYOffset" :min="0" :max="70" :step="1" easing>
-							<template #label>Floating shadow depth</template><template #suffix>{{ shadowRaisedYOffset }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.floatingShadowDepth }}</template><template #suffix>{{ shadowRaisedYOffset }}px</template>
 						</MkRange>
 						<MkRange v-model="focusWidth" :min="1" :max="6" :step="1" easing>
-							<template #label>Focus ring width</template><template #suffix>{{ focusWidth }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.focusRingWidth }}</template><template #suffix>{{ focusWidth }}px</template>
 						</MkRange>
 						<MkRange v-model="focusOffset" :min="-4" :max="6" :step="1" easing>
-							<template #label>Focus ring offset</template><template #suffix>{{ focusOffset }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.focusRingOffset }}</template><template #suffix>{{ focusOffset }}px</template>
 						</MkRange>
 						<MkRange v-model="tooltipRadius" :min="4" :max="24" :step="1" easing>
-							<template #label>Tooltip radius</template><template #suffix>{{ tooltipRadius }}px</template>
+							<template #label>{{ i18n.ts._feathermiss.tooltipRadius }}</template><template #suffix>{{ tooltipRadius }}px</template>
 						</MkRange>
 					</div>
 				</MkFolder>
 
 				<div class="_buttons">
-					<MkButton @click="reset">Reset to Feather</MkButton>
+					<MkButton @click="reset">{{ i18n.ts._feathermiss.resetToFeather }}</MkButton>
 				</div>
 			</div>
 		</MkDisableSection>
@@ -207,24 +207,24 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import MkButton from '@/components/MkButton.vue';
 import MkDisableSection from '@/components/MkDisableSection.vue';
 import MkFolder from '@/components/MkFolder.vue';
-import MkPreferenceContainer from '@/components/MkPreferenceContainer.vue';
 import MkRange from '@/components/MkRange.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
-import { prefer } from '@/preferences.js';
+import { i18n } from '@/i18n.js';
 import * as os from '@/os.js';
 import { copyToClipboard } from '@/utility/copy-to-clipboard.js';
+import { uiGraphics } from '@/feathermiss/preferences.js';
 import type { UiGraphicsStore } from '@/feathermiss/preferences.js';
 import { cloneUiGraphicsPreset, DEFAULT_UI_GRAPHICS, findUiGraphicsPreset, normalizeUiGraphics } from '@/feathermiss/config.js';
 import type { UiGraphicsPresetKey } from '@/feathermiss/config.js';
 
-const graphics = prefer.model('uiGraphics');
+const graphics = uiGraphics;
 
 const presets: ReadonlyArray<{ key: UiGraphicsPresetKey; label: string; caption: string; icon: string }> = [
-	{ key: 'feather', label: 'Feather', caption: 'Balanced and calm', icon: 'ti ti-feather' },
-	{ key: 'airy', label: 'Airy', caption: 'More space and softness', icon: 'ti ti-wind' },
-	{ key: 'frosted', label: 'Frosted', caption: 'Stronger translucent glass', icon: 'ti ti-snowflake' },
-	{ key: 'solid', label: 'Solid', caption: 'Maximum clarity and speed', icon: 'ti ti-square-filled' },
-	{ key: 'compact', label: 'Compact', caption: 'Dense without feeling cramped', icon: 'ti ti-layout-grid' },
+	{ key: 'feather', label: i18n.ts._feathermiss.presetFeather, caption: i18n.ts._feathermiss.presetFeatherDescription, icon: 'ti ti-feather' },
+	{ key: 'airy', label: i18n.ts._feathermiss.presetAiry, caption: i18n.ts._feathermiss.presetAiryDescription, icon: 'ti ti-wind' },
+	{ key: 'frosted', label: i18n.ts._feathermiss.presetFrosted, caption: i18n.ts._feathermiss.presetFrostedDescription, icon: 'ti ti-snowflake' },
+	{ key: 'solid', label: i18n.ts._feathermiss.presetSolid, caption: i18n.ts._feathermiss.presetSolidDescription, icon: 'ti ti-square-filled' },
+	{ key: 'compact', label: i18n.ts._feathermiss.presetCompact, caption: i18n.ts._feathermiss.presetCompactDescription, icon: 'ti ti-layout-grid' },
 ];
 
 const activePreset = computed(() => findUiGraphicsPreset(graphics.value));
@@ -292,19 +292,19 @@ function serializeConfiguration(pretty = true): string {
 
 function parseConfiguration(text: string): UiGraphicsStore {
 	const parsed: unknown = JSON.parse(text);
-	if (parsed == null || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('Invalid configuration');
+	if (parsed == null || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error(i18n.ts._feathermiss.invalidConfiguration);
 	const record = parsed as Record<string, unknown>;
-	if (record.version != null && record.version !== 1) throw new Error('Unsupported configuration version');
+	if (record.version != null && record.version !== 1) throw new Error(i18n.ts._feathermiss.unsupportedConfigurationVersion);
 	const candidate = record.uiGraphics != null ? record.uiGraphics : record;
-	if (candidate == null || typeof candidate !== 'object' || Array.isArray(candidate)) throw new Error('Invalid configuration');
+	if (candidate == null || typeof candidate !== 'object' || Array.isArray(candidate)) throw new Error(i18n.ts._feathermiss.invalidConfiguration);
 	const candidateRecord = candidate as Record<string, unknown>;
-	if (!(Object.keys(DEFAULT_UI_GRAPHICS) as (keyof UiGraphicsStore)[]).some(key => key in candidateRecord)) throw new Error('No interface fields found');
+	if (!(Object.keys(DEFAULT_UI_GRAPHICS) as (keyof UiGraphicsStore)[]).some(key => key in candidateRecord)) throw new Error(i18n.ts._feathermiss.noInterfaceFieldsFound);
 	return normalizeUiGraphics(candidateRecord as Partial<UiGraphicsStore>);
 }
 
 function applyConfigurationText(text: string) {
 	graphics.value = parseConfiguration(text);
-	os.toast('Interface configuration applied');
+	os.toast(i18n.ts._feathermiss.interfaceConfigurationApplied);
 }
 
 function copyConfiguration() {
@@ -318,8 +318,8 @@ async function pasteConfiguration() {
 			text = await navigator.clipboard.readText();
 		} catch {
 			const result = await os.inputText({
-				title: 'Paste interface configuration',
-				text: 'Clipboard access is unavailable. Paste the exported JSON below.',
+				title: i18n.ts._feathermiss.pasteInterfaceConfiguration,
+				text: i18n.ts._feathermiss.clipboardAccessUnavailable,
 				default: '',
 			});
 			if (result.canceled || result.result == null) return;
@@ -363,8 +363,8 @@ function importConfiguration() {
 async function showInvalidConfigurationAlert() {
 	await os.alert({
 		type: 'error',
-		title: 'Invalid interface configuration',
-		text: 'Use JSON copied or exported by Interface Studio, then try again.',
+		title: i18n.ts._feathermiss.invalidInterfaceConfiguration,
+		text: i18n.ts._feathermiss.invalidInterfaceConfigurationDescription,
 	});
 }
 

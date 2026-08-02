@@ -35,6 +35,7 @@ import { onActivated, onMounted, onUnmounted, provide, watch, ref, computed } fr
 import type { SuperMenuDef } from '@/components/MkSuperMenu.vue';
 import type { PageMetadata } from '@/page.js';
 import { i18n } from '@/i18n.js';
+import { iAmAdmin } from '@/i.js';
 import MkSuperMenu from '@/components/MkSuperMenu.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import { instance } from '@/instance.js';
@@ -184,7 +185,12 @@ const menuDef = computed<SuperMenuDef[]>(() => [{
 		text: i18n.ts.general,
 		to: '/admin/settings',
 		active: currentPage.value?.route.name === 'settings',
-	}, {
+	}, ...(iAmAdmin ? [{
+			icon: 'ti ti-sparkles',
+			text: i18n.ts._feathermiss.aiAdministration,
+			to: '/admin/feathermiss-ai',
+			active: currentPage.value?.route.name === 'feathermissAi',
+		}] : []), {
 		icon: 'ti ti-paint',
 		text: i18n.ts.branding,
 		to: '/admin/branding',

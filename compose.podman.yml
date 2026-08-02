@@ -1,0 +1,20 @@
+# Podman-specific bind-mount options for the rootless Compose deployment.
+# Keep the service definitions in compose.yml so Docker Compose and Podman
+# Compose use the same application topology.
+services:
+  web:
+    volumes:
+      - ./files:/misskey/files:Z,U
+      - ./.config:/misskey/.config:ro,Z
+
+  redis:
+    volumes:
+      - ./redis:/data:Z,U
+
+  db:
+    volumes:
+      - ./db:/var/lib/postgresql:Z,U
+
+  feathermiss-db:
+    volumes:
+      - ./feathermiss-db:/var/lib/postgresql:Z,U

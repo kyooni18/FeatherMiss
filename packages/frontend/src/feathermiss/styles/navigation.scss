@@ -7,9 +7,10 @@
 	._navbar,
 	._footer,
 	[data-feathermiss-navigation] {
-		background: var(--feathermiss-nav-surface);
-		border-color: var(--feathermiss-surface-border);
-		-webkit-backdrop-filter: var(--feathermiss-surface-filter);
-		backdrop-filter: var(--feathermiss-surface-filter);
+		background: var(--MI-surfaceNav, var(--feathermiss-nav-surface));
+		border-color: var(--MI-surfaceBorder, var(--feathermiss-surface-border));
+		box-shadow: var(--MI-surfaceShadow, var(--feathermiss-surface-shadow));
+		-webkit-backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
+		backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
 	}
 }

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { ref, computed } from 'vue';
+import { ref, computed, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
@@ -29,6 +29,8 @@ import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { $i } from '@/i.js';
 import { i18n } from '@/i18n.js';
+import { isFeatherMissAiEnabled } from '@/feathermiss/config.js';
+import { translationPreferences } from '@/feathermiss/preferences.js';
 import { globalEvents, useGlobalEvent } from '@/events.js';
 import MkUsersTooltip from '@/components/MkUsersTooltip.vue';
 import MkReactionsViewerDetails from '@/components/MkReactionsViewer.details.vue';
@@ -37,6 +39,7 @@ import { notePage } from '@/filters/note.js';
 import type { DI as DIType } from '@/di.js';
 import type { ExtractInjectedType } from '@/types/misc.js';
 import type { MenuItem } from '@/types/menu.js';
+import { FEATHERMISS_TIMELINE_ID } from '@/feathermiss/timeline.js';
 
 export interface UseNoteProps {
 	note: Misskey.entities.Note;
@@ -105,6 +108,7 @@ export function useNote(
 	const inChannel = options.inChannel ?? null;
 	const currentClip = options.currentClip ?? null;
 	const currentAntenna = options.currentAntenna ?? null;
+	const featherMissTimelineId = inject(FEATHERMISS_TIMELINE_ID, null);
 
 	// プラグインの割り込み処理
 	let rawNote = deepClone(props.note);
@@ -136,6 +140,13 @@ export function useNote(
 		note: appearNote,
 		parentNote: rawNote,
 		mock: props.mock,
+	});
+
+	onMounted(() => {
+		const timelineId = featherMissTimelineId?.value;
+		const preferences = translationPreferences.value;
+		if (timelineId == null || props.mock || !isFeatherMissAiEnabled() || !preferences.backgroundEnabled || !preferences.timelineIds.includes(timelineId) || preferences.targetLanguages.length === 0) return;
+		void import('@/feathermiss/ai.js').then(({ enqueueBackgroundTranslation }) => enqueueBackgroundTranslation(appearNote, timelineId));
 	});
 
 	// 各種フラグ状態

@@ -1861,6 +1861,22 @@ declare namespace entities {
         EndpointRequest,
         EndpointResponse,
         EndpointsResponse,
+        FeathermissAccountUnlinkResponse,
+        FeathermissAdminConfigGetResponse,
+        FeathermissAdminConfigSetRequest,
+        FeathermissAdminConfigSetResponse,
+        FeathermissAdminProviderGetResponse,
+        FeathermissAdminProviderSetRequest,
+        FeathermissAdminProviderSetResponse,
+        FeathermissAdminPurgeRequest,
+        FeathermissAdminPurgeResponse,
+        FeathermissNotesTranslateRequest,
+        FeathermissNotesTranslateResponse,
+        FeathermissNotesTranslateEnqueueRequest,
+        FeathermissNotesTranslateEnqueueResponse,
+        FeathermissPreferencesGetResponse,
+        FeathermissPreferencesSetRequest,
+        FeathermissPreferencesSetResponse,
         FederationFollowersRequest,
         FederationFollowersResponse,
         FederationFollowingRequest,
@@ -2275,6 +2291,54 @@ export { entities }
 
 // @public (undocumented)
 type Error_2 = components['schemas']['Error'];
+
+// @public (undocumented)
+type FeathermissAccountUnlinkResponse = operations['feathermiss___account___unlink']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminConfigGetResponse = operations['feathermiss___admin___config___get']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminConfigSetRequest = operations['feathermiss___admin___config___set']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminConfigSetResponse = operations['feathermiss___admin___config___set']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminProviderGetResponse = operations['feathermiss___admin___provider___get']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminProviderSetRequest = operations['feathermiss___admin___provider___set']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminProviderSetResponse = operations['feathermiss___admin___provider___set']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminPurgeRequest = operations['feathermiss___admin___purge']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissAdminPurgeResponse = operations['feathermiss___admin___purge']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissNotesTranslateEnqueueRequest = operations['feathermiss___notes___translate___enqueue']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissNotesTranslateEnqueueResponse = operations['feathermiss___notes___translate___enqueue']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissNotesTranslateRequest = operations['feathermiss___notes___translate']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissNotesTranslateResponse = operations['feathermiss___notes___translate']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissPreferencesGetResponse = operations['feathermiss___preferences___get']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissPreferencesSetRequest = operations['feathermiss___preferences___set']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type FeathermissPreferencesSetResponse = operations['feathermiss___preferences___set']['responses']['200']['content']['application/json'];
 
 // @public (undocumented)
 type FederationFollowersRequest = operations['federation___followers']['requestBody']['content']['application/json'];

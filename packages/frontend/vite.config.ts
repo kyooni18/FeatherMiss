@@ -190,6 +190,8 @@ export function getConfig(): UserConfig {
 
 		define: {
 			'import.meta.env.FEATHERMISS_UI': JSON.stringify(process.env.FEATHERMISS_UI ?? ''),
+			'import.meta.env.FEATHERMISS_ENABLED': JSON.stringify(process.env.FEATHERMISS_ENABLED ?? ''),
+			'import.meta.env.FEATHERMISS_AI_ENABLED': JSON.stringify(process.env.FEATHERMISS_AI_ENABLED ?? ''),
 			_VERSION_: JSON.stringify(meta.version),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]) => [k, v._lang_])),
 			_ENV_: JSON.stringify(process.env.NODE_ENV),

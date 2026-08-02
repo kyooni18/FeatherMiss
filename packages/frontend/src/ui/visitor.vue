@@ -100,7 +100,7 @@ onMounted(() => {
 	padding: 16px;
 	display: flex;
 	align-items: center;
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel, var(--MI_THEME-panel));
 }
 
 .headerIcon {

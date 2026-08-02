@@ -15,6 +15,9 @@ import { RepositoryModule } from './models/RepositoryModule.js';
 import { allSettled } from './misc/promise-tracker.js';
 import { GlobalEvents } from './core/GlobalEventService.js';
 import type { Provider, OnApplicationShutdown } from '@nestjs/common';
+import type { Pool } from 'pg';
+import { createFeatherMissDbPool } from './feathermiss/ai/repository.js';
+import { FeatherMissAiService } from './feathermiss/ai/service.js';
 
 const $config: Provider = {
 	provide: DI.config,
@@ -97,6 +100,29 @@ const $redisForReactions: Provider = {
 	inject: [DI.config],
 };
 
+const $feathermissDb: Provider = {
+	provide: DI.feathermissDb,
+	useFactory: async () => {
+		if (process.env.FEATHERMISS_ENABLED === '0' || process.env.FEATHERMISS_ENABLED === 'false') return null;
+		try {
+			return await createFeatherMissDbPool(process.env.FEATHERMISS_DATABASE_URL);
+		} catch (error) {
+			console.warn('[FeatherMiss] separate database is unavailable; FeatherMiss features are disabled.', error);
+			return null;
+		}
+	},
+};
+
+const $feathermissAi: Provider = {
+	provide: FeatherMissAiService,
+	useFactory: (db: Pool | null) => {
+		const service = new FeatherMissAiService(db);
+		service.startBackgroundWorker();
+		return service;
+	},
+	inject: [DI.feathermissDb],
+};
+
 const $meta: Provider = {
 	provide: DI.meta,
 	useFactory: async (db: DataSource, redisForSub: Redis.Redis) => {
@@ -157,8 +183,8 @@ const $meta: Provider = {
 @Global()
 @Module({
 	imports: [RepositoryModule],
-	providers: [$config, $db, $meta, $meilisearch, $redis, $redisForPub, $redisForSub, $redisForTimelines, $redisForReactions],
-	exports: [$config, $db, $meta, $meilisearch, $redis, $redisForPub, $redisForSub, $redisForTimelines, $redisForReactions, RepositoryModule],
+	providers: [$config, $db, $meta, $meilisearch, $redis, $redisForPub, $redisForSub, $redisForTimelines, $redisForReactions, $feathermissDb, $feathermissAi],
+	exports: [$config, $db, $meta, $meilisearch, $redis, $redisForPub, $redisForSub, $redisForTimelines, $redisForReactions, $feathermissDb, $feathermissAi, RepositoryModule],
 })
 export class GlobalModule implements OnApplicationShutdown {
 	constructor(
@@ -168,9 +194,12 @@ export class GlobalModule implements OnApplicationShutdown {
 		@Inject(DI.redisForSub) private redisForSub: Redis.Redis,
 		@Inject(DI.redisForTimelines) private redisForTimelines: Redis.Redis,
 		@Inject(DI.redisForReactions) private redisForReactions: Redis.Redis,
+		@Inject(DI.feathermissDb) private feathermissDb: Pool | null,
+		@Inject(FeatherMissAiService) private feathermissAiService: FeatherMissAiService,
 	) { }
 
 	public async dispose(): Promise<void> {
+		this.feathermissAiService.stopBackgroundWorker();
 		// Wait for all potential DB queries
 		await allSettled();
 		// And then disconnect from DB
@@ -181,6 +210,7 @@ export class GlobalModule implements OnApplicationShutdown {
 			this.redisForSub.disconnect(),
 			this.redisForTimelines.disconnect(),
 			this.redisForReactions.disconnect(),
+			this.feathermissDb?.end() ?? Promise.resolve(),
 		]);
 	}
 

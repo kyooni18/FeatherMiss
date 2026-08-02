@@ -10,11 +10,17 @@ import { waiting } from '@/os.js';
 import { unisonReload } from '@/utility/unison-reload.js';
 import { clear } from '@/utility/idb-proxy.js';
 import { $i } from '@/i.js';
+import { isFeatherMissDeploymentEnabled } from '@/feathermiss/config.js';
+import { misskeyApi } from '@/utility/misskey-api.js';
 
 export async function signout() {
 	if (!$i) return;
 
 	waiting();
+
+	if (isFeatherMissDeploymentEnabled()) {
+		await misskeyApi('feathermiss/account/unlink', {}, $i.token).catch(() => undefined);
+	}
 
 	if (store.s.enablePreferencesAutoCloudBackup) {
 		await cloudBackup();

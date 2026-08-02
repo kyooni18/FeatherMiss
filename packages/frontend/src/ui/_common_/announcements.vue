@@ -30,7 +30,9 @@ import { $i } from '@/i.js';
 <style lang="scss" module>
 .root {
 	font-size: 15px;
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel, var(--MI_THEME-panel));
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 }
 
 .item {

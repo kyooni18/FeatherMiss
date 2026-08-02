@@ -23,10 +23,15 @@ test.describe('FeatherMiss two-mode smoke', () => {
 	});
 
 	test('loads the timeline, composer, settings, and mode switch', async ({ page }) => {
+		const featherMissRequests: string[] = [];
+		page.on('request', request => {
+			if (request.url().includes('/api/feathermiss/')) featherMissRequests.push(request.url());
+		});
+
 		await visitHome(page);
 		await expect(page.getByTestId('open-post-form')).toBeVisible();
 
-		const expectedMode = process.env.FEATHERMISS_UI === '0' ? null : 'enabled';
+		const expectedMode = process.env.FEATHERMISS_ENABLED === '0' || process.env.FEATHERMISS_UI === '0' ? null : 'enabled';
 		if (expectedMode == null) {
 			await expect(page.locator('html')).not.toHaveAttribute('data-feathermiss');
 		} else {
@@ -40,5 +45,7 @@ test.describe('FeatherMiss two-mode smoke', () => {
 
 		await page.goto(`${BASE_URL}/settings/preferences`);
 		await expect(page.locator('main')).toBeVisible();
+
+		if (expectedMode == null) expect(featherMissRequests).toHaveLength(0);
 	});
 });

@@ -219,7 +219,11 @@ function menuEdit() {
 	overflow: auto;
 	overflow-x: clip;
 	overscroll-behavior: contain;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
+	border-right: var(--MI-surfaceBorderWidth, 0.5px) solid var(--MI-surfaceBorder, var(--MI_THEME-divider));
+	box-shadow: var(--MI-surfaceShadow, none);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 	contain: strict;
 
 	/* 画面が縦に長い、設置している項目数が少ないなどの環境においても確実にbottomを最下部に表示するため */
@@ -388,7 +392,7 @@ function menuEdit() {
 	margin-top: -32px;
 	margin-bottom: -32px;
 	pointer-events: none;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
 }
 
 .subButtonGapFillDivider {

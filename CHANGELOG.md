@@ -1,7 +1,21 @@
 ## Unreleased
 
 ### Client
+- Feat: Add an administrator UI for FeatherMiss AI provider, deployment, and translation-cache settings
 - Enhance: FeatherMiss UI can be disabled at runtime or with `FEATHERMISS_UI=0` to restore Misskey behavior for diagnostics
+- Enhance: FeatherMiss Interface Studio preferences are stored in the separate FeatherMiss database
+- Enhance: FeatherMiss applies one translucent material system across panels, popups, navigation, page surfaces, and overlays
+- Enhance: FeatherMiss translation preferences support account-scoped target languages and opt-in background settings
+- Fix: FeatherMiss Interface Studio now has an immediate Korean locale overlay while Crowdin translations are pending
+- Feat: FeatherMiss can provide optional AI-backed note translation while retaining native Misskey translation fallback
+- Enhance: FeatherMiss AI translation supports the OpenAI Responses API
+
+### Server
+- Enhance: Support running the bundled Compose deployment with Podman
+- Feat: Add optional in-process FeatherMiss AI translation with a separate PostgreSQL cache
+- Enhance: Keep FeatherMiss deployment, account, session, UI, and extension state outside the canonical Misskey database
+- Enhance: Add admin-only provider configuration, encrypted credentials, deployment kill switches, and translation-cache purge controls
+- Enhance: Opt-in background translation now follows native timeline note views and batches selected target languages through the FeatherMiss queue
 
 ## 2026.7.0
 

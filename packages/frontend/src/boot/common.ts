@@ -32,6 +32,7 @@ import { $i } from '@/i.js';
 import { launchPlugins } from '@/plugin.js';
 import { applyUiGraphics } from '@/feathermiss/config.js';
 import { initializeFeatherMiss } from '@/feathermiss/index.js';
+import { initializeFeatherMissPreferences, uiGraphics } from '@/feathermiss/preferences.js';
 import { initTelemetry } from '@/telemetry.js';
 
 export async function common(createVue: () => Promise<App<Element>>) {
@@ -198,9 +199,11 @@ export async function common(createVue: () => Promise<App<Element>>) {
 		updateDeviceKind(kind);
 	}, { immediate: true });
 
+	await initializeFeatherMissPreferences();
+
 	const syncUiGraphics = () => {
-		const enabled = initializeFeatherMiss(prefer.s.uiGraphics.enabled);
-		applyUiGraphics({ ...prefer.s.uiGraphics, enabled }, {
+		const enabled = initializeFeatherMiss(uiGraphics.value.enabled);
+		applyUiGraphics({ ...uiGraphics.value, enabled }, {
 			surfaceBlur: prefer.s.useBlurEffect,
 			modalBlur: prefer.s.useBlurEffectForModal,
 		});
@@ -208,7 +211,7 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	};
 
 	watch(
-		[prefer.r.uiGraphics, prefer.r.useBlurEffect, prefer.r.useBlurEffectForModal],
+		[uiGraphics, prefer.r.useBlurEffect, prefer.r.useBlurEffectForModal],
 		syncUiGraphics,
 		{ immediate: true, deep: true },
 	);

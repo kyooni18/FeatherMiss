@@ -10,16 +10,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<section :class="$style.hero">
 				<div :class="$style.heroIcon"><i class="ti ti-palette"></i></div>
 				<div :class="$style.heroText">
-					<h1>Interface Studio</h1>
-					<p>Shape FeatherMiss around your display, input method, and preferred density. Changes are previewed and applied immediately.</p>
+					<h1>{{ i18n.ts._feathermiss.interfaceStudio }}</h1>
+					<p>{{ i18n.ts._feathermiss.interfaceStudioDescription }}</p>
 				</div>
 				<MkButton link to="/settings/preferences" transparent :class="$style.preferencesLink">
-					<i class="ti ti-adjustments"></i> Preferences
+					<i class="ti ti-adjustments"></i> {{ i18n.ts._feathermiss.preferences }}
 				</MkButton>
 			</section>
 
 			<MkInfo :class="$style.scopeInfo">
-				This studio changes frontend presentation preferences only. It does not modify accounts, notes, server data, or database configuration.
+				{{ i18n.ts._feathermiss.studioScopeInfo }}
 			</MkInfo>
 
 			<UiCustomization/>
@@ -34,12 +34,13 @@ import MkButton from '@/components/MkButton.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import UiCustomization from '@/feathermiss/components/UiCustomization.vue';
 import { definePage } from '@/page.js';
+import { i18n } from '@/i18n.js';
 
 const headerActions = computed(() => []);
 const headerTabs = computed(() => []);
 
 definePage({
-	title: 'Interface Studio',
+	title: i18n.ts._feathermiss.interfaceStudio,
 	icon: 'ti ti-palette',
 });
 </script>

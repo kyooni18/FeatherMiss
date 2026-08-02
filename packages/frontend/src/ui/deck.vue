@@ -270,7 +270,7 @@ window.document.documentElement.style.scrollBehavior = 'auto';
 	height: 100dvh;
 	box-sizing: border-box;
 	flex: 1;
-	background: var(--MI_THEME-navBg);
+	background: var(--MI-surfaceNav, var(--MI_THEME-navBg));
 }
 
 .nonTitlebarArea {
@@ -286,7 +286,7 @@ window.document.documentElement.style.scrollBehavior = 'auto';
 	flex-direction: column;
 
 	&:not(.withWallpaper) {
-		background: var(--MI_THEME-deckBg);
+		background: var(--MI-surfacePage, var(--MI_THEME-deckBg));
 	}
 
 	&.withSidebarAndTitlebar {

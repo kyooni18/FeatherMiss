@@ -3,22 +3,38 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+html[data-feathermiss='enabled'] {
+	background: var(--MI-surfacePage, var(--feathermiss-material-page));
+}
+
 :root[data-feathermiss='enabled'] {
+	body,
+	#misskey_app {
+		background: var(--MI-surfacePage, var(--feathermiss-material-page));
+	}
+
+	._pageScrollable,
+	._pageScrollableReversed {
+		background: var(--MI-surfacePage, var(--feathermiss-material-page));
+	}
+
 	._panel {
+		background: var(--MI-surfacePanel, var(--feathermiss-material-panel));
 		border-radius: var(--feathermiss-panel-radius);
-		border: var(--MI-surfaceBorderWidth, 1px) solid var(--feathermiss-surface-border);
-		box-shadow: var(--feathermiss-surface-shadow);
-		-webkit-backdrop-filter: var(--feathermiss-surface-filter);
-		backdrop-filter: var(--feathermiss-surface-filter);
+		border: var(--MI-surfaceBorderWidth, 1px) solid var(--MI-surfaceBorder, var(--feathermiss-surface-border));
+		box-shadow: var(--MI-surfaceShadow, var(--feathermiss-surface-shadow));
+		-webkit-backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
+		backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
 	}
 
 	._popup,
 	._acrylic {
+		background: var(--MI-surfacePopup, var(--feathermiss-material-popup));
 		border-radius: var(--feathermiss-popup-radius);
-		border: var(--MI-surfaceBorderWidth, 1px) solid var(--feathermiss-surface-border);
-		box-shadow: var(--feathermiss-surface-shadow-raised);
-		-webkit-backdrop-filter: var(--feathermiss-surface-filter);
-		backdrop-filter: var(--feathermiss-surface-filter);
+		border: var(--MI-surfaceBorderWidth, 1px) solid var(--MI-surfaceBorder, var(--feathermiss-surface-border));
+		box-shadow: var(--MI-surfaceShadowRaised, var(--feathermiss-surface-shadow-raised));
+		-webkit-backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
+		backdrop-filter: var(--MI-surfaceFilter, var(--feathermiss-surface-filter));
 	}
 
 	._shadow {
@@ -61,6 +77,6 @@
 
 	._panel.mkw-post-form {
 		border-radius: calc(var(--MI-radius) + var(--MI-postFormRadiusOffset));
-		box-shadow: var(--feathermiss-surface-shadow-raised);
+		box-shadow: var(--MI-surfaceShadowRaised, var(--feathermiss-surface-shadow-raised));
 	}
 }

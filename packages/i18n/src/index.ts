@@ -10,6 +10,7 @@
 import * as fs from 'node:fs';
 import { load as loadYaml } from 'js-yaml';
 import { languages, primaries } from './const.js';
+import { koKRFeatherMissLocale } from './feathermiss/ko-KR.js';
 import type { Locale } from './autogen/locale.js';
 import type { ILocale, ParameterizedString } from './types.js';
 
@@ -83,11 +84,13 @@ function build(): Record<Language, Locale> {
 			default: {
 				const primaryLang = lang as PrimaryLang;
 				const primaryKey = (lang in primaries ? `${lang}-${primaries[primaryLang]}` : undefined) as Language | undefined;
+				const supplement = key === 'ko-KR' ? { _feathermiss: koKRFeatherMissLocale } : undefined;
 				a[key] = merge<Locale>(
 					locales['ja-JP'] as Locale,
 					locales['en-US'],
 					primaryKey ? locales[primaryKey] : {},
 					v,
+					supplement,
 				);
 				break;
 			}

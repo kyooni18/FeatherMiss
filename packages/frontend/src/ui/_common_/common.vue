@@ -258,7 +258,11 @@ if ($i) {
 	box-sizing: border-box;
 	overflow: auto;
 	overscroll-behavior: contain;
-	background: var(--MI_THEME-bg);
+	background: var(--MI-surfacePopup, var(--MI_THEME-bg));
+	border-right: var(--MI-surfaceBorderWidth, 1px) solid var(--MI-surfaceBorder, var(--MI_THEME-divider));
+	box-shadow: var(--MI-surfaceShadowRaised, none);
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 }
 
 .widgetsCloseButton {

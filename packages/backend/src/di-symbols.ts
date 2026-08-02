@@ -13,6 +13,7 @@ export const DI = {
 	redisForSub: Symbol('redisForSub'),
 	redisForTimelines: Symbol('redisForTimelines'),
 	redisForReactions: Symbol('redisForReactions'),
+	feathermissDb: Symbol('feathermissDb'),
 
 	//#region Repositories
 	usersRepository: Symbol('usersRepository'),

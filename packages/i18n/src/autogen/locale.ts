@@ -13370,4 +13370,522 @@ export interface Locale extends ILocale {
          */
         "mfm": string;
     };
+    "_feathermiss": {
+        /**
+         * インターフェーススタジオ
+         */
+        "interfaceStudio": string;
+        /**
+         * 表示、入力方法、情報密度に合わせてFeatherMissを調整できます。変更はすぐにプレビュー・適用されます。
+         */
+        "interfaceStudioDescription": string;
+        /**
+         * 設定
+         */
+        "preferences": string;
+        /**
+         * このスタジオが変更するのはフロントエンドの表示設定だけです。アカウント、ノート、サーバーデータ、データベース設定は変更しません。
+         */
+        "studioScopeInfo": string;
+        /**
+         * 浮遊するサーフェス
+         */
+        "previewFloatingSurface": string;
+        /**
+         * カスタム操作
+         */
+        "previewCustomControls": string;
+        /**
+         * 安定した動き
+         */
+        "previewStableMotion": string;
+        /**
+         * 軽やかなUI
+         */
+        "previewAiryUi": string;
+        /**
+         * 高度なインターフェーススタイル
+         */
+        "advancedInterfaceStyling": string;
+        /**
+         * すぐに適用され、FeatherMissの拡張状態に保存されます。
+         */
+        "advancedInterfaceStylingDescription": string;
+        /**
+         * プリセット
+         */
+        "presets": string;
+        /**
+         * インターフェース設定ツール
+         */
+        "interfaceConfigurationTools": string;
+        /**
+         * 元に戻す
+         */
+        "undo": string;
+        /**
+         * やり直す
+         */
+        "redo": string;
+        /**
+         * コピー
+         */
+        "copy": string;
+        /**
+         * 貼り付け
+         */
+        "paste": string;
+        /**
+         * ファイルに書き出す
+         */
+        "exportFile": string;
+        /**
+         * ファイルから読み込む
+         */
+        "importFile": string;
+        /**
+         * 形状と間隔
+         */
+        "shapeAndSpacing": string;
+        /**
+         * サーフェスの角丸
+         */
+        "surfaceCornerRadius": string;
+        /**
+         * ボタンの角丸
+         */
+        "buttonRadius": string;
+        /**
+         * インターフェースの余白
+         */
+        "interfaceBreathingRoom": string;
+        /**
+         * メニュー行の高さ
+         */
+        "menuRowHeight": string;
+        /**
+         * メニューの最小幅
+         */
+        "menuMinimumWidth": string;
+        /**
+         * 浮遊要素の端からの間隔
+         */
+        "floatingEdgeGap": string;
+        /**
+         * サイドドロワーの幅
+         */
+        "sideDrawerWidth": string;
+        /**
+         * ダイアログの画面余白
+         */
+        "dialogViewportPadding": string;
+        /**
+         * ナビゲーションと詳細な形状
+         */
+        "navigationSpecializedGeometry": string;
+        /**
+         * ピルボタンの角丸
+         */
+        "pillButtonRadius": string;
+        /**
+         * モバイルドックの角丸
+         */
+        "mobileDockRadius": string;
+        /**
+         * モバイルドックの左右余白
+         */
+        "mobileDockHorizontalInset": string;
+        /**
+         * モバイルドックの上余白
+         */
+        "mobileDockTopPadding": string;
+        /**
+         * モバイルドックの下部リフト
+         */
+        "mobileDockBottomLift": string;
+        /**
+         * スクワークルの大きさ
+         */
+        "squircleSize": string;
+        /**
+         * ポップアップ角丸の追加量
+         */
+        "popupRadiusOffset": string;
+        /**
+         * 投稿フォーム角丸の追加量
+         */
+        "postFormRadiusOffset": string;
+        /**
+         * ガラスとレイヤー
+         */
+        "glassAndLayers": string;
+        /**
+         * サーフェスのぼかし
+         */
+        "surfaceBlur": string;
+        /**
+         * 背景のぼかし
+         */
+        "backdropBlur": string;
+        /**
+         * 背景の彩度
+         */
+        "backdropSaturation": string;
+        /**
+         * 背景の明るさ
+         */
+        "backdropBrightness": string;
+        /**
+         * パネルの不透明度
+         */
+        "panelOpacity": string;
+        /**
+         * ポップアップの不透明度
+         */
+        "popupOpacity": string;
+        /**
+         * ナビゲーションの不透明度
+         */
+        "navigationOpacity": string;
+        /**
+         * ページの不透明度
+         */
+        "pageOpacity": string;
+        /**
+         * モーダルオーバーレイの暗さ
+         */
+        "modalOverlayDarkness": string;
+        /**
+         * 細線のコントラスト
+         */
+        "hairlineContrast": string;
+        /**
+         * 細線の幅
+         */
+        "hairlineWidth": string;
+        /**
+         * 動きと奥行き
+         */
+        "motionAndDepth": string;
+        /**
+         * 動きの時間
+         */
+        "motionDuration": string;
+        /**
+         * 動きの距離
+         */
+        "motionTravel": string;
+        /**
+         * パネルの影
+         */
+        "panelShadow": string;
+        /**
+         * パネルの影の深さ
+         */
+        "panelShadowDepth": string;
+        /**
+         * 浮遊要素の影
+         */
+        "floatingShadow": string;
+        /**
+         * 浮遊要素の影の深さ
+         */
+        "floatingShadowDepth": string;
+        /**
+         * フォーカスリングの幅
+         */
+        "focusRingWidth": string;
+        /**
+         * フォーカスリングの位置
+         */
+        "focusRingOffset": string;
+        /**
+         * ツールチップの角丸
+         */
+        "tooltipRadius": string;
+        /**
+         * Featherにリセット
+         */
+        "resetToFeather": string;
+        /**
+         * インターフェース設定を適用しました
+         */
+        "interfaceConfigurationApplied": string;
+        /**
+         * インターフェース設定を貼り付け
+         */
+        "pasteInterfaceConfiguration": string;
+        /**
+         * クリップボードにアクセスできません。以下に書き出したJSONを貼り付けてください。
+         */
+        "clipboardAccessUnavailable": string;
+        /**
+         * 無効なインターフェース設定
+         */
+        "invalidInterfaceConfiguration": string;
+        /**
+         * インターフェーススタジオでコピーまたは書き出したJSONを使用して、もう一度お試しください。
+         */
+        "invalidInterfaceConfigurationDescription": string;
+        /**
+         * 無効な設定
+         */
+        "invalidConfiguration": string;
+        /**
+         * 対応していない設定バージョン
+         */
+        "unsupportedConfigurationVersion": string;
+        /**
+         * インターフェース項目が見つかりません
+         */
+        "noInterfaceFieldsFound": string;
+        /**
+         * Feather
+         */
+        "presetFeather": string;
+        /**
+         * バランスがよく穏やか
+         */
+        "presetFeatherDescription": string;
+        /**
+         * Airy
+         */
+        "presetAiry": string;
+        /**
+         * 余白と柔らかさを重視
+         */
+        "presetAiryDescription": string;
+        /**
+         * Frosted
+         */
+        "presetFrosted": string;
+        /**
+         * 半透明ガラスを強調
+         */
+        "presetFrostedDescription": string;
+        /**
+         * Solid
+         */
+        "presetSolid": string;
+        /**
+         * 明瞭さと速度を重視
+         */
+        "presetSolidDescription": string;
+        /**
+         * Compact
+         */
+        "presetCompact": string;
+        /**
+         * 窮屈さを抑えた高密度
+         */
+        "presetCompactDescription": string;
+        /**
+         * 翻訳
+         */
+        "translation": string;
+        /**
+         * 翻訳は任意のアカウント単位で保存され、元のノートを置き換えません。バックグラウンド翻訳はここで選択したタイムラインと言語に限定されます。
+         */
+        "translationInfo": string;
+        /**
+         * バックグラウンド翻訳を有効にする
+         */
+        "backgroundTranslation": string;
+        /**
+         * 管理者がバックグラウンド翻訳とプロバイダーを設定している場合のみ動作します。
+         */
+        "backgroundTranslationDescription": string;
+        /**
+         * 対象言語
+         */
+        "targetLanguages": string;
+        /**
+         * ISO言語コードをカンマ区切りで入力してください。空の場合はバックグラウンド処理を行いません。
+         */
+        "targetLanguagesDescription": string;
+        /**
+         * 選択したタイムラインID
+         */
+        "timelineIds": string;
+        /**
+         * カンマ区切りで入力してください。home、local、social、global、list:<id>、channel:<id>、antenna:<id>、role:<id>を指定できます。ノート本文はMisskey API経由で取得されます。
+         */
+        "timelineIdsDescription": string;
+        /**
+         * 翻訳設定を保存
+         */
+        "saveTranslationPreferences": string;
+        /**
+         * FeatherMiss AI管理
+         */
+        "aiAdministration": string;
+        /**
+         * FeatherMissの翻訳プロバイダー、利用範囲、キャッシュを管理します。APIキーは暗号化して保存され、読み出されません。
+         */
+        "aiAdministrationDescription": string;
+        /**
+         * デプロイ設定
+         */
+        "deploymentSettings": string;
+        /**
+         * FeatherMissを有効にする
+         */
+        "featherMissEnabled": string;
+        /**
+         * FeatherMissのサーバー側機能を有効にします。
+         */
+        "featherMissEnabledDescription": string;
+        /**
+         * AI翻訳を有効にする
+         */
+        "aiEnabled": string;
+        /**
+         * 明示的に有効にした場合のみ、設定した外部プロバイダーを使用します。
+         */
+        "aiEnabledDescription": string;
+        /**
+         * AIキルスイッチ
+         */
+        "aiKillSwitch": string;
+        /**
+         * 有効にすると、ネイティブMisskey翻訳を残したままAIプロバイダーの使用を停止します。
+         */
+        "aiKillSwitchDescription": string;
+        /**
+         * バックグラウンド翻訳を許可
+         */
+        "backgroundTranslationEnabled": string;
+        /**
+         * 許可するコンテンツ範囲
+         */
+        "permittedContentScope": string;
+        /**
+         * AIプロバイダーへ送信できるノートの範囲を制限します。
+         */
+        "permittedContentScopeDescription": string;
+        /**
+         * オンデマンド翻訳のみ
+         */
+        "notesOnDemand": string;
+        /**
+         * 選択したタイムライン
+         */
+        "selectedTimelines": string;
+        /**
+         * 翻訳キャッシュ保持日数
+         */
+        "retentionDays": string;
+        /**
+         * 1リクエストあたりの最大文字数
+         */
+        "maxRequestCharacters": string;
+        /**
+         * デプロイ単位の分間リクエスト数
+         */
+        "rateLimitPerMinute": string;
+        /**
+         * AIプロバイダー
+         */
+        "providerSettings": string;
+        /**
+         * プロバイダー
+         */
+        "provider": string;
+        /**
+         * OpenAI互換
+         */
+        "openaiCompatible": string;
+        /**
+         * OpenAI互換のchat/completionsエンドポイントを使用します。
+         */
+        "openaiCompatibleDescription": string;
+        /**
+         * OpenAI Responses API
+         */
+        "openaiResponses": string;
+        /**
+         * OpenAI互換のresponsesエンドポイントを使用します。
+         */
+        "openaiResponsesDescription": string;
+        /**
+         * エンドポイント
+         */
+        "providerEndpoint": string;
+        /**
+         * 例: https://api.openai.com/v1
+         */
+        "providerEndpointDescription": string;
+        /**
+         * モデル
+         */
+        "providerModel": string;
+        /**
+         * APIキー
+         */
+        "providerApiKey": string;
+        /**
+         * 未入力のまま保存すると、既存のキーを保持します。
+         */
+        "providerApiKeyDescription": string;
+        /**
+         * APIキーは設定済みです。変更する場合のみ入力してください。
+         */
+        "providerApiKeyConfigured": string;
+        /**
+         * プロバイダーを有効にする
+         */
+        "providerEnabled": string;
+        /**
+         * タイムアウト（ミリ秒）
+         */
+        "timeoutMs": string;
+        /**
+         * 最大同時実行数
+         */
+        "maxConcurrent": string;
+        /**
+         * 最大リトライ回数
+         */
+        "maxRetries": string;
+        /**
+         * サーキット遮断しきい値
+         */
+        "circuitFailureThreshold": string;
+        /**
+         * サーキット復旧待機（ミリ秒）
+         */
+        "circuitResetMs": string;
+        /**
+         * データ管理
+         */
+        "dataManagement": string;
+        /**
+         * FeatherMissに保存された翻訳キャッシュを削除し、保留中の翻訳ジョブを取り消します。
+         */
+        "purgeDescription": string;
+        /**
+         * 翻訳キャッシュを全削除
+         */
+        "purgeTranslations": string;
+        /**
+         * すべての翻訳キャッシュを削除します。この操作は元に戻せません。続行しますか？
+         */
+        "purgeConfirm": string;
+        /**
+         * {n}件の翻訳キャッシュを削除しました。
+         */
+        "purgedTranslations": ParameterizedString<"n">;
+        /**
+         * 設定を保存しました。
+         */
+        "settingsSaved": string;
+        /**
+         * 有効
+         */
+        "enabled": string;
+        /**
+         * 無効
+         */
+        "disabled": string;
+    };
 }

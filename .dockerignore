@@ -3,11 +3,13 @@
 .travis
 .vscode
 .config
+.git/
 Dockerfile
 build/
 built/
 src-js/
 db/
+feathermiss-db/
 .devcontainer/compose.yml
 node_modules/
 packages/*/node_modules

@@ -25,6 +25,8 @@ import { genEmbedCode } from '@/utility/get-embed-code.js';
 import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { globalEvents } from '@/events.js';
+import { isFeatherMissAiEnabled } from '@/feathermiss/config.js';
+import { translationPreferences } from '@/feathermiss/preferences.js';
 
 const isInBrowserTranslationAvailable = (
 	'LanguageDetector' in window &&
@@ -303,16 +305,27 @@ export function getNoteMenu(props: {
 
 	async function translate(): Promise<void> {
 		if (props.translation.value != null) return;
+		const targetLanguage = translationPreferences.value.targetLanguages[0] ?? miLocalStorage.getItem('lang') ?? navigator.language;
+		if (isFeatherMissAiEnabled()) {
+			props.translating.value = true;
+			try {
+				const { translateWithFeatherMiss } = await import('@/feathermiss/ai.js');
+				const result = await translateWithFeatherMiss(appearNote, targetLanguage);
+				if (result != null) {
+					props.translation.value = result;
+					return;
+				}
+			} finally {
+				props.translating.value = false;
+			}
+		}
 		if (prefer.s['experimental.enableWebTranslatorApi'] && isInBrowserTranslationAvailable && appearNote.text != null) {
 			props.translating.value = true;
 			try {
 				// @ts-expect-error 実験的なAPIなので型定義がない
 				const detector = await LanguageDetector.create();
 				const langResult = await detector.detect(appearNote.text);
-				let localStorageLang = miLocalStorage.getItem('lang');
-				if (localStorageLang != null) {
-					localStorageLang = localStorageLang.split('-')[0];
-				}
+				const localStorageLang = targetLanguage.split('-')[0];
 
 				// 翻訳元と翻訳先の言語が同じ場合はTranslatorがthrowするのでそのまま返す
 				if (langResult[0]?.detectedLanguage === localStorageLang || langResult[0]?.detectedLanguage === navigator.language) {
@@ -326,7 +339,7 @@ export function getNoteMenu(props: {
 				// @ts-expect-error 実験的なAPIなので型定義がない
 				const translator = await Translator.create({
 					sourceLanguage: langResult[0]?.detectedLanguage,
-					targetLanguage: localStorageLang ?? navigator.language,
+					targetLanguage: localStorageLang,
 				});
 				const translated = await translator.translate(appearNote.text);
 				props.translation.value = {
@@ -340,7 +353,7 @@ export function getNoteMenu(props: {
 			props.translating.value = true;
 			const res = await misskeyApi('notes/translate', {
 				noteId: appearNote.id,
-				targetLang: miLocalStorage.getItem('lang') ?? navigator.language,
+				targetLang: targetLanguage,
 			});
 			props.translating.value = false;
 			props.translation.value = res;
@@ -402,7 +415,7 @@ export function getNoteMenu(props: {
 			});
 		}
 
-		if ((prefer.s['experimental.enableWebTranslatorApi'] && isInBrowserTranslationAvailable) || ($i.policies.canUseTranslator && instance.translatorAvailable)) {
+		if (isFeatherMissAiEnabled() || (prefer.s['experimental.enableWebTranslatorApi'] && isInBrowserTranslationAvailable) || ($i.policies.canUseTranslator && instance.translatorAvailable)) {
 			menuItems.push({
 				icon: 'ti ti-language-hiragana',
 				text: i18n.ts.translate,

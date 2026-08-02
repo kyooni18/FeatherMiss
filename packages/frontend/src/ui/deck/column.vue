@@ -366,7 +366,9 @@ function onDrop(ev: DragEvent) {
 	}
 
 	&.naked {
-		background: color(from var(--MI_THEME-bg) srgb r g b / 0.5) !important;
+		background: var(--MI-surfacePanel, color(from var(--MI_THEME-bg) srgb r g b / 0.5)) !important;
+		-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+		backdrop-filter: var(--MI-surfaceFilter, none);
 
 		> .header {
 			background: transparent;
@@ -382,7 +384,7 @@ function onDrop(ev: DragEvent) {
 
 	&.withWallpaper {
 		&.naked {
-			background: color(from var(--MI_THEME-bg) srgb r g b / 0.75) !important;
+			background: var(--MI-surfacePanel, color(from var(--MI_THEME-bg) srgb r g b / 0.75)) !important;
 			-webkit-backdrop-filter: var(--MI-blur, blur(10px));
 			backdrop-filter: var(--MI-blur, blur(10px));
 
@@ -397,10 +399,10 @@ function onDrop(ev: DragEvent) {
 	}
 
 	&.paged {
-		background: var(--MI_THEME-bg) !important;
+		background: var(--MI-surfacePage, var(--MI_THEME-bg)) !important;
 
 		> .body {
-			background: var(--MI_THEME-bg) !important;
+			background: var(--MI-surfacePage, var(--MI_THEME-bg)) !important;
 			scrollbar-color: var(--MI_THEME-scrollbarHandle) transparent;
 		}
 	}
@@ -415,7 +417,7 @@ function onDrop(ev: DragEvent) {
 	padding: 0 16px 0 30px;
 	font-size: 0.9em;
 	color: var(--MI_THEME-panelHeaderFg);
-	background: var(--MI_THEME-panelHeaderBg);
+	background: var(--MI-surfacePanel, var(--MI_THEME-panelHeaderBg));
 	cursor: pointer;
 	user-select: none;
 }

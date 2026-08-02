@@ -18,7 +18,6 @@ import type { ImageFramePreset } from '@/utility/image-frame-renderer/ImageFrame
 import { genId } from '@/utility/id.js';
 import { DEFAULT_DEVICE_KIND } from '@/utility/device-kind.js';
 import { deepEqual } from '@/utility/deep-equal.js';
-import type { UiGraphicsStore } from '@/feathermiss/preferences.js';
 
 /** サウンド設定 */
 export type SoundStore = {
@@ -249,47 +248,6 @@ export const PREF_DEF = definePreferences({
 	},
 	useBlurEffect: {
 		default: true,
-	},
-	uiGraphics: {
-		default: {
-			enabled: true,
-			radius: 14,
-			buttonRadius: 13,
-			buttonPillRadius: 999,
-			mobileDockRadius: 24,
-			mobileDockPaddingX: 10,
-			mobileDockPaddingTop: 8,
-			mobileDockPaddingBottom: 2,
-			blur: 12,
-			saturate: 128,
-			brightness: 102,
-			panelAlpha: 0.66,
-			popupAlpha: 0.72,
-			navAlpha: 0.68,
-			pageAlpha: 0.72,
-			borderAlpha: 0.09,
-			borderWidth: 1,
-			overlayOpacity: 0.2,
-			modalBlur: 7,
-			squircleSize: 30,
-			popupRadiusOffset: 8,
-			postFormRadiusOffset: 10,
-			focusWidth: 2,
-			focusOffset: 2,
-			shadowStrength: 0.78,
-			shadowYOffset: 12,
-			shadowRaisedStrength: 0.86,
-			shadowRaisedYOffset: 22,
-			spacingScale: 1.06,
-			menuItemHeight: 38,
-			menuMinWidth: 220,
-			floatingGap: 10,
-			drawerWidth: 324,
-			dialogPadding: 30,
-			tooltipRadius: 10,
-			motionScale: 1,
-			motionDistance: 10,
-		} as UiGraphicsStore,
 	},
 	useStickyIcons: {
 		default: true,

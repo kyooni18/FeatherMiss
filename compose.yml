@@ -1,21 +1,35 @@
 name: feathermiss
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        FEATHERMISS_ENABLED: ${FEATHERMISS_ENABLED:-0}
+        FEATHERMISS_AI_ENABLED: ${FEATHERMISS_AI_ENABLED:-0}
     image: kyooni18/feathermiss-web:latest
     restart: always
-    links:
-      - db
-      - redis
+
 #     - mcaptcha
 #     - meilisearch
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
     ports:
       - "3000:3000"
+    environment:
+      FEATHERMISS_ENABLED: ${FEATHERMISS_ENABLED:-0}
+      FEATHERMISS_AI_ENABLED: ${FEATHERMISS_AI_ENABLED:-0}
+      FEATHERMISS_AI_KILL_SWITCH: ${FEATHERMISS_AI_KILL_SWITCH:-0}
+      FEATHERMISS_AI_PROVIDER: ${FEATHERMISS_AI_PROVIDER:-openai-compatible}
+      FEATHERMISS_AI_API_KEY: ${FEATHERMISS_AI_API_KEY:-}
+      FEATHERMISS_AI_BASE_URL: ${FEATHERMISS_AI_BASE_URL:-https://api.openai.com/v1}
+      FEATHERMISS_AI_MODEL: ${FEATHERMISS_AI_MODEL:-gpt-4o-mini}
+      FEATHERMISS_AI_TIMEOUT_MS: ${FEATHERMISS_AI_TIMEOUT_MS:-30000}
+      FEATHERMISS_AI_MAX_RETRIES: ${FEATHERMISS_AI_MAX_RETRIES:-2}
+      FEATHERMISS_AI_MAX_CONCURRENT: ${FEATHERMISS_AI_MAX_CONCURRENT:-2}
+      FEATHERMISS_AI_CIRCUIT_FAILURE_THRESHOLD: ${FEATHERMISS_AI_CIRCUIT_FAILURE_THRESHOLD:-5}
+      FEATHERMISS_AI_CIRCUIT_RESET_MS: ${FEATHERMISS_AI_CIRCUIT_RESET_MS:-30000}
+      FEATHERMISS_AI_MAX_CHARACTERS: ${FEATHERMISS_AI_MAX_CHARACTERS:-20000}
+      FEATHERMISS_AI_CACHE_TTL_MS: ${FEATHERMISS_AI_CACHE_TTL_MS:-604800000}
+      FEATHERMISS_ENCRYPTION_KEY: ${FEATHERMISS_ENCRYPTION_KEY:-}
+      FEATHERMISS_DATABASE_URL: ${FEATHERMISS_DATABASE_URL:-postgres://${FEATHERMISS_DB_USER:-feathermiss}:${FEATHERMISS_DB_PASSWORD:-feathermiss}@feathermiss-db:5432/${FEATHERMISS_DB_NAME:-feathermiss}}
     networks:
       - internal_network
       - external_network
@@ -24,6 +38,13 @@ services:
     volumes:
       - ./files:/misskey/files
       - ./.config:/misskey/.config:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      feathermiss-db:
+        condition: service_healthy
 
   redis:
     restart: always
@@ -46,6 +67,22 @@ services:
       - .config/docker.env
     volumes:
       - ./db:/var/lib/postgresql
+    healthcheck:
+      test: "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
+      interval: 5s
+      retries: 20
+
+  feathermiss-db:
+    restart: always
+    image: postgres:18-alpine
+    networks:
+      - internal_network
+    environment:
+      POSTGRES_USER: ${FEATHERMISS_DB_USER:-feathermiss}
+      POSTGRES_PASSWORD: ${FEATHERMISS_DB_PASSWORD:-feathermiss}
+      POSTGRES_DB: ${FEATHERMISS_DB_NAME:-feathermiss}
+    volumes:
+      - ./feathermiss-db:/var/lib/postgresql
     healthcheck:
       test: "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"
       interval: 5s

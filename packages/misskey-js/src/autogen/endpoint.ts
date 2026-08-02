@@ -325,6 +325,22 @@ import type {
 	EndpointRequest,
 	EndpointResponse,
 	EndpointsResponse,
+	FeathermissAccountUnlinkResponse,
+	FeathermissAdminConfigGetResponse,
+	FeathermissAdminConfigSetRequest,
+	FeathermissAdminConfigSetResponse,
+	FeathermissAdminProviderGetResponse,
+	FeathermissAdminProviderSetRequest,
+	FeathermissAdminProviderSetResponse,
+	FeathermissAdminPurgeRequest,
+	FeathermissAdminPurgeResponse,
+	FeathermissNotesTranslateRequest,
+	FeathermissNotesTranslateResponse,
+	FeathermissNotesTranslateEnqueueRequest,
+	FeathermissNotesTranslateEnqueueResponse,
+	FeathermissPreferencesGetResponse,
+	FeathermissPreferencesSetRequest,
+	FeathermissPreferencesSetResponse,
 	FederationFollowersRequest,
 	FederationFollowersResponse,
 	FederationFollowingRequest,
@@ -882,6 +898,16 @@ export type Endpoints = {
 	'endpoint': { req: EndpointRequest; res: EndpointResponse };
 	'endpoints': { req: EmptyRequest; res: EndpointsResponse };
 	'export-custom-emojis': { req: EmptyRequest; res: EmptyResponse };
+	'feathermiss/account/unlink': { req: EmptyRequest; res: FeathermissAccountUnlinkResponse };
+	'feathermiss/admin/config/get': { req: EmptyRequest; res: FeathermissAdminConfigGetResponse };
+	'feathermiss/admin/config/set': { req: FeathermissAdminConfigSetRequest; res: FeathermissAdminConfigSetResponse };
+	'feathermiss/admin/provider/get': { req: EmptyRequest; res: FeathermissAdminProviderGetResponse };
+	'feathermiss/admin/provider/set': { req: FeathermissAdminProviderSetRequest; res: FeathermissAdminProviderSetResponse };
+	'feathermiss/admin/purge': { req: FeathermissAdminPurgeRequest; res: FeathermissAdminPurgeResponse };
+	'feathermiss/notes/translate': { req: FeathermissNotesTranslateRequest; res: FeathermissNotesTranslateResponse };
+	'feathermiss/notes/translate/enqueue': { req: FeathermissNotesTranslateEnqueueRequest; res: FeathermissNotesTranslateEnqueueResponse };
+	'feathermiss/preferences/get': { req: EmptyRequest; res: FeathermissPreferencesGetResponse };
+	'feathermiss/preferences/set': { req: FeathermissPreferencesSetRequest; res: FeathermissPreferencesSetResponse };
 	'federation/followers': { req: FederationFollowersRequest; res: FederationFollowersResponse };
 	'federation/following': { req: FederationFollowingRequest; res: FederationFollowingResponse };
 	'federation/instances': { req: FederationInstancesRequest; res: FederationInstancesResponse };

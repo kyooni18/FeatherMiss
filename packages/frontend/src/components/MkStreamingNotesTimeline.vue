@@ -78,6 +78,7 @@ import { DI } from '@/di.js';
 import { globalEvents, useGlobalEvent } from '@/events.js';
 import { isSeparatorNeeded, getSeparatorInfo } from '@/utility/timeline-date-separate.js';
 import { Paginator } from '@/utility/paginator.js';
+import { FEATHERMISS_TIMELINE_ID } from '@/feathermiss/timeline.js';
 
 const props = withDefaults(defineProps<{
 	src: BasicTimelineType | 'mentions' | 'directs' | 'list' | 'antenna' | 'channel' | 'role';
@@ -99,6 +100,16 @@ const props = withDefaults(defineProps<{
 	sound: false,
 	customSound: null,
 });
+
+const featherMissTimelineId = computed(() => {
+	if (props.src === 'list' && props.list != null) return `list:${props.list}`;
+	if (props.src === 'channel' && props.channel != null) return `channel:${props.channel}`;
+	if (props.src === 'antenna' && props.antenna != null) return `antenna:${props.antenna}`;
+	if (props.src === 'role' && props.role != null) return `role:${props.role}`;
+	if (['home', 'local', 'social', 'global'].includes(props.src)) return props.src;
+	return null;
+});
+provide(FEATHERMISS_TIMELINE_ID, featherMissTimelineId);
 
 provide('inTimeline', true);
 provide('tl_withSensitive', computed(() => props.withSensitive));

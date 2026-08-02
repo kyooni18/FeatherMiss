@@ -9,12 +9,21 @@ export { type UiGraphicsStore } from '@/feathermiss/preferences.js';
 
 /** Resolve the build-time override while keeping the existing preference as the default. */
 export function resolveFeatherMissEnabled(preferenceEnabled: boolean): boolean {
-	const override = (import.meta as ImportMeta & {
-		readonly env?: Record<string, string | undefined>;
-	}).env?.FEATHERMISS_UI;
-	if (override === '0' || override === 'false') return false;
-	if (override === '1' || override === 'true') return true;
+	const deployment = getBooleanFlag('FEATHERMISS_ENABLED');
+	if (deployment != null) return deployment && preferenceEnabled;
+
+	const override = getBooleanFlag('FEATHERMISS_UI');
+	if (override != null) return override;
 	return preferenceEnabled;
+}
+
+/** Whether the compiled deployment exposes FeatherMiss at all. */
+export function isFeatherMissDeploymentEnabled(): boolean {
+	return getBooleanFlag('FEATHERMISS_ENABLED') !== false;
+}
+
+export function isFeatherMissAiEnabled(): boolean {
+	return isFeatherMissEnabled() && isFeatherMissDeploymentEnabled() && getBooleanFlag('FEATHERMISS_AI_ENABLED') === true;
 }
 
 export function isFeatherMissEnabled(): boolean {
@@ -28,6 +37,15 @@ export function setFeatherMissEnabled(enabled: boolean): void {
 	} else {
 		root.removeAttribute('data-feathermiss');
 	}
+}
+
+function getBooleanFlag(name: string): boolean | null {
+	const value = (import.meta as ImportMeta & {
+		readonly env?: Record<string, string | undefined>;
+	}).env?.[name];
+	if (value === '0' || value === 'false') return false;
+	if (value === '1' || value === 'true') return true;
+	return null;
 }
 
 export const DEFAULT_UI_GRAPHICS: Readonly<UiGraphicsStore> = Object.freeze({
@@ -342,12 +360,13 @@ export function applyUiGraphics(
 ): void {
 	const root = window.document.documentElement;
 	const graphics = normalizeUiGraphics(value);
-	setFeatherMissEnabled(graphics.enabled);
+	const extensionEnabled = resolveFeatherMissEnabled(graphics.enabled);
+	setFeatherMissEnabled(extensionEnabled);
 
-	root.classList.toggle('uiGraphicsEnabled', graphics.enabled);
+	root.classList.toggle('uiGraphicsEnabled', extensionEnabled);
 	root.classList.toggle('uiSurfaceBlurDisabled', !options.surfaceBlur);
 
-	if (!graphics.enabled) {
+	if (!extensionEnabled) {
 		for (const key of OVERRIDE_KEYS) root.style.removeProperty(key);
 		root.style.setProperty('--MI-modalBgFilter', options.modalBlur ? 'blur(var(--MI-uiModalBlur))' : 'none');
 		return;

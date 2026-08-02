@@ -38,7 +38,9 @@ function skip() {
 	height: var(--height);
 	overflow: clip;
 	contain: strict;
-	background: var(--MI_THEME-panel);
+	background: var(--MI-surfacePanel, var(--MI_THEME-panel));
+	-webkit-backdrop-filter: var(--MI-surfaceFilter, none);
+	backdrop-filter: var(--MI-surfaceFilter, none);
 }
 
 .icon {

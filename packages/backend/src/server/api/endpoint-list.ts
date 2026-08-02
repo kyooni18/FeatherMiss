@@ -346,6 +346,16 @@ export * as 'notes/thread-muting/create' from './endpoints/notes/thread-muting/c
 export * as 'notes/thread-muting/delete' from './endpoints/notes/thread-muting/delete.js';
 export * as 'notes/timeline' from './endpoints/notes/timeline.js';
 export * as 'notes/translate' from './endpoints/notes/translate.js';
+export * as 'feathermiss/notes/translate' from './endpoints/feathermiss/notes/translate.js';
+export * as 'feathermiss/notes/translate/enqueue' from './endpoints/feathermiss/notes/translate/enqueue.js';
+export * as 'feathermiss/account/unlink' from './endpoints/feathermiss/account/unlink.js';
+export * as 'feathermiss/preferences/get' from './endpoints/feathermiss/preferences/get.js';
+export * as 'feathermiss/preferences/set' from './endpoints/feathermiss/preferences/set.js';
+export * as 'feathermiss/admin/config/get' from './endpoints/feathermiss/admin/config/get.js';
+export * as 'feathermiss/admin/config/set' from './endpoints/feathermiss/admin/config/set.js';
+export * as 'feathermiss/admin/provider/get' from './endpoints/feathermiss/admin/provider/get.js';
+export * as 'feathermiss/admin/provider/set' from './endpoints/feathermiss/admin/provider/set.js';
+export * as 'feathermiss/admin/purge' from './endpoints/feathermiss/admin/purge.js';
 export * as 'notes/unrenote' from './endpoints/notes/unrenote.js';
 export * as 'notes/user-list-timeline' from './endpoints/notes/user-list-timeline.js';
 export * as 'notifications/create' from './endpoints/notifications/create.js';

@@ -6,10 +6,11 @@
 import { defineAsyncComponent } from 'vue';
 import type { AsyncComponentLoader } from 'vue';
 import type { RouteDef } from '@/lib/nirax.js';
-import { $i, iAmModerator } from '@/i.js';
+import { $i, iAmAdmin, iAmModerator } from '@/i.js';
 import MkLoading from '@/pages/_loading_.vue';
 import MkError from '@/pages/_error_.vue';
 import PageTimeline from '@/pages/timeline.vue';
+import { isFeatherMissDeploymentEnabled } from '@/feathermiss/config.js';
 
 export const page = (loader: AsyncComponentLoader) => defineAsyncComponent({
 	loader: loader,
@@ -19,6 +20,10 @@ export const page = (loader: AsyncComponentLoader) => defineAsyncComponent({
 
 function chatPage(...args: Parameters<typeof page>) {
 	return $i?.policies.chatAvailability !== 'unavailable' ? page(...args) : page(() => import('@/pages/not-found.vue'));
+}
+
+function featherMissPage(...args: Parameters<typeof page>) {
+	return isFeatherMissDeploymentEnabled() ? page(...args) : page(() => import('@/pages/not-found.vue'));
 }
 
 export const ROUTE_DEF = [{
@@ -74,7 +79,7 @@ export const ROUTE_DEF = [{
 }, {
 	name: 'uiCustomization',
 	path: '/ui-customization',
-	component: page(() => import('@/feathermiss/components/UiCustomizationPage.vue')),
+	component: featherMissPage(() => import('@/feathermiss/components/UiCustomizationPage.vue')),
 	loginRequired: true,
 }, {
 	name: 'settings',
@@ -85,6 +90,10 @@ export const ROUTE_DEF = [{
 		path: '/profile',
 		name: 'profile',
 		component: page(() => import('@/pages/settings/profile.vue')),
+	}, {
+		path: '/feathermiss-translation',
+		name: 'feathermissTranslation',
+		component: featherMissPage(() => import('@/feathermiss/components/TranslationSettingsPage.vue')),
 	}, {
 		path: '/avatar-decoration',
 		name: 'avatarDecoration',
@@ -495,6 +504,10 @@ export const ROUTE_DEF = [{
 		path: '/external-services',
 		name: 'external-services',
 		component: page(() => import('@/pages/admin/external-services.vue')),
+	}, {
+		path: '/feathermiss-ai',
+		name: 'feathermissAi',
+		component: iAmAdmin ? page(() => import('@/pages/admin/feathermiss-ai.vue')) : page(() => import('@/pages/not-found.vue')),
 	}, {
 		path: '/performance',
 		name: 'performance',

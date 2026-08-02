@@ -52,6 +52,7 @@ import { store } from '@/store.js';
 import { signout } from '@/signout.js';
 import { genSearchIndexes } from '@/utility/inapp-search.js';
 import { enableStoragePersistence, getStoragePersistenceStatusRef, storagePersistenceSupported, skipStoragePersistence } from '@/utility/storage.js';
+import { isFeatherMissDeploymentEnabled } from '@/feathermiss/config.js';
 
 const searchIndex = await import('search-index:settings').then(({ searchIndexes }) => genSearchIndexes(searchIndexes));
 
@@ -110,17 +111,22 @@ const menuDef = computed<SuperMenuDef[]>(() => [{
 		active: currentPage.value?.route.name === 'security',
 	}],
 }, {
-	items: [{
-		icon: 'ti ti-adjustments',
-		text: i18n.ts.preferences,
-		to: '/settings/preferences',
-		active: currentPage.value?.route.name === 'preferences',
-	}, {
-		icon: 'ti ti-palette',
-		text: 'Interface Studio',
-		to: '/ui-customization',
-		active: currentPage.value?.route.name === 'uiCustomization',
-	}, {
+		items: [{
+			icon: 'ti ti-adjustments',
+			text: i18n.ts.preferences,
+			to: '/settings/preferences',
+			active: currentPage.value?.route.name === 'preferences',
+		}, ...(isFeatherMissDeploymentEnabled() ? [{
+			icon: 'ti ti-palette',
+			text: 'Interface Studio',
+			to: '/ui-customization',
+			active: currentPage.value?.route.name === 'uiCustomization',
+		}, {
+			icon: 'ti ti-language',
+			text: i18n.ts._feathermiss.translation,
+			to: '/settings/feathermiss-translation',
+			active: currentPage.value?.route.name === 'feathermissTranslation',
+		}] : []), {
 		icon: 'ti ti-brush',
 		text: i18n.ts.theme,
 		to: '/settings/theme',

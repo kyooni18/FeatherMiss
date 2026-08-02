@@ -32,6 +32,10 @@ COPY --link ["packages/misskey-reversi/package.json", "./packages/misskey-revers
 COPY --link ["packages/misskey-bubble-game/package.json", "./packages/misskey-bubble-game/"]
 
 ARG NODE_ENV=production
+ARG FEATHERMISS_ENABLED=1
+ARG FEATHERMISS_AI_ENABLED=0
+ENV FEATHERMISS_ENABLED=${FEATHERMISS_ENABLED}
+ENV FEATHERMISS_AI_ENABLED=${FEATHERMISS_AI_ENABLED}
 
 RUN node -e "console.log(JSON.parse(require('node:fs').readFileSync('./package.json')).packageManager)" | xargs npm install -g
 
@@ -40,7 +44,7 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store,sharing=locked \
 
 COPY --link . ./
 
-RUN git submodule update --init
+RUN if [ -d .git ]; then git submodule update --init; fi
 RUN pnpm build
 RUN rm -rf .git/
 

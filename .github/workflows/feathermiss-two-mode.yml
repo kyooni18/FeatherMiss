@@ -3,21 +3,28 @@ name: FeatherMiss two-mode integration
 on:
   pull_request:
     paths:
+      - packages/backend/src/feathermiss/**
+      - packages/backend/src/server/api/endpoints/feathermiss/**
       - packages/frontend/**
       - packages/frontend-shared/**
+      - compose.yml
+      - Dockerfile
       - .github/workflows/feathermiss-two-mode.yml
   workflow_dispatch:
 
 jobs:
   validate:
-    name: Validate FEATHERMISS_UI=${{ matrix.feathermiss_ui }}
+    name: Validate FEATHERMISS_ENABLED=${{ matrix.feathermiss_enabled }} UI=${{ matrix.feathermiss_ui }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        feathermiss_enabled: ['0', '1']
         feathermiss_ui: ['0', '1']
     env:
       FEATHERMISS_UI: ${{ matrix.feathermiss_ui }}
+      FEATHERMISS_ENABLED: ${{ matrix.feathermiss_enabled }}
+      FEATHERMISS_AI_ENABLED: '0'
     steps:
       - uses: actions/checkout@v7.0.0
         with:
