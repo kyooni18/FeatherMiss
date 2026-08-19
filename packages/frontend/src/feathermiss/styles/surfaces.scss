@@ -3,6 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+:root {
+	--MI-buttonRadius: 5px;
+	--MI-buttonPillRadius: 999px;
+}
+
 html[data-feathermiss='enabled'] {
 	background: var(--MI-surfacePage, var(--feathermiss-material-page));
 }
@@ -55,6 +60,14 @@ html[data-feathermiss='enabled'] {
 		padding: var(--MI-buttonPaddingY) var(--MI-buttonPaddingX);
 		min-height: var(--MI-buttonMinHeight);
 		border-radius: var(--MI-buttonRadius);
+	}
+
+	._popup > ._button[role^='menuitem'] {
+		border-radius: var(--MI-buttonRadius);
+	}
+
+	._popup > ._button[role^='menuitem']::before {
+		border-radius: inherit;
 	}
 
 	._pageScrollable,
